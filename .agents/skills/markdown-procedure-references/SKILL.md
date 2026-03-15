@@ -1,11 +1,11 @@
 ---
 name: markdown-procedure-references
-description: Helps write and revise Markdown procedure manuals, runbooks, and setup guides so ordered steps stay maintenance-free and cross-references stay stable. Use this whenever the user is editing Markdown手順書, numbered instructions, SOPs, or asks how to refer to another step without hard-coding step numbers.
+description: Helps write and revise Markdown procedure manuals (手順書), runbooks, and setup guides so ordered steps stay maintenance-free and cross-references stay stable. Use this whenever the user is editing Markdown procedures, numbered instructions, SOPs, or asks how to refer to another step without hard-coding step numbers.
 ---
 
 # Markdown Procedure References
 
-Use this skill to write Markdown手順書 with low-maintenance numbering and reliable step-to-step references.
+Use this skill to write Markdown procedures (手順書) with low-maintenance numbering and reliable step-to-step references.
 
 ## When to Use This Skill
 
