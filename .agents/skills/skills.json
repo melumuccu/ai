@@ -5,6 +5,11 @@
     "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
   },
   {
+    "path": ".agents/skills/japanese-default/SKILL.md",
+    "name": "japanese-default",
+    "description": "ユーザが「日本語で返答して」「以後は日本語を基本にして」「成果物も含めて日本語化して」など、日本語を会話・説明・生成ファイルの基準言語にしたいときに必ず使うスキルです。対話、進捗報告、ドキュメント、テンプレートなどのユーザ向け出力を自然な日本語で統一し、明示的な例外だけ元の言語を保持します。"
+  },
+  {
     "path": ".agents/skills/skill-creator/SKILL.md",
     "name": "skill-creator",
     "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy."
