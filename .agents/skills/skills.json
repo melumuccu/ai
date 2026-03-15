@@ -7,7 +7,7 @@
   {
     "path": ".agents/skills/markdown-procedure-references/SKILL.md",
     "name": "markdown-procedure-references",
-    "description": "Markdown手順書、ランブック、セットアップガイドを、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、手順間の参照をアンカーで安定化したいときに使います。"
+    "description": "Markdownで数字リストを含む文章を、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、項目間の参照をアンカーで安定化したいときに使います。"
   },
   {
     "path": ".agents/skills/skill-creator/SKILL.md",
