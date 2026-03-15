@@ -7,7 +7,7 @@
   {
     "path": ".agents/skills/markdown-procedure-references/SKILL.md",
     "name": "markdown-procedure-references",
-    "description": "Helps write and revise Markdown procedure manuals (手順書), runbooks, and setup guides so ordered steps stay maintenance-free and cross-references stay stable. Use this whenever the user is editing Markdown procedures, numbered instructions, SOPs, or asks how to refer to another step without hard-coding step numbers."
+    "description": "Markdown手順書、ランブック、セットアップガイドを、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、手順間の参照をアンカーで安定化したいときに使います。"
   },
   {
     "path": ".agents/skills/skill-creator/SKILL.md",

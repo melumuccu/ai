@@ -1,35 +1,35 @@
 ---
 name: markdown-procedure-references
-description: Helps write and revise Markdown procedure manuals (手順書), runbooks, and setup guides so ordered steps stay maintenance-free and cross-references stay stable. Use this whenever the user is editing Markdown procedures, numbered instructions, SOPs, or asks how to refer to another step without hard-coding step numbers.
+description: Markdown手順書、ランブック、セットアップガイドを、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、手順間の参照をアンカーで安定化したいときに使います。
 ---
 
-# Markdown Procedure References
+# Markdown手順書の相互参照
 
-Use this skill to write Markdown procedures (手順書) with low-maintenance numbering and reliable step-to-step references.
+このスキルは、Markdownの手順書を「番号管理の手間が少なく、手順間の参照が壊れにくい」形で作成・修正するときに使います。
 
-## When to Use This Skill
+## このスキルを使う場面
 
-Use this skill when the user:
+次のような依頼で使ってください。
 
-- Is writing or revising a Markdown procedure, runbook, SOP, or setup guide
-- Wants numbered steps but does not want to renumber them by hand after inserts or reordering
-- Needs one step to refer to another step later in the same document
-- Wants a reusable template for operational manuals or onboarding docs
-- Mentions 手順書, Markdown, ordered lists, step numbers, anchors, internal links, or cross-references
+- Markdownの手順書、ランブック、SOP、セットアップガイドを書いている・直している
+- 手順番号は必要だが、途中追加や並び替えのたびに手で採番し直したくない
+- 後続の手順から前の手順を参照したい
+- 運用手順書やオンボーディング資料のテンプレートがほしい
+- 手順書、Markdown、順序付きリスト、手順番号、アンカー、内部リンク、相互参照といった話題が出ている
 
-## Core Rules
+## 基本ルール
 
-### 1. Keep ordered-list source numbers fixed at `1.`
+### 1. 順序付きリストはソース上ですべて `1.` にする
 
-Write every item in an ordered list as `1.` in the source Markdown.
+Markdownソースでは、順序付きリストの各項目をすべて `1.` で書きます。
 
-Why this works:
+この書き方にする理由:
 
-- Markdown renderers assign the visible numbers automatically
-- Inserting or reordering a step no longer forces manual renumbering
-- Diffs stay smaller and easier to review
+- Markdownレンダラーが表示上の連番を自動で振ってくれる
+- 手順の追加や並び替えをしても、手動で番号を直す必要がない
+- 差分が小さくなり、レビューしやすい
 
-Example:
+例:
 
 ```markdown
 1. 端末を起動する
@@ -37,58 +37,58 @@ Example:
 1. サービスを再起動する
 ```
 
-### 2. Refer to steps by anchor, not by visible number
+### 2. 手順の参照は表示番号ではなくアンカーで行う
 
-When a later step needs to point to an earlier one, add an HTML anchor at the start of the referenced step and link to that anchor instead of writing "Step 3" or "手順3".
+後続の手順から前の手順を参照する場合は、「手順3」「Step 3」のように表示番号で書かず、参照先の手順冒頭にHTMLアンカーを置き、そのアンカーへリンクしてください。
 
-Use this pattern:
+書き方:
 
 ```markdown
 1. <span id="step-install-db"></span>データベースをインストールする
 1. [データベースのインストール手順](#step-install-db)で設定したパスワードを入力する
 ```
 
-Why this matters:
+この運用にする理由:
 
-- The reference keeps working even if the visible order changes
-- Readers can jump directly to the referenced step in many Markdown preview environments
-- The text stays readable because the link label describes the action, not a brittle number
+- 手順の順番が変わっても参照が壊れにくい
+- GitHub などのMarkdownプレビューで参照先へ移動しやすい
+- リンク文言が「何をする手順か」を表すので読みやすい
 
-### 3. Use stable, descriptive anchor names
+### 3. アンカー名は安定した分かりやすい名前にする
 
-Anchor naming rules:
+アンカー命名規則:
 
-- Start with `step-`
-- Use short, descriptive English words
-- Join words with hyphens (`kebab-case`)
-- Make each anchor unique within the document
+- `step-` で始める
+- 内容が推測しやすい短い英単語を使う
+- 単語はハイフンでつなぐ (`kebab-case`)
+- 同一ドキュメント内で重複させない
 
-Good examples:
+良い例:
 
 - `step-prepare`
 - `step-install-db`
 - `step-restart-service`
 
-Avoid:
+避ける例:
 
 - `step-1`
 - `step-before-this`
 - `step-temp`
 
-## How to Apply the Rules
+## 適用手順
 
-When creating or revising a document:
+ドキュメントを新規作成・修正するときは、次の順で考えてください。
 
-1. Convert every ordered-list item in the procedure to `1.` in the Markdown source.
-1. Identify steps that are referenced later or are likely to be referenced after future edits.
-1. Insert `<span id="..."></span>` immediately before the text of those steps.
-1. Rewrite cross-references so they point to anchors with Markdown links such as `[準備作業](#step-prepare)`.
-1. Prefer link labels that describe the action or outcome instead of mentioning a step number.
-1. Check that every anchor is unique and every link target exists.
+1. 手順内の順序付きリストを、Markdownソース上ですべて `1.` にそろえる。
+1. 後続手順から参照される箇所、または今後参照されそうな箇所を見つける。
+1. その手順の本文直前に `<span id="..."></span>` を入れる。
+1. 相互参照を `[準備作業](#step-prepare)` のような内部リンクへ書き換える。
+1. リンク文言は手順番号ではなく、作業内容や成果が分かる表現にする。
+1. アンカー名の重複や、存在しないリンク先がないか確認する。
 
-## Authoring Template
+## 執筆テンプレート
 
-Use this pattern as the default template:
+新しい手順書を作るときは、まず次の形をベースにしてください。
 
 ```markdown
 1. <span id="step-prepare"></span>準備作業を行う
@@ -96,35 +96,36 @@ Use this pattern as the default template:
 1. [準備作業](#step-prepare)の結果を確認し、完了ボタンを押す
 ```
 
-## Editing Guidance
+## 既存文書を直すときの指針
 
-If the source document already has explicit numbers such as `1.`, `2.`, `3.`:
+すでに `1.` `2.` `3.` のように番号が明示されている文書では:
 
-- Normalize them all to `1.` in the source
-- Keep the user-facing order the same unless they asked for structural changes
-- Replace brittle references like "手順2を参照" with descriptive anchored links
+- ソース上の番号はすべて `1.` に統一する
+- 構成変更の依頼がない限り、利用者に見える手順の順番は変えない
+- 「手順2を参照」のような壊れやすい記述は、説明的なアンカーリンクへ置き換える
 
-If a new step is inserted in the middle:
+途中に新しい手順を挿入する場合は:
 
-- Add the new list item as `1.`
-- Do not renumber surrounding source lines
-- Update only the anchor names or link labels that truly need clarification
+- 追加する項目も `1.` で書く
+- 前後のソース番号は振り直さない
+- 必要なときだけアンカー名やリンク文言を見直す
 
-## Response Expectations
+## 出力時の方針
 
-When you produce or rewrite Markdown:
+Markdownを新規作成・書き直しするときは:
 
-- Return the finished Markdown directly unless the user asks for commentary
-- Preserve the document's original language and tone
-- Keep anchors minimal: add them where references exist or are clearly useful
-- Do not add extra HTML beyond the small `<span id="..."></span>` anchor pattern
+- ユーザーが解説を求めていない限り、完成したMarkdown本文をそのまま返す
+- 文書全体の基調言語は日本語にする
+- 元の文書のトーンや文体は可能な限り維持する
+- アンカーは必要な箇所、または明らかに将来参照されそうな箇所に絞る
+- HTMLは `<span id="..."></span>` によるアンカー用途以外で増やさない
 
-## Quick Checklist
+## 最終チェック
 
-Before you finish, verify:
+仕上げる前に次を確認してください。
 
-- Every ordered-list item is written as `1.` in source
-- Every referenced step has a unique `step-...` anchor
-- Every internal link uses the matching `#step-...` target
-- Link text describes the step content instead of the visible number
-- The document can tolerate step insertion or reordering without manual renumbering
+- すべての順序付きリスト項目がソース上で `1.` になっている
+- 参照される手順に一意な `step-...` アンカーが付いている
+- 内部リンクが対応する `#step-...` を向いている
+- リンク文言が表示番号ではなく手順内容を説明している
+- 手順の追加や並び替えがあっても、手作業の採番修正なしで維持できる

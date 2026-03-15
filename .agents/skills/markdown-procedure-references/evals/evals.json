@@ -4,34 +4,34 @@
     {
       "id": 1,
       "prompt": "次のMarkdown手順書を、番号管理コストを減らして参照が壊れにくい形に書き直して。手順2への参照も維持して。\\n\\n1. 管理画面にログインする\\n2. 設定画面を開く\\n3. 手順2で変更した内容を確認して保存する",
-      "expected_output": "The rewritten Markdown uses only `1.` as ordered-list source numbering, adds an anchor to the settings step, and replaces the brittle step-number reference with a descriptive internal link.",
+      "expected_output": "出力されたMarkdownでは、順序付きリストのソース番号がすべて `1.` に統一され、設定画面を開く手順にアンカーが追加され、手順番号参照が説明的な内部リンクへ置き換わっている。",
       "files": [],
       "expectations": [
-        "All ordered-list items are written as `1.` in the source output.",
-        "The referenced step contains a `<span id=\"step-...\">` anchor.",
-        "The later step links to that anchor with a Markdown internal link using `#step-...`."
+        "順序付きリストの各項目が、ソース上で `1.` として出力されている。",
+        "参照される手順に `<span id=\"step-...\">` アンカーが含まれている。",
+        "後続の手順が `#step-...` を使うMarkdown内部リンクでそのアンカーを参照している。"
       ]
     },
     {
       "id": 2,
       "prompt": "Markdownのセットアップ手順を作って。『設定ファイルを開く』のあとに『バックアップを取る』を追加しやすい構成にして、後続の手順から設定ファイルを開くステップを参照できるようにして。",
-      "expected_output": "The procedure is authored from scratch with `1.` numbering, includes a stable anchor for the configuration step, and uses an anchor-based reference instead of mentioning a visible step number.",
+      "expected_output": "手順書が最初から `1.` ベースで作られ、設定ファイルを開く手順に安定したアンカーが付いており、後続手順では表示上の番号ではなくアンカー参照が使われている。",
       "files": [],
       "expectations": [
-        "The output demonstrates the maintenance-free `1.` numbering pattern.",
-        "The configuration step includes a descriptive `step-...` anchor.",
-        "A later step references the configuration step by anchor rather than by ordinal number."
+        "出力が保守しやすい `1.` 採番パターンを示している。",
+        "設定ファイルを開く手順に説明的な `step-...` アンカーが付いている。",
+        "後続の手順が順序番号ではなくアンカーで設定ファイルを開く手順を参照している。"
       ]
     },
     {
       "id": 3,
       "prompt": "既存の運用手順に『サービス再起動前にログを確認する』を途中追加したい。将来また並び替える可能性があるので、相互参照が壊れにくいMarkdownテンプレートを提示して。",
-      "expected_output": "The answer provides a reusable Markdown template that keeps every ordered-list item at `1.`, uses anchors for reusable steps, and explains the structure through the resulting Markdown itself.",
+      "expected_output": "回答は再利用しやすいMarkdownテンプレートになっており、順序付きリストはすべて `1.` で書かれ、再利用する手順にはアンカーが付き、後続手順からアンカー参照できる構成になっている。",
       "files": [],
       "expectations": [
-        "The output is a Markdown template rather than plain prose alone.",
-        "The template includes at least one `<span id=\"step-...\">` anchor.",
-        "The template shows a later step linking back to an anchored step."
+        "出力が説明文だけではなくMarkdownテンプレートとして提示されている。",
+        "テンプレート内に少なくとも1つの `<span id=\"step-...\">` アンカーが含まれている。",
+        "テンプレート内で、後続手順からアンカー付き手順へのリンクが示されている。"
       ]
     }
   ]
