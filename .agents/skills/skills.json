@@ -5,6 +5,11 @@
     "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
   },
   {
+    "path": ".agents/skills/markdown-procedure-references/SKILL.md",
+    "name": "markdown-procedure-references",
+    "description": "Helps write and revise Markdown procedure manuals, runbooks, and setup guides so ordered steps stay maintenance-free and cross-references stay stable. Use this whenever the user is editing Markdown手順書, numbered instructions, SOPs, or asks how to refer to another step without hard-coding step numbers."
+  },
+  {
     "path": ".agents/skills/skill-creator/SKILL.md",
     "name": "skill-creator",
     "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy."
