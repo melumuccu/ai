@@ -1,0 +1,15 @@
+#!/bin/sh
+# `git commit` 実行時に `mise run skills-json` を実行し、生成された `.agents/skills/skills.json` を自動で `git add` します。
+
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+if ! command -v mise >/dev/null 2>&1; then
+  echo 'mise is required to run the skills-json pre-commit hook' >&2
+  exit 1
+fi
+
+mise run skills-json
+git add -- .agents/skills/skills.json
