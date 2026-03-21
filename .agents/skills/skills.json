@@ -1,5 +1,10 @@
 [
   {
+    "path": ".agents/skills/commit-message-5prefix-ja/SKILL.md",
+    "name": "commit-message-5prefix-ja",
+    "description": "5文字固定のプレフィックスと日本語の subject で commit message を作成・整形するためのスキルです。コミットメッセージ案の作成、既存メッセージの整形、prefix の選択、変更内容から適切な種別を決めたいときは必ず使います。"
+  },
+  {
     "path": ".agents/skills/find-skills/SKILL.md",
     "name": "find-skills",
     "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
