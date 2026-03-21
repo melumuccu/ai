@@ -2,6 +2,24 @@
 
 このディレクトリには、各 skill の `SKILL.md` と、その一覧をまとめた `.agents/skills/skills.json` を配置します。
 
+## ディレクトリ構成
+
+(skills 実態ファイル群は省略)
+
+```
+$ tree .agents/skills
+.agents/skills
+├── prompt-for-agent-meta.md // リモート環境の AI Agent 向けコピペ用メタプロンプト。このプロンプトをコピペして指示を書けば当リポジトリの skill を利用してくれるようにプロンプトを組んである。
+├── prompt-for-agent.md // リモート環境の AI Agent に向けた指示プロンプト実態。上記のメタプロンプトはこれを参照している。
+└── skills.json // skill 一覧をまとめた JSON ファイル。AI Agent はこれを参照して、利用可能な skill を認識する。
+```
+
+```
+$ tree .githooks
+.githooks
+└── pre-commit // コミット前に .agents/skills/skills.json を自動生成するフックスクリプト。これを有効化しておくと、SKILL.md を追加・編集した際に skills.json の更新を忘れずに済む。
+```
+
 ## skills.json を生成する目的
 
 クラウドで動作する AI Agent は、global skills を直接指定できないことが多く、ローカル環境の skill をそのまま認識できない場合があります。
