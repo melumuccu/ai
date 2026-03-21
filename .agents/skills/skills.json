@@ -1,23 +1,23 @@
 [
   {
-    "path": ".agents/skills/commit-message-5prefix-ja/SKILL.md",
-    "name": "commit-message-5prefix-ja",
-    "description": "5文字固定のプレフィックスと日本語の subject で commit message を作成・整形するためのスキルです。コミットメッセージ案の作成、既存メッセージの整形、prefix の選択、変更内容から適切な種別を決めたいとき、ユーザからコミットを指示されたときは必ず使います。"
-  },
-  {
     "path": ".agents/skills/find-skills/SKILL.md",
     "name": "find-skills",
     "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
   },
   {
+    "path": ".agents/skills/kf-git-commit-日本語コミットメッセージ/SKILL.md",
+    "name": "kf-git-commit-日本語コミットメッセージ",
+    "description": "5文字固定のプレフィックスと日本語の subject で commit message を作成・整形するためのスキルです。コミットメッセージ案の作成、既存メッセージの整形、prefix の選択、変更内容から適切な種別を決めたいとき、ユーザからコミットを指示されたときは必ず使います。"
+  },
+  {
+    "path": ".agents/skills/kf-markdown-list-番号付き手順相互参照/SKILL.md",
+    "name": "kf-markdown-list-番号付き手順相互参照",
+    "description": "Markdownで数字リストを含む文章を、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、項目間の参照をアンカーで安定化したいときに使います。"
+  },
+  {
     "path": ".agents/skills/kf-skill-naming-作成整理規約/SKILL.md",
     "name": "kf-skill-naming-作成整理規約",
     "description": "このリポジトリで skills を新規作成、命名、改名、整理するときに使うスキルです。skill ディレクトリ名のルールを決めたいとき、既存の命名規約に沿って skill 名を提案したいとき、skills をカテゴリ順に並びやすく整理したいとき、外部 skill と自作 skill を区別したいときは必ず使います。"
-  },
-  {
-    "path": ".agents/skills/markdown-procedure-references/SKILL.md",
-    "name": "markdown-procedure-references",
-    "description": "Markdownで数字リストを含む文章を、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、項目間の参照をアンカーで安定化したいときに使います。"
   },
   {
     "path": ".agents/skills/skill-creator/SKILL.md",

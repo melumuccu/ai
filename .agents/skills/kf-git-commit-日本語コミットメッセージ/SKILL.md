@@ -1,5 +1,5 @@
 ---
-name: commit-message-5prefix-ja
+name: kf-git-commit-日本語コミットメッセージ
 description: 5文字固定のプレフィックスと日本語の subject で commit message を作成・整形するためのスキルです。コミットメッセージ案の作成、既存メッセージの整形、prefix の選択、変更内容から適切な種別を決めたいとき、ユーザからコミットを指示されたときは必ず使います。
 ---
 

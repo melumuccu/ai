@@ -1,5 +1,5 @@
 ---
-name: markdown-procedure-references
+name: kf-markdown-list-番号付き手順相互参照
 description: Markdownで数字リストを含む文章を、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、項目間の参照をアンカーで安定化したいときに使います。
 ---
 
