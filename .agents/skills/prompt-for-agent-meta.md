@@ -1,6 +1,6 @@
 ## 前提指示
 
-最初に、https://github.com/melumuccu/skills リポジトリ内の `.agents/skills/prompt-for-agent.md` の内容を参照し、その指示を現在の作業方針として採用してください。
+最初に、https://github.com/melumuccu/ai リポジトリ内の `.agents/skills/prompt-for-agent.md` の内容を参照し、その指示を現在の作業方針として採用してください。
 
 ### 作業の進め方
 
