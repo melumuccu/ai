@@ -75,7 +75,7 @@ Based on the user interview, fill in these components:
 ```
 skill-name/
 ├── SKILL.md (required)
-│   ├── YAML frontmatter (name, description required; keep `name` ASCII kebab-case and write `name` and `description` in English)
+│   ├── YAML frontmatter (name, description required; keep `name` ASCII kebab-case and write `description` in English)
 │   └── Markdown instructions
 └── Bundled Resources (optional)
     ├── scripts/    - Executable code for deterministic/repetitive tasks

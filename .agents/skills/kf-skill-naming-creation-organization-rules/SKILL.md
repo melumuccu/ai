@@ -43,8 +43,8 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 
 ディレクトリ名と frontmatter の `name` は、対象リポジトリに応じて次の形を基本とします。ここで使う各セグメントは ASCII の英単語で、全体を kebab-case にします。
 
-- `melumuccu/ai`: `kf-large-category-optional-category-optional-category-short-summary`
-- その他のリポジトリ: `large-category-optional-category-optional-category-short-summary`
+- `melumuccu/ai`: `kf-large-category-subcategory-subsubcategory-short-summary`
+- その他のリポジトリ: `large-category-subcategory-subsubcategory-short-summary`
 - frontmatter の英語ルールは、後述の「frontmatter は英語で統一する」セクションに従います。
 
 ### 1. `melumuccu/ai` では `kf-` を付ける
@@ -142,7 +142,7 @@ skill 名を決めるときは、次の順で考えてください。
 1. 足りなければ、新しい大カテゴリを短い英語名詞で追加する。
 1. 必要な場合のみ下位カテゴリを1つから2つ追加する。
 1. 末尾に、短い英語概要を置く。
-1. `melumuccu/ai` では `kf-large-category-...-short-summary`、それ以外のリポジトリでは `large-category-...-short-summary` の形に整える。
+1. `melumuccu/ai` では `kf-large-category-subcategory-...-short-summary`、それ以外のリポジトリでは `large-category-subcategory-...-short-summary` の形に整える。
 1. frontmatter の `name` をディレクトリ名と一致させ、`description` を英語で書く。
 1. 長すぎないか、一覧で見て意味が分かるか確認する。
 

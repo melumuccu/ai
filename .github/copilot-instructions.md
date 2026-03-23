@@ -10,7 +10,7 @@
     - コード上のコメント
     - README や各種ドキュメント
 - 一方で、skill のディレクトリ名や `SKILL.md` の frontmatter のような機械可読メタデータはユーザ向け出力ではありません。
-- これらは各 skill の規約に従い、`name` は ASCII の kebab-case、`description` は英語で記述してください。
+- これらは `kf-skill-naming-creation-organization-rules` の規約に従い、`name` は ASCII の kebab-case、`description` は英語で記述してください。
 
 ## コマンド実行
 
