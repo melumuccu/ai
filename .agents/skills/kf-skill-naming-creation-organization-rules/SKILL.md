@@ -41,12 +41,11 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 
 ### 基本形
 
-ディレクトリ名と frontmatter の `name` は、対象リポジトリに応じて次の形を基本とします。
+ディレクトリ名と frontmatter の `name` は、対象リポジトリに応じて次の形を基本とします。ここで使う各セグメントは ASCII の英単語で、全体を kebab-case にします。
 
 - `melumuccu/ai`: `kf-large-category-optional-category-optional-category-short-summary`
 - その他のリポジトリ: `large-category-optional-category-optional-category-short-summary`
-
-さらに、frontmatter の `description` も英語で書きます。
+- frontmatter の英語ルールは、後述の「frontmatter は英語で統一する」セクションに従います。
 
 ### 1. `melumuccu/ai` では `kf-` を付ける
 
@@ -100,7 +99,7 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 ### 7. frontmatter は英語で統一する
 
 - `name` はディレクトリ名と同じ ASCII の kebab-case にする
-- `description` は skill の用途とトリガー条件を説明する英語の文にする
+- `description` は skill の用途とトリガー条件を説明する 1 文から 2 文程度の英語文にする
 - 本文や通常出力を日本語にしてもよいが、frontmatter に日本語は使わない
 
 ## 大カテゴリの決め方
