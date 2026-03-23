@@ -1,6 +1,6 @@
 ---
-name: kf-skill-naming-作成整理規約
-description: このリポジトリで skills を新規作成、命名、改名、整理するときに使うスキルです。skill ディレクトリ名のルールを決めたいとき、既存の命名規約に沿って skill 名を提案したいとき、skills をカテゴリ順に並びやすく整理したいとき、外部 skill と自作 skill を区別したいときは必ず使います。
+name: kf-skill-naming-creation-organization-rules
+description: Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones.
 ---
 
 # skills の作成整理規約
