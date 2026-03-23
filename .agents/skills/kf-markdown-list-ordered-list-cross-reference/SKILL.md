@@ -1,6 +1,6 @@
 ---
-name: kf-markdown-list-番号付き手順相互参照
-description: Markdownで数字リストを含む文章を、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、項目間の参照をアンカーで安定化したいときに使います。
+name: kf-markdown-list-ordered-list-cross-reference
+description: Create and revise Markdown documents with ordered lists in a maintainable way. Use this skill when you want every ordered list item written as `1.` and cross-references between items stabilized with anchors.
 ---
 
 # Markdown数字リストの相互参照

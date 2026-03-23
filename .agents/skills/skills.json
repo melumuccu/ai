@@ -5,14 +5,14 @@
     "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
   },
   {
-    "path": ".agents/skills/kf-git-commit-日本語コミットメッセージ/SKILL.md",
-    "name": "kf-git-commit-日本語コミットメッセージ",
-    "description": "5文字固定のプレフィックスと日本語の subject で commit message を作成・整形するためのスキルです。コミットメッセージ案の作成、既存メッセージの整形、prefix の選択、変更内容から適切な種別を決めたいとき、ユーザからコミットを指示されたときは必ず使います。"
+    "path": ".agents/skills/kf-git-commit-japanese-commit-message/SKILL.md",
+    "name": "kf-git-commit-japanese-commit-message",
+    "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Use this skill when drafting commit message proposals, reformatting existing messages, choosing a prefix, deciding the appropriate type from the changes, or when the user asks you to commit."
   },
   {
-    "path": ".agents/skills/kf-markdown-list-番号付き手順相互参照/SKILL.md",
-    "name": "kf-markdown-list-番号付き手順相互参照",
-    "description": "Markdownで数字リストを含む文章を、日本語ベースで保守しやすく執筆・修正するためのスキルです。順序付きリストを常に `1.` で書き、項目間の参照をアンカーで安定化したいときに使います。"
+    "path": ".agents/skills/kf-markdown-list-ordered-list-cross-reference/SKILL.md",
+    "name": "kf-markdown-list-ordered-list-cross-reference",
+    "description": "Create and revise Markdown documents with ordered lists in a maintainable way. Use this skill when you want every ordered list item written as `1.` and cross-references between items stabilized with anchors."
   },
   {
     "path": ".agents/skills/kf-skill-naming-creation-organization-rules/SKILL.md",
