@@ -16,7 +16,7 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 - 既存 skill の名前が規約に合っているか見直したい
 - skills をカテゴリ順に並びやすく整理したい
 - 外部 skill と自作 skill を区別したい
-- 日本語を含む skill 名の付け方を決めたい
+- ASCII の skill 名や英語 frontmatter の付け方を決めたい
 
 ## このリポジトリでの前提
 
@@ -41,10 +41,12 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 
 ### 基本形
 
-ディレクトリ名は、対象リポジトリに応じて次の形を基本とします。
+ディレクトリ名と frontmatter の `name` は、対象リポジトリに応じて次の形を基本とします。
 
-- `melumuccu/ai`: `kf-大カテゴリ-任意カテゴリ-任意カテゴリ-日本語概要`
-- その他のリポジトリ: `大カテゴリ-任意カテゴリ-任意カテゴリ-日本語概要`
+- `melumuccu/ai`: `kf-large-category-optional-category-optional-category-short-summary`
+- その他のリポジトリ: `large-category-optional-category-optional-category-short-summary`
+
+さらに、frontmatter の `description` も英語で書きます。
 
 ### 1. `melumuccu/ai` では `kf-` を付ける
 
@@ -61,8 +63,8 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 ### 3. 区切り文字はハイフンに統一する
 
 - アンダースコアは使わない
-- 小文字英数字とハイフンを基本とする
-- 末尾の概要は日本語を許容する
+- ディレクトリ名と frontmatter の `name` は、小文字英数字とハイフンだけを使う
+- ASCII 以外の文字、日本語、空白は使わない
 
 ### 4. 大カテゴリは必須
 
@@ -76,24 +78,30 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 - まずは大カテゴリ + 1個程度の下位カテゴリで足りるかを優先して考える
 - 分類のためだけに不要なカテゴリを増やさない
 
-### 6. 日本語概要は末尾に置く
+### 6. 英語概要は末尾に置く
 
-- 末尾には skill の内容がひと目で分かる短い日本語概要を置く
-- 助詞はなるべく省き、名詞句で止める
+- 末尾には skill の内容がひと目で分かる短い英語概要を置く
+- できるだけ名詞句または短い機能名で止める
 - 長文化しすぎない
 
 良い例:
 
-- `変更点レビュー観点`
-- `論文要約`
-- `ログ解析`
-- `比較表整形`
+- `change-review-checkpoints`
+- `paper-summary`
+- `log-analysis`
+- `comparison-table-formatting`
 
 避ける例:
 
-- `変更内容をわかりやすくレビューする`
-- `論文を読んで要点を整理する`
-- `ログを調べて原因候補を洗い出す`
+- `review-changes-clearly-for-humans`
+- `read-papers-and-organize-key-points`
+- `investigate-logs-and-list-possible-causes`
+
+### 7. frontmatter は英語で統一する
+
+- `name` はディレクトリ名と同じ ASCII の kebab-case にする
+- `description` は skill の用途とトリガー条件を説明する英語の文にする
+- 本文や通常出力を日本語にしてもよいが、frontmatter に日本語は使わない
 
 ## 大カテゴリの決め方
 
@@ -134,8 +142,9 @@ skill 名を決めるときは、次の順で考えてください。
 1. 既存 skill に使える大カテゴリがあるか確認し、あれば再利用する。
 1. 足りなければ、新しい大カテゴリを短い英語名詞で追加する。
 1. 必要な場合のみ下位カテゴリを1つから2つ追加する。
-1. 末尾に、助詞を省いた短い日本語概要を置く。
-1. `melumuccu/ai` では `kf-大カテゴリ-...-日本語概要`、それ以外のリポジトリでは `大カテゴリ-...-日本語概要` の形に整える。
+1. 末尾に、短い英語概要を置く。
+1. `melumuccu/ai` では `kf-large-category-...-short-summary`、それ以外のリポジトリでは `large-category-...-short-summary` の形に整える。
+1. frontmatter の `name` をディレクトリ名と一致させ、`description` を英語で書く。
 1. 長すぎないか、一覧で見て意味が分かるか確認する。
 
 ## 命名例
@@ -144,23 +153,23 @@ skill 名を決めるときは、次の順で考えてください。
 
 `melumuccu/ai` での例:
 
-- `kf-markdown-list-番号付き手順相互参照`
-- `kf-markdown-table-比較表整形`
-- `kf-markdown-link-内部リンク整理`
-- `kf-skill-review-SKILL記述レビュー`
-- `kf-skill-tuning-description最適化`
-- `kf-git-commit-日本語コミットメッセージ`
-- `kf-git-review-変更点レビュー観点`
-- `kf-python-test-pytestテスト追加`
-- `kf-shell-log-ログ解析`
-- `kf-research-paper-論文要約`
+- `kf-markdown-list-ordered-list-cross-reference`
+- `kf-markdown-table-comparison-table-formatting`
+- `kf-markdown-link-internal-link-organization`
+- `kf-skill-review-skill-description-review`
+- `kf-skill-tuning-description-optimization`
+- `kf-git-commit-japanese-commit-message`
+- `kf-git-review-change-review-checkpoints`
+- `kf-python-test-pytest-test-addition`
+- `kf-shell-log-log-analysis`
+- `kf-research-paper-paper-summary`
 
 それ以外のリポジトリでの例:
 
-- `markdown-list-番号付き手順相互参照`
-- `skill-review-SKILL記述レビュー`
-- `git-commit-日本語コミットメッセージ`
-- `shell-log-ログ解析`
+- `markdown-list-ordered-list-cross-reference`
+- `skill-review-skill-description-review`
+- `git-commit-japanese-commit-message`
+- `shell-log-log-analysis`
 
 ## 整理と改名の方針
 
@@ -184,6 +193,7 @@ skill 名を決めるときは、次の順で考えてください。
 - ユーザーが名前案だけを求めている場合は、候補名を複数提示する
 - ユーザーが作成まで求めている場合は、規約に沿ったディレクトリ名と `SKILL.md` を用意する
 - 命名対象のリポジトリが `melumuccu/ai` かどうかを先に確認し、prefix の有無を切り替える
+- `SKILL.md` を作るときは、frontmatter の `name` と `description` を英語で書く
 - 必要であれば、なぜその大カテゴリを選んだかを短く説明する
 - 過剰に細かいカテゴリ分けは避ける
 
@@ -195,8 +205,10 @@ skill 名を決めるときは、次の順で考えてください。
 - `melumuccu/ai` 以外なら prefix を付けず、大カテゴリから始めている
 - `melumuccu/ai` なら `kf-` の直後に大カテゴリがある
 - 区切り文字がハイフンで統一されている
+- ディレクトリ名と frontmatter の `name` が一致し、ASCII の kebab-case になっている
 - 大カテゴリが主題領域として自然な名詞になっている
 - 下位カテゴリが不要に増えすぎていない
-- 末尾の日本語概要が短い名詞句になっている
+- 末尾の英語概要が短く分かりやすい
+- frontmatter の `description` が英語になっている
 - 外部 skill と自作 skill を混同していない
 - skill の追加や改名後に一覧更新が必要か確認している
