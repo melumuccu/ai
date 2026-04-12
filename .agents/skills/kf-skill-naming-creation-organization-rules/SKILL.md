@@ -152,7 +152,6 @@ skill 名を決めるときは、次の順で考えてください。
 
 `melumuccu/ai` での例:
 
-- `kf-markdown-list-ordered-list-cross-reference`
 - `kf-markdown-table-comparison-table-formatting`
 - `kf-markdown-link-internal-link-organization`
 - `kf-skill-review-skill-description-review`

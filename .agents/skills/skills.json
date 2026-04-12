@@ -5,19 +5,29 @@
     "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
   },
   {
+    "path": ".agents/skills/kf-agent-research-report-only-unless-approved/SKILL.md",
+    "name": "kf-agent-research-report-only-unless-approved",
+    "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes."
+  },
+  {
     "path": ".agents/skills/kf-git-commit-japanese-commit-message/SKILL.md",
     "name": "kf-git-commit-japanese-commit-message",
     "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Use this skill when drafting commit message proposals, reformatting existing messages, choosing a prefix, deciding the appropriate type from the changes, or when the user asks you to commit."
   },
   {
-    "path": ".agents/skills/kf-markdown-list-ordered-list-cross-reference/SKILL.md",
-    "name": "kf-markdown-list-ordered-list-cross-reference",
-    "description": "Create and revise Markdown documents with ordered lists in a maintainable way. Use this skill when you want every ordered list item written as `1.` and cross-references between items stabilized with anchors."
-  },
-  {
     "path": ".agents/skills/kf-skill-naming-creation-organization-rules/SKILL.md",
     "name": "kf-skill-naming-creation-organization-rules",
     "description": "Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones."
+  },
+  {
+    "path": ".agents/skills/kf-writing-japanese-concise-structured-response/SKILL.md",
+    "name": "kf-writing-japanese-concise-structured-response",
+    "description": "Write or revise Japanese Markdown documents and code comments in this repository with a concise, structured style. Use this whenever the task involves drafting Markdown, especially maintainable ordered lists with 1.-style numbering and anchor-based cross references, or writing code comments."
+  },
+  {
+    "path": ".agents/skills/prompt-builder/SKILL.md",
+    "name": "prompt-builder",
+    "description": "Guide users through creating high-quality GitHub Copilot prompts with proper structure, tools, and best practices."
   },
   {
     "path": ".agents/skills/skill-creator/SKILL.md",
