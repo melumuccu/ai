@@ -11,7 +11,7 @@
     - README や各種ドキュメント
     - skills, instructions, agents などのリポジトリ内ファイルの内容 (ただし、機械可読なメタデータや frontmatter は英字で記載すること)
 - 一方で、skill のディレクトリ名や `SKILL.md` の frontmatter のような機械可読メタデータはユーザ向け出力ではありません。
-- これらは `kf-skill-naming-creation-organization-rules` の規約に従い、`name` は ASCII の kebab-case、`description` は英語で記述してください。
+- これらは `kf-g-skill-naming-creation-organization-rules` の規約に従い、`name` は ASCII の kebab-case、`description` は英語で記述してください。
 
 ## コマンド実行
 

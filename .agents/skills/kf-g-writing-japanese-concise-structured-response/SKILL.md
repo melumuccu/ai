@@ -1,5 +1,5 @@
 ---
-name: kf-writing-japanese-concise-structured-response
+name: kf-g-writing-japanese-concise-structured-response
 description: Write or revise Japanese Markdown documents and code comments in this repository with a concise, structured style. Use this whenever the task involves drafting Markdown, especially maintainable ordered lists with 1.-style numbering and anchor-based cross references, or writing code comments.
 ---
 

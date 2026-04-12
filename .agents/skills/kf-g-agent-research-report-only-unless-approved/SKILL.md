@@ -1,5 +1,5 @@
 ---
-name: kf-agent-research-report-only-unless-approved
+name: kf-g-agent-research-report-only-unless-approved
 description: Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes.
 ---
 

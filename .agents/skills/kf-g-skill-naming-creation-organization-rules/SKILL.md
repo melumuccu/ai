@@ -1,5 +1,5 @@
 ---
-name: kf-skill-naming-creation-organization-rules
+name: kf-g-skill-naming-creation-organization-rules
 description: Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones.
 ---
 
@@ -26,16 +26,16 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 - 外部 skill は今後の更新取り込みを前提にしているため、原則としてディレクトリ名や中身を直接変更しない
 - 自作 skill は `.agents/skills/` 配下へ追加する
 
-### 2. 自作 skill は `kf-` で始める
+### 2. 自作 skill は環境別 prefix を付ける
 
-- このリポジトリで自作する skill のディレクトリ名は `kf-` で始める
-- `kf-` は自作 skill の識別子として使う
+- `melumuccu/ai` では `kf-g-` を付ける
+- `melumuccu/ai` 以外では `kf-pj-` を付ける
 - 既存の外部 skill 名にはこの規約を後から強制しない
 
 ### 3. 一覧で近い skill が並ぶことを重視する
 
 - `.agents/skills/` がアルファベット順で表示されたとき、同じ主題領域の skill が近くに並ぶように命名する
-- そのため、`kf-` の直後には必ず大カテゴリを置く
+- そのため、`kf-g-` または `kf-pj-` の直後には必ず大カテゴリを置く
 
 ## 命名規約
 
@@ -43,21 +43,21 @@ description: Use this skill when creating, naming, renaming, or organizing skill
 
 ディレクトリ名と frontmatter の `name` は、対象リポジトリに応じて次の形を基本とします。ここで使う各セグメントは ASCII の英単語で、全体を kebab-case にします。
 
-- `melumuccu/ai`: `kf-large-category-subcategory-subsubcategory-short-summary`
-- その他のリポジトリ: `large-category-subcategory-subsubcategory-short-summary`
+- `melumuccu/ai`: `kf-g-large-category-subcategory-subsubcategory-short-summary`
+- その他のリポジトリ: `kf-pj-large-category-subcategory-subsubcategory-short-summary`
 - frontmatter の英語ルールは、後述の「frontmatter は英語で統一する」セクションに従います。
 
-### 1. `melumuccu/ai` では `kf-` を付ける
+### 1. `melumuccu/ai` では `kf-g-` を付ける
 
-- このリポジトリ（`melumuccu/ai`）で skill を命名するときは、`kf-` の prefix を必ず付ける
-- `kf-` の直後には必ず大カテゴリを置く
+- このリポジトリ（`melumuccu/ai`）で skill を命名するときは、`kf-g-` の prefix を必ず付ける
+- `kf-g-` の直後には必ず大カテゴリを置く
 - 既存の外部 skill 名にはこの規約を後から強制しない
 
-### 2. それ以外のリポジトリでは prefix を付けない
+### 2. それ以外のリポジトリでは `kf-pj-` を付ける
 
-- `melumuccu/ai` 以外のリポジトリで skill を命名するときは、prefix は付けない
-- 先頭は必ず大カテゴリから始める
-- 一覧で近い skill が並ぶように、大カテゴリを起点に命名する
+- `melumuccu/ai` 以外のリポジトリで skill を命名するときは、`kf-pj-` の prefix を必ず付ける
+- `kf-pj-` の直後には必ず大カテゴリを置く
+- 一覧で近い skill が並ぶように、`kf-pj-` の後ろを大カテゴリ起点に命名する
 
 ### 3. 区切り文字はハイフンに統一する
 
@@ -142,7 +142,7 @@ skill 名を決めるときは、次の順で考えてください。
 1. 足りなければ、新しい大カテゴリを短い英語名詞で追加する。
 1. 必要な場合のみ下位カテゴリを1つから2つ追加する。
 1. 末尾に、短い英語概要を置く。
-1. `melumuccu/ai` では `kf-large-category-subcategory-...-short-summary`、それ以外のリポジトリでは `large-category-subcategory-...-short-summary` の形に整える。
+1. `melumuccu/ai` では `kf-g-large-category-subcategory-...-short-summary`、それ以外のリポジトリでは `kf-pj-large-category-subcategory-...-short-summary` の形に整える。
 1. frontmatter の `name` をディレクトリ名と一致させ、`description` を英語で書く。
 1. 長すぎないか、一覧で見て意味が分かるか確認する。
 
@@ -152,22 +152,22 @@ skill 名を決めるときは、次の順で考えてください。
 
 `melumuccu/ai` での例:
 
-- `kf-markdown-table-comparison-table-formatting`
-- `kf-markdown-link-internal-link-organization`
-- `kf-skill-review-skill-description-review`
-- `kf-skill-tuning-description-optimization`
-- `kf-git-commit-japanese-commit-message`
-- `kf-git-review-change-review-checkpoints`
-- `kf-python-test-pytest-test-addition`
-- `kf-shell-log-log-analysis`
-- `kf-research-paper-paper-summary`
+- `kf-g-markdown-table-comparison-table-formatting`
+- `kf-g-markdown-link-internal-link-organization`
+- `kf-g-skill-review-skill-description-review`
+- `kf-g-skill-tuning-description-optimization`
+- `kf-g-git-commit-japanese-commit-message`
+- `kf-g-git-review-change-review-checkpoints`
+- `kf-g-python-test-pytest-test-addition`
+- `kf-g-shell-log-log-analysis`
+- `kf-g-research-paper-paper-summary`
 
 それ以外のリポジトリでの例:
 
-- `markdown-list-ordered-list-cross-reference`
-- `skill-review-skill-description-review`
-- `git-commit-japanese-commit-message`
-- `shell-log-log-analysis`
+- `kf-pj-markdown-list-ordered-list-cross-reference`
+- `kf-pj-skill-review-skill-description-review`
+- `kf-pj-git-commit-japanese-commit-message`
+- `kf-pj-shell-log-log-analysis`
 
 ## 整理と改名の方針
 
@@ -179,7 +179,7 @@ skill 名を決めるときは、次の順で考えてください。
 ### 2. 自作 skill のみ規約に合わせて整理する
 
 - 自作 skill の追加、改名、再配置を行うときは、この規約に従う
-- `melumuccu/ai` では `kf-` 付き、それ以外のリポジトリでは prefix 無しの形で統一する
+- `melumuccu/ai` では `kf-g-` 付き、それ以外のリポジトリでは `kf-pj-` 付きの形で統一する
 - 同系統の skill が並ぶことを優先して、大カテゴリの粒度を揃える
 
 ### 3. 変更後は一覧情報も更新する
@@ -190,7 +190,7 @@ skill 名を決めるときは、次の順で考えてください。
 
 - ユーザーが名前案だけを求めている場合は、候補名を複数提示する
 - ユーザーが作成まで求めている場合は、規約に沿ったディレクトリ名と `SKILL.md` を用意する
-- 命名対象のリポジトリが `melumuccu/ai` かどうかを先に確認し、prefix の有無を切り替える
+- 命名対象のリポジトリが `melumuccu/ai` かどうかを先に確認し、`kf-g-` と `kf-pj-` を切り替える
 - `SKILL.md` を作るときは、frontmatter の `name` と `description` を英語で書く
 - 必要であれば、なぜその大カテゴリを選んだかを短く説明する
 - 過剰に細かいカテゴリ分けは避ける
@@ -199,9 +199,10 @@ skill 名を決めるときは、次の順で考えてください。
 
 返す前に次を確認してください。
 
-- `melumuccu/ai` なら自作 skill 名が `kf-` で始まっている
-- `melumuccu/ai` 以外なら prefix を付けず、大カテゴリから始めている
-- `melumuccu/ai` なら `kf-` の直後に大カテゴリがある
+- `melumuccu/ai` なら自作 skill 名が `kf-g-` で始まっている
+- `melumuccu/ai` 以外なら自作 skill 名が `kf-pj-` で始まっている
+- `melumuccu/ai` なら `kf-g-` の直後に大カテゴリがある
+- `melumuccu/ai` 以外なら `kf-pj-` の直後に大カテゴリがある
 - 区切り文字がハイフンで統一されている
 - ディレクトリ名と frontmatter の `name` が一致し、ASCII の kebab-case になっている
 - 大カテゴリが主題領域として自然な名詞になっている
