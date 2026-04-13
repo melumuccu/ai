@@ -15,6 +15,11 @@
     "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Use this skill when drafting commit message proposals, reformatting existing messages, choosing a prefix, deciding the appropriate type from the changes, or when the user asks you to commit."
   },
   {
+    "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md",
+    "name": "kf-g-project-bootstrap-new-project-rules",
+    "description": "Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, and kiso.css adoption."
+  },
+  {
     "path": ".agents/skills/kf-g-skill-naming-creation-organization-rules/SKILL.md",
     "name": "kf-g-skill-naming-creation-organization-rules",
     "description": "Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones."
