@@ -10,6 +10,41 @@
     "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes."
   },
   {
+    "path": ".agents/skills/kf-g-css-flex-grid/SKILL.md",
+    "name": "kf-g-css-flex-grid",
+    "description": "Use this skill when designing, reviewing, or generating CSS layout with display grid or flex. Apply it whenever the user asks about grid-template, grid-area naming, flex-direction, or needs to choose between grid and flex for component or page layout."
+  },
+  {
+    "path": ".agents/skills/kf-g-css-spacing-gap-margin-rules/SKILL.md",
+    "name": "kf-g-css-spacing-gap-margin-rules",
+    "description": "Use this skill when designing, reviewing, or generating CSS spacing rules. Apply it whenever the user asks whether spacing should use gap, margin, or structural empty space, wants to avoid margin-based layout spacing, or needs rules for container-owned spacing in grid or flex layouts."
+  },
+  {
+    "path": ".agents/skills/kf-g-css-tak-animations/SKILL.md",
+    "name": "kf-g-css-tak-animations",
+    "description": "UI animations necessity judgment, recommendations for motion design, implementation strategies, and performance/accessibility reviews. Targets include hover, active, focus, popover, tooltip, dropdown, dialog, tab, segmented control, card, button, toast, accordion, carousel, scroll-linked animation, View Transitions, and more."
+  },
+  {
+    "path": ".agents/skills/kf-g-css-tak-design-system-terminology/SKILL.md",
+    "name": "kf-g-css-tak-design-system-terminology",
+    "description": "Use this skill when defining, reviewing, or correcting design system terminology for CSS, layout, components, and UI concepts. Apply it when names may conflict with Web standards, HTML semantics, or responsibility boundaries."
+  },
+  {
+    "path": ".agents/skills/kf-g-css-tak-font-size-text-zoom/SKILL.md",
+    "name": "kf-g-css-tak-font-size-text-zoom",
+    "description": "Use this skill when deciding whether font-size should use rem or px, reviewing Chrome text zoom support, or choosing whether text-dependent spacing and sizing should scale with typography. Apply it when CSS uses blanket rem conversion, root font-size hacks, or relative units such as em and ch without a clear semantic basis."
+  },
+  {
+    "path": ".agents/skills/kf-g-css-tak-responsive-rules/SKILL.md",
+    "name": "kf-g-css-tak-responsive-rules",
+    "description": "Use this skill when designing, reviewing, or generating responsive CSS. Apply it whenever the user asks about breakpoints, media queries, container queries, fluid sizing, viewport or container units, or needs to validate responsive component behavior, even if they do not explicitly mention responsive design."
+  },
+  {
+    "path": ".agents/skills/kf-g-css-tak-typography/SKILL.md",
+    "name": "kf-g-css-tak-typography",
+    "description": "Use this skill when designing, reviewing, or generating CSS for typography in Japanese or multilingual interfaces. Apply it for font family, text wrapping, kerning, line height, fluid type, truncation, manual line breaks, and related text layout decisions."
+  },
+  {
     "path": ".agents/skills/kf-g-git-commit-japanese-commit-message/SKILL.md",
     "name": "kf-g-git-commit-japanese-commit-message",
     "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Use this skill when drafting commit message proposals, reformatting existing messages, choosing a prefix, deciding the appropriate type from the changes, or when the user asks you to commit."
