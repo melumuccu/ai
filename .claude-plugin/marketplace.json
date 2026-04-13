@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "description": "Local skills in this repository, grouped by whether their names start with kf-."
+  },
+  "name": "melumuccu-ai-skills",
+  "owner": {
+    "name": "melumuccu"
+  },
+  "plugins": [
+    {
+      "description": "Repository-local skills whose names start with kf-",
+      "name": "kf-skills",
+      "skills": [
+        "./kf-g-agent-research-report-only-unless-approved",
+        "./kf-g-css-flex-grid",
+        "./kf-g-css-spacing-gap-margin-rules",
+        "./kf-g-css-tak-animations",
+        "./kf-g-css-tak-design-system-terminology",
+        "./kf-g-css-tak-font-size-text-zoom",
+        "./kf-g-css-tak-responsive-rules",
+        "./kf-g-css-tak-typography",
+        "./kf-g-git-commit-japanese-commit-message",
+        "./kf-g-project-bootstrap-new-project-rules",
+        "./kf-g-skill-naming-creation-organization-rules",
+        "./kf-g-writing-japanese-concise-structured-response"
+      ],
+      "source": "./.agents/skills",
+      "strict": false
+    },
+    {
+      "description": "Repository skills that from external sources",
+      "name": "external-skills",
+      "skills": [
+        "./find-skills",
+        "./prompt-builder",
+        "./skill-creator"
+      ],
+      "source": "./.agents/skills",
+      "strict": false
+    }
+  ]
+}
