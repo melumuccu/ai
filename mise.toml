@@ -1,3 +1,6 @@
+[tools]
+node = "v24"
+pnpm = "latest"
 [tasks.skills-json]
 description = "SKILL.md のフロントマターから .agents/skills/skills.json を生成する"
 run = '''
