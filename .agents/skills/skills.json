@@ -1,5 +1,10 @@
 [
   {
+    "path": ".agents/skills/docker-expert/SKILL.md",
+    "name": "docker-expert",
+    "description": "You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds, orchestration patterns, and production deployment strategies based on current industry best practices."
+  },
+  {
     "path": ".agents/skills/find-skills/SKILL.md",
     "name": "find-skills",
     "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
@@ -45,9 +50,14 @@
     "description": "Use this skill when designing, reviewing, or generating CSS for typography in Japanese or multilingual interfaces. Apply it for font family, text wrapping, kerning, line height, fluid type, truncation, manual line breaks, and related text layout decisions."
   },
   {
+    "path": ".agents/skills/kf-g-docker-container-dev-workflow-rules/SKILL.md",
+    "name": "kf-g-docker-container-dev-workflow-rules",
+    "description": "Use this skill when creating or reviewing Docker container development setup, Dockerfiles, Compose files, or Vite dev servers in this repository. Apply the local rules for multi-stage layer comment blocks, bind-mounted source directories, and Vite hot reload; use it alongside docker-expert because these conventions supplement docker-expert."
+  },
+  {
     "path": ".agents/skills/kf-g-git-commit-japanese-commit-message/SKILL.md",
     "name": "kf-g-git-commit-japanese-commit-message",
-    "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Use this skill when drafting commit message proposals, reformatting existing messages, choosing a prefix, deciding the appropriate type from the changes, or when the user asks you to commit."
+    "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Always use this skill whenever the user asks to commit, wants a commit message, needs a commit message reformatted, wants help choosing a prefix or commit type from the changes, or uses short prompts like \"commit\", \"commit plz\"."
   },
   {
     "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md",
@@ -73,5 +83,10 @@
     "path": ".agents/skills/skill-creator/SKILL.md",
     "name": "skill-creator",
     "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy."
+  },
+  {
+    "path": ".agents/skills/tdd/SKILL.md",
+    "name": "tdd",
+    "description": "Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions \"red-green-refactor\", wants integration tests, or asks for test-first development."
   }
 ]

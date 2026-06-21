@@ -19,6 +19,7 @@
         "./kf-g-css-tak-font-size-text-zoom",
         "./kf-g-css-tak-responsive-rules",
         "./kf-g-css-tak-typography",
+        "./kf-g-docker-container-dev-workflow-rules",
         "./kf-g-git-commit-japanese-commit-message",
         "./kf-g-project-bootstrap-new-project-rules",
         "./kf-g-skill-naming-creation-organization-rules",
