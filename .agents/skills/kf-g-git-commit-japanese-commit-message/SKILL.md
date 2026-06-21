@@ -13,7 +13,6 @@ description: Create and format commit messages with a fixed 5-character prefix a
 1. [format.md](references/format.md) で出力形式を確認する
 1. [prefix-guide.md](references/prefix-guide.md) で prefix を選ぶ
 1. [decision-rules.md](references/decision-rules.md) で判断基準を確認する
-1. [git-commit-command-rules.md](references/git-commit-command-rules.md) で `git commit` 実行時のコマンドルールを確認する
 1. [generation.md](references/generation.md) で作成手順を確認する
 1. [examples.md](references/examples.md) で出力例を確認する
 1. [checklist.md](references/checklist.md) で最終確認する
@@ -24,7 +23,6 @@ description: Create and format commit messages with a fixed 5-character prefix a
 - [format.md](references/format.md): 出力形式と基本ルール
 - [prefix-guide.md](references/prefix-guide.md): prefix 選択基準
 - [decision-rules.md](references/decision-rules.md): 判断ルール
-- [git-commit-command-rules.md](references/git-commit-command-rules.md): `git commit` 実行時のコマンドルール
 - [generation.md](references/generation.md): 作成手順とテンプレート
 - [examples.md](references/examples.md): 出力例と完成形
 - [checklist.md](references/checklist.md): 最終確認
