@@ -2,12 +2,14 @@
 
 ## Setup
 
-`mise` が未導入であれば先にインストールし、その後 Git がこのリポジトリのフックディレクトリを使うように設定します。
+`mise install` で `pre-commit` と `gitleaks` も入る。先に `mise` を使える状態にしてから進める。
 
 ```sh
-git config --local core.hooksPath .githooks
-chmod +x .githooks/pre-commit
+mise install
+mise run hooks-install
 ```
+
+`hooks-install` は `pre-commit install` と `pre-commit install --hook-type pre-push` をまとめて実行する。
 
 ## Tasks
 
@@ -15,4 +17,10 @@ chmod +x .githooks/pre-commit
 
 ```sh
 mise run skills-json
+```
+
+フック設定を確認する:
+
+```sh
+mise run hooks-validate
 ```

@@ -34,6 +34,7 @@ description: Use this skill when starting a new project and defining baseline re
 1. user settings で既に効いている値と、PJ 固有で必要な値を切り分ける。
 1. `.devcontainer/` と `mise.toml` を先に設計する。
 1. frontend がある場合は `pnpm-workspace.yaml` を作り、pnpm のセキュリティ設定を先に入れる。
+1. `pre-commit` と `gitleaks` は `mise.toml` の `[tools]` へ入れ、`mise install` で導入する。
 1. `references/sample-files/` に該当するサンプルがあるか確認し、初期ファイル作成の起点にする。
 1. gitleaks の GitHub Action と `.pre-commit-config.yaml` を追加する。
 1. Vite+ を前提に scaffold と日常コマンドを決める。
@@ -101,8 +102,9 @@ description: Use this skill when starting a new project and defining baseline re
 ### 6. secret scan は gitleaks で標準化する
 
 - GitHub Action と pre-commit の設定は、`gitleaks/gitleaks` の README を参照して組む。
+- `pre-commit` と `gitleaks` は brew ではなく `mise` で入れる。`mise install` を導入の基準にする。
 - `GITLEAKS_LICENSE` は個人アカウント利用を前提に不要とし、既定では設定しない。Organization 向け要件が明確な場合だけ別途検討する。
-- local の macOS では `gitleaks` と `pre-commit` が brew で install 済みかつ PATH が通っている前提でよいが、devcontainer 環境では別途 install が必要なため、PJ 側で devcontainer からも実行できるように整える。
+- local の macOS でも `mise install` を前提にし、devcontainer 環境でも同じ `mise` の導線で入るように整える。
 
 pre-commit framework の運用:
 
@@ -192,6 +194,7 @@ frontend を含む新規 PJ では、少なくとも次を用意する。
 - devcontainer を作成したか。
 - user settings の `dev.containers.*`, `dotfiles.*` を確認したか。
 - `mise.toml` が tools / env / tasks の中心になっているか。
+- `mise.toml` の `[tools]` に `pre-commit` と `gitleaks` を載せているか。
 - `references/sample-files/` の該当サンプルを確認したか。
 - `.github/workflows/gitleaks.yml` で公式 gitleaks action を設定したか。
 - `.pre-commit-config.yaml` で `pre-commit` 用 hook と `pre-push` 用 hook の `stages` を明示したか。
