@@ -12,6 +12,7 @@
       "name": "kf-skills",
       "skills": [
         "./kf-g-agent-research-report-only-unless-approved",
+        "./kf-g-code-comment-why-only",
         "./kf-g-css-flex-grid",
         "./kf-g-css-spacing-gap-margin-rules",
         "./kf-g-css-tak-animations",
@@ -19,8 +20,10 @@
         "./kf-g-css-tak-font-size-text-zoom",
         "./kf-g-css-tak-responsive-rules",
         "./kf-g-css-tak-typography",
+        "./kf-g-dependency-library-selection-policy",
         "./kf-g-docker-container-dev-workflow-rules",
         "./kf-g-git-commit-japanese-commit-message",
+        "./kf-g-git-commit-staged-only-rules",
         "./kf-g-project-bootstrap-new-project-rules",
         "./kf-g-skill-naming-creation-organization-rules",
         "./kf-g-writing-japanese-concise-structured-response"

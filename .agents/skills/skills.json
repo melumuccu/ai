@@ -1,92 +1,107 @@
 [
   {
-    "path": ".agents/skills/docker-expert/SKILL.md",
+    "description": "You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds, orchestration patterns, and production deployment strategies based on current industry best practices.",
     "name": "docker-expert",
-    "description": "You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds, orchestration patterns, and production deployment strategies based on current industry best practices."
+    "path": ".agents/skills/docker-expert/SKILL.md"
   },
   {
-    "path": ".agents/skills/find-skills/SKILL.md",
+    "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
     "name": "find-skills",
-    "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
+    "path": ".agents/skills/find-skills/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-agent-research-report-only-unless-approved/SKILL.md",
+    "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes.",
     "name": "kf-g-agent-research-report-only-unless-approved",
-    "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes."
+    "path": ".agents/skills/kf-g-agent-research-report-only-unless-approved/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-css-flex-grid/SKILL.md",
+    "description": "Use this project skill whenever adding, editing, reviewing, or deciding whether to keep source-code comments in this repository. It enforces WHY-only comments and prevents comments that merely restate WHAT the code already shows.",
+    "name": "kf-g-code-comment-why-only",
+    "path": ".agents/skills/kf-g-code-comment-why-only/SKILL.md"
+  },
+  {
+    "description": "Use this skill when designing, reviewing, or generating CSS layout with display grid or flex. Apply it whenever the user asks about grid-template, grid-area naming, flex-direction, or needs to choose between grid and flex for component or page layout.",
     "name": "kf-g-css-flex-grid",
-    "description": "Use this skill when designing, reviewing, or generating CSS layout with display grid or flex. Apply it whenever the user asks about grid-template, grid-area naming, flex-direction, or needs to choose between grid and flex for component or page layout."
+    "path": ".agents/skills/kf-g-css-flex-grid/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-css-spacing-gap-margin-rules/SKILL.md",
+    "description": "Use this skill when designing, reviewing, or generating CSS spacing rules. Apply it whenever the user asks whether spacing should use gap, margin, or structural empty space, wants to avoid margin-based layout spacing, or needs rules for container-owned spacing in grid or flex layouts.",
     "name": "kf-g-css-spacing-gap-margin-rules",
-    "description": "Use this skill when designing, reviewing, or generating CSS spacing rules. Apply it whenever the user asks whether spacing should use gap, margin, or structural empty space, wants to avoid margin-based layout spacing, or needs rules for container-owned spacing in grid or flex layouts."
+    "path": ".agents/skills/kf-g-css-spacing-gap-margin-rules/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-css-tak-animations/SKILL.md",
+    "description": "UI animations necessity judgment, recommendations for motion design, implementation strategies, and performance/accessibility reviews. Targets include hover, active, focus, popover, tooltip, dropdown, dialog, tab, segmented control, card, button, toast, accordion, carousel, scroll-linked animation, View Transitions, and more.",
     "name": "kf-g-css-tak-animations",
-    "description": "UI animations necessity judgment, recommendations for motion design, implementation strategies, and performance/accessibility reviews. Targets include hover, active, focus, popover, tooltip, dropdown, dialog, tab, segmented control, card, button, toast, accordion, carousel, scroll-linked animation, View Transitions, and more."
+    "path": ".agents/skills/kf-g-css-tak-animations/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-css-tak-design-system-terminology/SKILL.md",
+    "description": "Use this skill when defining, reviewing, or correcting design system terminology for CSS, layout, components, and UI concepts. Apply it when names may conflict with Web standards, HTML semantics, or responsibility boundaries.",
     "name": "kf-g-css-tak-design-system-terminology",
-    "description": "Use this skill when defining, reviewing, or correcting design system terminology for CSS, layout, components, and UI concepts. Apply it when names may conflict with Web standards, HTML semantics, or responsibility boundaries."
+    "path": ".agents/skills/kf-g-css-tak-design-system-terminology/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-css-tak-font-size-text-zoom/SKILL.md",
+    "description": "Use this skill when deciding whether font-size should use rem or px, reviewing Chrome text zoom support, or choosing whether text-dependent spacing and sizing should scale with typography. Apply it when CSS uses blanket rem conversion, root font-size hacks, or relative units such as em and ch without a clear semantic basis.",
     "name": "kf-g-css-tak-font-size-text-zoom",
-    "description": "Use this skill when deciding whether font-size should use rem or px, reviewing Chrome text zoom support, or choosing whether text-dependent spacing and sizing should scale with typography. Apply it when CSS uses blanket rem conversion, root font-size hacks, or relative units such as em and ch without a clear semantic basis."
+    "path": ".agents/skills/kf-g-css-tak-font-size-text-zoom/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-css-tak-responsive-rules/SKILL.md",
+    "description": "Use this skill when designing, reviewing, or generating responsive CSS. Apply it whenever the user asks about breakpoints, media queries, container queries, fluid sizing, viewport or container units, or needs to validate responsive component behavior, even if they do not explicitly mention responsive design.",
     "name": "kf-g-css-tak-responsive-rules",
-    "description": "Use this skill when designing, reviewing, or generating responsive CSS. Apply it whenever the user asks about breakpoints, media queries, container queries, fluid sizing, viewport or container units, or needs to validate responsive component behavior, even if they do not explicitly mention responsive design."
+    "path": ".agents/skills/kf-g-css-tak-responsive-rules/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-css-tak-typography/SKILL.md",
+    "description": "Use this skill when designing, reviewing, or generating CSS for typography in Japanese or multilingual interfaces. Apply it for font family, text wrapping, kerning, line height, fluid type, truncation, manual line breaks, and related text layout decisions.",
     "name": "kf-g-css-tak-typography",
-    "description": "Use this skill when designing, reviewing, or generating CSS for typography in Japanese or multilingual interfaces. Apply it for font family, text wrapping, kerning, line height, fluid type, truncation, manual line breaks, and related text layout decisions."
+    "path": ".agents/skills/kf-g-css-tak-typography/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-docker-container-dev-workflow-rules/SKILL.md",
+    "description": "Use this project skill whenever adding, replacing, evaluating, or reviewing third-party libraries or package dependencies in this repository. It prioritizes trusted vendor-backed packages, screens out low-adoption or individual-maintained libraries, and requires documented justification for unavoidable exceptions.",
+    "name": "kf-g-dependency-library-selection-policy",
+    "path": ".agents/skills/kf-g-dependency-library-selection-policy/SKILL.md"
+  },
+  {
+    "description": "Use this skill when creating or reviewing Docker container development setup, Dockerfiles, Compose files, or Vite dev servers in this repository. Apply the local rules for multi-stage layer comment blocks, bind-mounted source directories, and Vite hot reload; use it alongside docker-expert because these conventions supplement docker-expert.",
     "name": "kf-g-docker-container-dev-workflow-rules",
-    "description": "Use this skill when creating or reviewing Docker container development setup, Dockerfiles, Compose files, or Vite dev servers in this repository. Apply the local rules for multi-stage layer comment blocks, bind-mounted source directories, and Vite hot reload; use it alongside docker-expert because these conventions supplement docker-expert."
+    "path": ".agents/skills/kf-g-docker-container-dev-workflow-rules/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-git-commit-japanese-commit-message/SKILL.md",
+    "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Always use this skill whenever the user asks to commit, wants a commit message, needs a commit message reformatted, wants help choosing a prefix or commit type from the changes, or uses short prompts like \"commit\", \"commit plz\".",
     "name": "kf-g-git-commit-japanese-commit-message",
-    "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Always use this skill whenever the user asks to commit, wants a commit message, needs a commit message reformatted, wants help choosing a prefix or commit type from the changes, or uses short prompts like \"commit\", \"commit plz\"."
+    "path": ".agents/skills/kf-g-git-commit-japanese-commit-message/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md",
+    "description": "Enforce staged-only behavior for git commits. Always use this skill whenever the user asks to commit, wants a commit created, asks to run git commit, wants a commit message based on repo changes, or uses short prompts like \"commit\", \"commit plz\"; combine it with kf-g-git-commit-japanese-commit-message when creating the message.",
+    "name": "kf-g-git-commit-staged-only-rules",
+    "path": ".agents/skills/kf-g-git-commit-staged-only-rules/SKILL.md"
+  },
+  {
+    "description": "Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, and kiso.css adoption.",
     "name": "kf-g-project-bootstrap-new-project-rules",
-    "description": "Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, and kiso.css adoption."
+    "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-skill-naming-creation-organization-rules/SKILL.md",
+    "description": "Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones.",
     "name": "kf-g-skill-naming-creation-organization-rules",
-    "description": "Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones."
+    "path": ".agents/skills/kf-g-skill-naming-creation-organization-rules/SKILL.md"
   },
   {
-    "path": ".agents/skills/kf-g-writing-japanese-concise-structured-response/SKILL.md",
+    "description": "Write or revise Japanese Markdown documents and code comments in this repository with a concise, structured style. Use this whenever the task involves drafting Markdown, especially maintainable ordered lists with 1.-style numbering and anchor-based cross references, or writing code comments.",
     "name": "kf-g-writing-japanese-concise-structured-response",
-    "description": "Write or revise Japanese Markdown documents and code comments in this repository with a concise, structured style. Use this whenever the task involves drafting Markdown, especially maintainable ordered lists with 1.-style numbering and anchor-based cross references, or writing code comments."
+    "path": ".agents/skills/kf-g-writing-japanese-concise-structured-response/SKILL.md"
   },
   {
-    "path": ".agents/skills/prompt-builder/SKILL.md",
+    "description": "Guide users through creating high-quality GitHub Copilot prompts with proper structure, tools, and best practices.",
     "name": "prompt-builder",
-    "description": "Guide users through creating high-quality GitHub Copilot prompts with proper structure, tools, and best practices."
+    "path": ".agents/skills/prompt-builder/SKILL.md"
   },
   {
-    "path": ".agents/skills/skill-creator/SKILL.md",
+    "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.",
     "name": "skill-creator",
-    "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy."
+    "path": ".agents/skills/skill-creator/SKILL.md"
   },
   {
-    "path": ".agents/skills/tdd/SKILL.md",
+    "description": "Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions \"red-green-refactor\", wants integration tests, or asks for test-first development.",
     "name": "tdd",
-    "description": "Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions \"red-green-refactor\", wants integration tests, or asks for test-first development."
+    "path": ".agents/skills/tdd/SKILL.md"
   }
 ]
