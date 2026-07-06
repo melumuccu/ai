@@ -39,6 +39,13 @@
       "skills": [
         "./docker-expert",
         "./find-skills",
+        "./genshijin",
+        "./genshijin-commit",
+        "./genshijin-compress",
+        "./genshijin-crew",
+        "./genshijin-help",
+        "./genshijin-review",
+        "./genshijin-stats",
         "./prompt-builder",
         "./skill-creator",
         "./svelte-code-writer",

@@ -12,6 +12,48 @@
       "sourceType": "github",
       "computedHash": "d31e234f0c90694a670222cdd1dafa853e051d7066beda389f1097c22dadd461"
     },
+    "genshijin": {
+      "source": "InterfaceX-co-jp/genshijin",
+      "sourceType": "github",
+      "skillPath": "skills/genshijin/SKILL.md",
+      "computedHash": "62c8d8fe9704b296d67fd666a27227e507f338a3f0931aa8187405fe44992405"
+    },
+    "genshijin-commit": {
+      "source": "InterfaceX-co-jp/genshijin",
+      "sourceType": "github",
+      "skillPath": "skills/genshijin-commit/SKILL.md",
+      "computedHash": "db1561cf6b0cad2e60dbe4f089c0ebfa38b35feef8f9cec0e3a4afaadc9271ba"
+    },
+    "genshijin-compress": {
+      "source": "InterfaceX-co-jp/genshijin",
+      "sourceType": "github",
+      "skillPath": "skills/genshijin-compress/SKILL.md",
+      "computedHash": "7c894d3b8c607d8bedcf94552ec71f38940d9d5eda8c0d763c7801758b0646b5"
+    },
+    "genshijin-crew": {
+      "source": "InterfaceX-co-jp/genshijin",
+      "sourceType": "github",
+      "skillPath": "skills/genshijin-crew/SKILL.md",
+      "computedHash": "aa3720f57a1a1ddd0a85cd6ad4f762499cd72905389f9064421fd3c633fa9008"
+    },
+    "genshijin-help": {
+      "source": "InterfaceX-co-jp/genshijin",
+      "sourceType": "github",
+      "skillPath": "skills/genshijin-help/SKILL.md",
+      "computedHash": "46efb7fbfc640cf9b867df9924e6046d7ed83795a4fd809180bb43684f81a601"
+    },
+    "genshijin-review": {
+      "source": "InterfaceX-co-jp/genshijin",
+      "sourceType": "github",
+      "skillPath": "skills/genshijin-review/SKILL.md",
+      "computedHash": "f6fa3c56f88f788c1516eee862434b06c8f86c91a925689a78b114a5a8cee2e0"
+    },
+    "genshijin-stats": {
+      "source": "InterfaceX-co-jp/genshijin",
+      "sourceType": "github",
+      "skillPath": "skills/genshijin-stats/SKILL.md",
+      "computedHash": "33b9878352ea6a4003376cd44639fe0002e674d2eb12dcdc6ab0c90648fdb41f"
+    },
     "prompt-builder": {
       "source": "github/awesome-copilot",
       "sourceType": "github",
