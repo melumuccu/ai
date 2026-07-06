@@ -53,7 +53,7 @@
         "./tdd"
       ],
       "source": "./.agents/skills",
-      "strict": false
+      "strict": true
     }
   ]
 }
