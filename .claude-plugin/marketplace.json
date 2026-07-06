@@ -39,6 +39,8 @@
         "./find-skills",
         "./prompt-builder",
         "./skill-creator",
+        "./svelte-code-writer",
+        "./svelte-core-bestpractices",
         "./tdd"
       ],
       "source": "./.agents/skills",
