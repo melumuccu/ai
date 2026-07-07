@@ -1,17 +1,10 @@
----
-name: kf-g-code-comment-why-only
-description: Use this project skill whenever adding, editing, reviewing, or deciding whether to keep source-code comments in this repository. It enforces WHY-only comments and prevents comments that merely restate WHAT the code already shows.
----
-
-# コードコメント規約
-
-この skill は、このリポジトリでソースコードのコメントを追加、編集、レビュー、削除判断するときに使う。
+# WHY のみ
 
 ## 基本方針
 
-コード内コメントは常に WHY だけを書く。WHAT はコードから読み取れる前提にする。
-
-コメントは、コードだけでは読み取れない文脈を未来の作業者に渡すためのものとして扱う。処理内容の説明が必要に見える場合は、まず命名、関数分割、型、テストで読みやすくできないかを優先する。
+- コード内コメントは常に WHY だけ書く。WHAT はコードから読み取れる前提にする
+- コメントは、コードだけでは読めない文脈を未来の作業者に渡すためのもの
+- 処理内容の説明が必要に見えるなら、まず命名、関数分割、型、テストで読みやすくできないかを優先する
 
 ## コメントしてよい内容
 
@@ -39,9 +32,9 @@ description: Use this project skill whenever adding, editing, reviewing, or deci
 
 コメントを追加または維持する前に、次を確認する。
 
-1. そのコメントは WHY を説明しているか。
-1. コメントなしだと、将来の作業者が誤って削除、単純化、置換しそうか。
-1. コードの命名や構造を改善するほうが自然ではないか。
+1. そのコメントは WHY を説明しているか
+1. コメントなしだと、将来の作業者が誤って削除、単純化、置換しそうか
+1. コードの命名や構造を改善するほうが自然ではないか
 
 1 つ目が満たせない場合、そのコメントは書かない。3 つ目が自然な場合、コメントよりコード改善を優先する。
 
@@ -57,7 +50,7 @@ const converted = await convertToJpeg(image);
 よい:
 
 ```ts
-// HEIC はブラウザ表示が不安定なため、プロキシ側で JPEG に寄せて返す。
+// HEIC はブラウザ表示が不安定なため、JPEG に寄せる。
 const converted = await convertToJpeg(image);
 ```
 
@@ -81,4 +74,5 @@ if (!assetId) {
 
 ## レビュー時の扱い
 
-コードレビューでは、WHAT コメントを見つけたら削除候補として扱う。WHY が必要なのにコメントがない場合は、コメント追加だけでなく、より明確な名前や構造にできないかも確認する。
+- WHAT コメントを見つけたら削除候補として扱う
+- WHY が必要なのにコメントがない場合は、コメント追加だけでなく、より明確な名前や構造にできないかも確認する

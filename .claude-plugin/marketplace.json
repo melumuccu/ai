@@ -12,7 +12,7 @@
       "name": "kf-skills",
       "skills": [
         "./kf-g-agent-research-report-only-unless-approved",
-        "./kf-g-code-comment-why-only",
+        "./kf-g-code-comment-rules",
         "./kf-g-css-flex-grid",
         "./kf-g-css-spacing-gap-margin-rules",
         "./kf-g-css-tak-animations",
