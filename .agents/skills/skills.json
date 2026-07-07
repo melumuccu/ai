@@ -115,6 +115,21 @@
     "description": "Enforce staged-only behavior for git commits. Always use this skill whenever the user asks to commit, wants a commit created, asks to run git commit, wants a commit message based on repo changes, or uses short prompts like \"commit\", \"commit plz\"; combine it with kf-g-git-commit-japanese-commit-message when creating the message."
   },
   {
+    "path": ".agents/skills/kf-g-github-issue-worktree-management/SKILL.md",
+    "name": "kf-g-github-issue-worktree-management",
+    "description": "Use this skill whenever starting, planning, implementing, tracking, or closing GitHub issue work. Always use it when the user says to start implementation/planning from issues, asks to pick the next issue, or asks for issue-linked work, because issue work should use a dedicated worktree and continuous issue progress records."
+  },
+  {
+    "path": ".agents/skills/kf-g-github-operations-bot-workflow/SKILL.md",
+    "name": "kf-g-github-operations-bot-workflow",
+    "description": "Use this skill whenever working with GitHub issues, pull requests, comments, reviews, repository metadata, or agent-authored GitHub activity. Always use it before posting GitHub comments or reviews, checking remote repository context, or deciding whether GitHub App bot credentials are available."
+  },
+  {
+    "path": ".agents/skills/kf-g-github-pr-review-workflow/SKILL.md",
+    "name": "kf-g-github-pr-review-workflow",
+    "description": "Use this skill whenever creating, updating, reviewing, commenting on, or preparing a GitHub pull request. Always use it for issue-linked PRs, reviewer assignment, PR body conventions, PR comments, PR reviews, and deciding whether to use GitHub App bot review scripts."
+  },
+  {
     "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md",
     "name": "kf-g-project-bootstrap-new-project-rules",
     "description": "Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, and kiso.css adoption."
