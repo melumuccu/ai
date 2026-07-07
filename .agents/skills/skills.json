@@ -1,127 +1,167 @@
 [
   {
-    "description": "You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds, orchestration patterns, and production deployment strategies based on current industry best practices.",
+    "path": ".agents/skills/docker-expert/SKILL.md",
     "name": "docker-expert",
-    "path": ".agents/skills/docker-expert/SKILL.md"
+    "description": "You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds, orchestration patterns, and production deployment strategies based on current industry best practices."
   },
   {
-    "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+    "path": ".agents/skills/find-skills/SKILL.md",
     "name": "find-skills",
-    "path": ".agents/skills/find-skills/SKILL.md"
+    "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
   },
   {
-    "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes.",
+    "path": ".agents/skills/genshijin-commit/SKILL.md",
+    "name": "genshijin-commit",
+    "description": "超圧縮コミットメッセージ生成。Conventional Commits形式で件名≤50文字、 「何を」より「なぜ」を重視。日本語・英語両対応。 「コミットメッセージ作って」「/commit」「/genshijin-commit」で起動。 ステージング変更時に自動起動候補。"
+  },
+  {
+    "path": ".agents/skills/genshijin-compress/SKILL.md",
+    "name": "genshijin-compress",
+    "description": "自然言語メモリファイル（CLAUDE.md, todos, 設定）を原始人形式に圧縮し入力トークン削減。 技術内容・コード・URL・構造は完全保持。圧縮版が原ファイルを上書き、人間可読版は FILE.original.md として保存。「/genshijin-compress <filepath>」「メモリファイル圧縮」で起動。"
+  },
+  {
+    "path": ".agents/skills/genshijin-crew/SKILL.md",
+    "name": "genshijin-crew",
+    "description": "原始人スタイル subagent への委譲判断ガイド。`genshijin-investigator` (コード位置特定)、 `genshijin-builder` (1-2ファイル編集)、`genshijin-reviewer` (diff レビュー) を inline作業 or vanilla `Explore` の代わりにスポーンするタイミングを示す。subagent 出力は原始人圧縮 → 主コンテキストに戻る tool-result が約60%縮小 → 長セッション持続。 Trigger: 「subagent 委譲」「genshijin-crew 使用」「investigator/builder/reviewer 起動」「コンテキスト節約」「圧縮 agent 出力」。"
+  },
+  {
+    "path": ".agents/skills/genshijin-help/SKILL.md",
+    "name": "genshijin-help",
+    "description": "全 genshijin モード・スキル・コマンドのクイックリファレンスカード。 1回限り表示・モード変更なし・状態永続化なし。 「/genshijin-help」「原始人ヘルプ」「原始人の使い方」で起動。"
+  },
+  {
+    "path": ".agents/skills/genshijin-review/SKILL.md",
+    "name": "genshijin-review",
+    "description": "超圧縮PRレビューコメント。1行1指摘: 位置・問題・修正。前置き削除、シグナル優先。 日本語対応。「PRレビューして」「コードレビュー」「/review」「/genshijin-review」で起動。 プルリクエストレビュー時に自動起動候補。"
+  },
+  {
+    "path": ".agents/skills/genshijin-stats/SKILL.md",
+    "name": "genshijin-stats",
+    "description": "現セッションのリアルトークン使用量と推定削減量を表示。Claude Code セッションログから直接読込 — AI 推定なし。 `/genshijin-stats` で起動。出力は mode-tracker フックが注入し、モデル自身は数値計算しない。"
+  },
+  {
+    "path": ".agents/skills/genshijin/SKILL.md",
+    "name": "genshijin",
+    "description": "超圧縮コミュニケーションモード。原始人のように話してトークン使用量を約75%削減。 技術的正確性は完全に維持。強度レベル: 丁寧・通常（デフォルト）・極限の3段階。 「原始人モード」「短く」「簡潔に」「トークン節約」と言うか、/genshijin で起動。"
+  },
+  {
+    "path": ".agents/skills/kf-g-agent-research-report-only-unless-approved/SKILL.md",
     "name": "kf-g-agent-research-report-only-unless-approved",
-    "path": ".agents/skills/kf-g-agent-research-report-only-unless-approved/SKILL.md"
+    "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes."
   },
   {
-    "description": "Use this project skill whenever adding, editing, reviewing, or deciding whether to keep source-code comments in this repository. It is the authoritative rule set for code comments, including WHY-only content, official-doc URL breadcrumbs, and comment placement.",
+    "path": ".agents/skills/kf-g-code-comment-rules/SKILL.md",
     "name": "kf-g-code-comment-rules",
-    "path": ".agents/skills/kf-g-code-comment-rules/SKILL.md"
+    "description": "Use this project skill whenever adding, editing, reviewing, or deciding whether to keep source-code comments in this repository. It is the authoritative rule set for code comments, including WHY-only content, official-doc URL breadcrumbs, and comment placement."
   },
   {
-    "description": "Use this skill when designing, reviewing, or generating CSS layout with display grid or flex. Apply it whenever the user asks about grid-template, grid-area naming, flex-direction, or needs to choose between grid and flex for component or page layout.",
+    "path": ".agents/skills/kf-g-css-flex-grid/SKILL.md",
     "name": "kf-g-css-flex-grid",
-    "path": ".agents/skills/kf-g-css-flex-grid/SKILL.md"
+    "description": "Use this skill when designing, reviewing, or generating CSS layout with display grid or flex. Apply it whenever the user asks about grid-template, grid-area naming, flex-direction, or needs to choose between grid and flex for component or page layout."
   },
   {
-    "description": "Use this skill when designing, reviewing, or generating CSS spacing rules. Apply it whenever the user asks whether spacing should use gap, margin, or structural empty space, wants to avoid margin-based layout spacing, or needs rules for container-owned spacing in grid or flex layouts.",
+    "path": ".agents/skills/kf-g-css-spacing-gap-margin-rules/SKILL.md",
     "name": "kf-g-css-spacing-gap-margin-rules",
-    "path": ".agents/skills/kf-g-css-spacing-gap-margin-rules/SKILL.md"
+    "description": "Use this skill when designing, reviewing, or generating CSS spacing rules. Apply it whenever the user asks whether spacing should use gap, margin, or structural empty space, wants to avoid margin-based layout spacing, or needs rules for container-owned spacing in grid or flex layouts."
   },
   {
-    "description": "UI animations necessity judgment, recommendations for motion design, implementation strategies, and performance/accessibility reviews. Targets include hover, active, focus, popover, tooltip, dropdown, dialog, tab, segmented control, card, button, toast, accordion, carousel, scroll-linked animation, View Transitions, and more.",
+    "path": ".agents/skills/kf-g-css-tak-animations/SKILL.md",
     "name": "kf-g-css-tak-animations",
-    "path": ".agents/skills/kf-g-css-tak-animations/SKILL.md"
+    "description": "UI animations necessity judgment, recommendations for motion design, implementation strategies, and performance/accessibility reviews. Targets include hover, active, focus, popover, tooltip, dropdown, dialog, tab, segmented control, card, button, toast, accordion, carousel, scroll-linked animation, View Transitions, and more."
   },
   {
-    "description": "Use this skill when defining, reviewing, or correcting design system terminology for CSS, layout, components, and UI concepts. Apply it when names may conflict with Web standards, HTML semantics, or responsibility boundaries.",
+    "path": ".agents/skills/kf-g-css-tak-design-system-terminology/SKILL.md",
     "name": "kf-g-css-tak-design-system-terminology",
-    "path": ".agents/skills/kf-g-css-tak-design-system-terminology/SKILL.md"
+    "description": "Use this skill when defining, reviewing, or correcting design system terminology for CSS, layout, components, and UI concepts. Apply it when names may conflict with Web standards, HTML semantics, or responsibility boundaries."
   },
   {
-    "description": "Use this skill when deciding whether font-size should use rem or px, reviewing Chrome text zoom support, or choosing whether text-dependent spacing and sizing should scale with typography. Apply it when CSS uses blanket rem conversion, root font-size hacks, or relative units such as em and ch without a clear semantic basis.",
+    "path": ".agents/skills/kf-g-css-tak-font-size-text-zoom/SKILL.md",
     "name": "kf-g-css-tak-font-size-text-zoom",
-    "path": ".agents/skills/kf-g-css-tak-font-size-text-zoom/SKILL.md"
+    "description": "Use this skill when deciding whether font-size should use rem or px, reviewing Chrome text zoom support, or choosing whether text-dependent spacing and sizing should scale with typography. Apply it when CSS uses blanket rem conversion, root font-size hacks, or relative units such as em and ch without a clear semantic basis."
   },
   {
-    "description": "Use this skill when designing, reviewing, or generating responsive CSS. Apply it whenever the user asks about breakpoints, media queries, container queries, fluid sizing, viewport or container units, or needs to validate responsive component behavior, even if they do not explicitly mention responsive design.",
+    "path": ".agents/skills/kf-g-css-tak-responsive-rules/SKILL.md",
     "name": "kf-g-css-tak-responsive-rules",
-    "path": ".agents/skills/kf-g-css-tak-responsive-rules/SKILL.md"
+    "description": "Use this skill when designing, reviewing, or generating responsive CSS. Apply it whenever the user asks about breakpoints, media queries, container queries, fluid sizing, viewport or container units, or needs to validate responsive component behavior, even if they do not explicitly mention responsive design."
   },
   {
-    "description": "Use this skill when designing, reviewing, or generating CSS for typography in Japanese or multilingual interfaces. Apply it for font family, text wrapping, kerning, line height, fluid type, truncation, manual line breaks, and related text layout decisions.",
+    "path": ".agents/skills/kf-g-css-tak-typography/SKILL.md",
     "name": "kf-g-css-tak-typography",
-    "path": ".agents/skills/kf-g-css-tak-typography/SKILL.md"
+    "description": "Use this skill when designing, reviewing, or generating CSS for typography in Japanese or multilingual interfaces. Apply it for font family, text wrapping, kerning, line height, fluid type, truncation, manual line breaks, and related text layout decisions."
   },
   {
-    "description": "Use this project skill whenever adding, replacing, evaluating, or reviewing third-party libraries or package dependencies in this repository. It prioritizes trusted vendor-backed packages, screens out low-adoption or individual-maintained libraries, and requires documented justification for unavoidable exceptions.",
+    "path": ".agents/skills/kf-g-dependency-library-selection-policy/SKILL.md",
     "name": "kf-g-dependency-library-selection-policy",
-    "path": ".agents/skills/kf-g-dependency-library-selection-policy/SKILL.md"
+    "description": "Use this project skill whenever adding, replacing, evaluating, or reviewing third-party libraries or package dependencies in this repository. It prioritizes trusted vendor-backed packages, screens out low-adoption or individual-maintained libraries, and requires documented justification for unavoidable exceptions."
   },
   {
-    "description": "Use this skill when creating or reviewing Docker container development setup, Dockerfiles, Compose files, or Vite dev servers in this repository. Apply the local rules for multi-stage layer comment blocks, bind-mounted source directories, and Vite hot reload; use it alongside docker-expert because these conventions supplement docker-expert.",
+    "path": ".agents/skills/kf-g-docker-container-dev-workflow-rules/SKILL.md",
     "name": "kf-g-docker-container-dev-workflow-rules",
-    "path": ".agents/skills/kf-g-docker-container-dev-workflow-rules/SKILL.md"
+    "description": "Use this skill when creating or reviewing Docker container development setup, Dockerfiles, Compose files, or Vite dev servers in this repository. Apply the local rules for multi-stage layer comment blocks, bind-mounted source directories, and Vite hot reload; use it alongside docker-expert because these conventions supplement docker-expert."
   },
   {
-    "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Always use this skill whenever the user asks to commit, wants a commit message, needs a commit message reformatted, wants help choosing a prefix or commit type from the changes, or uses short prompts like \"commit\", \"commit plz\".",
+    "path": ".agents/skills/kf-g-git-commit-atomic-rules/SKILL.md",
+    "name": "kf-g-git-commit-atomic-rules",
+    "description": "Enforce frequent atomic commits while doing coding work. Always use this skill at the start of any task that may edit code, configuration, tests, documentation, generated metadata, or other repository files; apply it before implementing features, fixing bugs, refactoring, formatting, or making multi-step changes."
+  },
+  {
+    "path": ".agents/skills/kf-g-git-commit-japanese-commit-message/SKILL.md",
     "name": "kf-g-git-commit-japanese-commit-message",
-    "path": ".agents/skills/kf-g-git-commit-japanese-commit-message/SKILL.md"
+    "description": "Create and format commit messages with a fixed 5-character prefix and a Japanese subject. Always use this skill whenever the user asks to commit, wants a commit message, needs a commit message reformatted, wants help choosing a prefix or commit type from the changes, or uses short prompts like \"commit\", \"commit plz\"."
   },
   {
-    "description": "Enforce staged-only behavior for git commits. Always use this skill whenever the user asks to commit, wants a commit created, asks to run git commit, wants a commit message based on repo changes, or uses short prompts like \"commit\", \"commit plz\"; combine it with kf-g-git-commit-japanese-commit-message when creating the message.",
+    "path": ".agents/skills/kf-g-git-commit-staged-only-rules/SKILL.md",
     "name": "kf-g-git-commit-staged-only-rules",
-    "path": ".agents/skills/kf-g-git-commit-staged-only-rules/SKILL.md"
+    "description": "Enforce staged-only behavior for git commits. Always use this skill whenever the user asks to commit, wants a commit created, asks to run git commit, wants a commit message based on repo changes, or uses short prompts like \"commit\", \"commit plz\"; combine it with kf-g-git-commit-japanese-commit-message when creating the message."
   },
   {
-    "description": "Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, and kiso.css adoption.",
+    "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md",
     "name": "kf-g-project-bootstrap-new-project-rules",
-    "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md"
+    "description": "Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, and kiso.css adoption."
   },
   {
-    "description": "Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones.",
+    "path": ".agents/skills/kf-g-skill-naming-creation-organization-rules/SKILL.md",
     "name": "kf-g-skill-naming-creation-organization-rules",
-    "path": ".agents/skills/kf-g-skill-naming-creation-organization-rules/SKILL.md"
+    "description": "Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones."
   },
   {
-    "description": "Use this skill when designing, reviewing, or editing SvelteKit route architecture, separation of concerns, UI component placement, +page.svelte/+page.server.ts responsibilities, or $lib/server service/model layering. Apply it whenever the user mentions SvelteKit component splitting, route-local components, shared components, load/actions, database access, external APIs, auth checks, business logic placement, frontend/backend boundaries, or MVC-like layering.",
+    "path": ".agents/skills/kf-g-sveltekit-architecture-separation-rules/SKILL.md",
     "name": "kf-g-sveltekit-architecture-separation-rules",
-    "path": ".agents/skills/kf-g-sveltekit-architecture-separation-rules/SKILL.md"
+    "description": "Use this skill when designing, reviewing, or editing SvelteKit route architecture, separation of concerns, UI component placement, +page.svelte/+page.server.ts responsibilities, or $lib/server service/model layering. Apply it whenever the user mentions SvelteKit component splitting, route-local components, shared components, load/actions, database access, external APIs, auth checks, business logic placement, frontend/backend boundaries, or MVC-like layering."
   },
   {
-    "description": "Use this skill whenever the task involves SvelteKit-specific behavior such as routing, load functions, form actions, hooks, adapters, page options, environment modules, deployment, or file conventions. Because an official SvelteKit skill is not provided, use the official documentation under https://svelte.dev/docs/kit as the primary source before answering or implementing.",
+    "path": ".agents/skills/kf-g-sveltekit-docs/SKILL.md",
     "name": "kf-g-sveltekit-docs",
-    "path": ".agents/skills/kf-g-sveltekit-docs/SKILL.md"
+    "description": "Use this skill whenever the task involves SvelteKit-specific behavior such as routing, load functions, form actions, hooks, adapters, page options, environment modules, deployment, or file conventions. Because an official SvelteKit skill is not provided, use the official documentation under https://svelte.dev/docs/kit as the primary source before answering or implementing."
   },
   {
-    "description": "Write or revise Japanese Markdown documents in this repository with a concise, structured style. Use this whenever the task involves drafting Markdown, especially maintainable ordered lists with 1.-style numbering and anchor-based cross references.",
+    "path": ".agents/skills/kf-g-writing-japanese-concise-structured-response/SKILL.md",
     "name": "kf-g-writing-japanese-concise-structured-response",
-    "path": ".agents/skills/kf-g-writing-japanese-concise-structured-response/SKILL.md"
+    "description": "Write or revise Japanese Markdown documents in this repository with a concise, structured style. Use this whenever the task involves drafting Markdown, especially maintainable ordered lists with 1.-style numbering and anchor-based cross references."
   },
   {
-    "description": "Guide users through creating high-quality GitHub Copilot prompts with proper structure, tools, and best practices.",
+    "path": ".agents/skills/prompt-builder/SKILL.md",
     "name": "prompt-builder",
-    "path": ".agents/skills/prompt-builder/SKILL.md"
+    "description": "Guide users through creating high-quality GitHub Copilot prompts with proper structure, tools, and best practices."
   },
   {
-    "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.",
+    "path": ".agents/skills/skill-creator/SKILL.md",
     "name": "skill-creator",
-    "path": ".agents/skills/skill-creator/SKILL.md"
+    "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy."
   },
   {
-    "description": "CLI tools for Svelte 5 documentation lookup and code analysis. MUST be used whenever creating, editing or analyzing any Svelte component (.svelte) or Svelte module (.svelte.ts/.svelte.js). If possible, this skill should be executed within the svelte-file-editor agent for optimal results.",
+    "path": ".agents/skills/svelte-code-writer/SKILL.md",
     "name": "svelte-code-writer",
-    "path": ".agents/skills/svelte-code-writer/SKILL.md"
+    "description": "CLI tools for Svelte 5 documentation lookup and code analysis. MUST be used whenever creating, editing or analyzing any Svelte component (.svelte) or Svelte module (.svelte.ts/.svelte.js). If possible, this skill should be executed within the svelte-file-editor agent for optimal results."
   },
   {
-    "description": "Guidance on writing fast, robust, modern Svelte code. Load this skill whenever in a Svelte project and asked to write/edit or analyze a Svelte component or module. Covers reactivity, event handling, styling, integration with libraries and more.",
+    "path": ".agents/skills/svelte-core-bestpractices/SKILL.md",
     "name": "svelte-core-bestpractices",
-    "path": ".agents/skills/svelte-core-bestpractices/SKILL.md"
+    "description": "Guidance on writing fast, robust, modern Svelte code. Load this skill whenever in a Svelte project and asked to write/edit or analyze a Svelte component or module. Covers reactivity, event handling, styling, integration with libraries and more."
   },
   {
-    "description": "Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions \"red-green-refactor\", wants integration tests, or asks for test-first development.",
+    "path": ".agents/skills/tdd/SKILL.md",
     "name": "tdd",
-    "path": ".agents/skills/tdd/SKILL.md"
+    "description": "Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions \"red-green-refactor\", wants integration tests, or asks for test-first development."
   }
 ]

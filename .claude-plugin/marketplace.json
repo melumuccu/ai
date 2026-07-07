@@ -22,6 +22,7 @@
         "./kf-g-css-tak-typography",
         "./kf-g-dependency-library-selection-policy",
         "./kf-g-docker-container-dev-workflow-rules",
+        "./kf-g-git-commit-atomic-rules",
         "./kf-g-git-commit-japanese-commit-message",
         "./kf-g-git-commit-staged-only-rules",
         "./kf-g-project-bootstrap-new-project-rules",
