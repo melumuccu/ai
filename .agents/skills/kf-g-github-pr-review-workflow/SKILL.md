@@ -72,13 +72,16 @@ Review event:
 レビューコメント対応時:
 
 - 未解決 thread / requested changes / CI failure を確認する。
+- ユーザからの PR comment / review comment には必ず reply で応答する。
+- 複数の review comment が 1 つの review に含まれる場合でも、各 review comment / thread ごとに個別 reply する。
 - 指摘ごとに修正、説明、保留を分ける。
-- 修正したら PR comment に対応内容を残す。
+- 修正、説明、保留の内容は該当 comment / thread の reply に残す。
 - 自分が作った unrelated change を混ぜない。
 
 ## 禁止事項
 
 - Merge 処理
+- 複数の comment がまとまった review に対して、まとめて 1 つの comment を作成して reply すること。
 
 ## 最終確認
 
@@ -86,4 +89,5 @@ Review event:
 - issue に PR URL を残したか。
 - reviewer を設定したか。
 - AI agent comment / review は bot credential で投稿したか。
+- ユーザからの PR comment / review comment へ個別に reply したか。
 - gitleaks 失敗を回避していないか。
