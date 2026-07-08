@@ -37,6 +37,19 @@ PR body には最低限これを含める。
 
 Issue 自動 close が必要なら、body に `Closes #<issue-number>` または repository で定めた closing keyword を入れる。
 
+## PR description / comment のリンク化
+
+PR description / comment / reply の本文作成時、下記対象が本文に出るなら可能な限りリンク形式で記述する。
+URL が未確定の対象は、URL 判明後に本文更新または comment / reply で補う。
+
+- issue: `#<issue-number>`。別 repository なら `OWNER/REPO#<issue-number>`。
+- PR: `#<pr-number>`。別 repository なら `OWNER/REPO#<pr-number>`。
+- commit: `[{short commit id}]({PR base URL}/changes/{commit id})`。
+- file: `[path/to/file](<repository URL>/blob/<branch-or-commit>/path/to/file)`。
+- file line: `[path/to/file:L<line>](<repository URL>/blob/<branch-or-commit>/path/to/file#L<line>)`。
+- review comment / thread: `[review comment](<comment URL>)`。
+- CI / check run: `[<check name>](<check run URL>)`。
+
 ## PR 作成後
 
 実施:
@@ -90,4 +103,5 @@ Review event:
 - reviewer を設定したか。
 - AI agent comment / review は bot credential で投稿したか。
 - ユーザからの PR comment / review comment へ個別に reply したか。
+- PR description / comment / reply のリンク化対象を可能な限りリンク形式で書いたか。
 - gitleaks 失敗を回避していないか。
