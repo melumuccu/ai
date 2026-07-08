@@ -41,7 +41,8 @@ sample
 
 ユーザへ出力する残作業:
 
-1. `.env` に `AI_AGENT_GITHUB_CLIENT_ID`、`AI_AGENT_GITHUB_INSTALLATION_ID`、`AI_AGENT_GITHUB_PRIVATE_KEY_PATH` を記入する。
+1. `.env` に読み取り用の `GH_TOKEN` を記入する。
+1. `.env` に投稿用の `AI_AGENT_GITHUB_CLIENT_ID`、`AI_AGENT_GITHUB_INSTALLATION_ID`、`AI_AGENT_GITHUB_PRIVATE_KEY_PATH` を記入する。
 1. GitHub App の private key (`ai-agent-melumuccu.{YYYY-MM-DD}.private-key.pem`) を `.agents/credentials/github` 直下へ配置する。
 1. `.env` と private key に `chmod 600` を設定する。
 1. 設定完了後、AI agent に GitHub bot 投稿の再実行を依頼する。

@@ -14,10 +14,14 @@
 値は GitHub App 作成後に取得する。Bitwarden の GitHub にも記録する。
 
 ```sh
+GH_TOKEN=github_pat_xxx
 AI_AGENT_GITHUB_CLIENT_ID=xxx
 AI_AGENT_GITHUB_INSTALLATION_ID=xxx
 AI_AGENT_GITHUB_PRIVATE_KEY_PATH=.agents/credentials/github/ai-agent-melumuccu.xxxxxxxxxxx.private-key.pem
 ```
+
+`GH_TOKEN` は読み取り操作で使うユーザ本人 token。
+AI agent は sandbox 環境で動くため、host 側の `gh auth login` 済み状態を前提にしない。
 
 JWT の `iss` には GitHub docs 推奨の Client ID を使う。
 古い local 設定との互換用に script は `AI_AGENT_GITHUB_APP_ID` も fallback として読む。
