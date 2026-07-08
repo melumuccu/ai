@@ -14,7 +14,7 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、issue 起点の�
 - PR は対応 issue に紐づけ、merge / close 時に issue が閉じる形を優先する。
 - PR 作成後、issue comment に PR URL を残す。
 - reviewer は　gh コマンドでログイン済みのユーザーを reviewer に設定する
-- AI agent の PR comment / review は GitHub App bot credential を優先する。
+- AI agent の PR 作成 / comment / review は GitHub App bot credential を優先する。
 
 ## PR 作成前
 
