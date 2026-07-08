@@ -47,13 +47,26 @@ issue 着手時は repository 外の sibling directory に worktree を作る。
 
 ## 作業中の issue 更新
 
-作業中は issue に記録を残す。
+issue と local 設計資料は用途を分ける。
+
+- remote の GitHub Issues / GitHub Projects は、作業進行を管理する場所。
+- local repository の設計資料は、後から見返す設計判断を残す場所。
+- issue の作業メモを、そのまま設計資料へコピーしない。
+- 設計資料には、完了後も参照する決定事項、背景、議論の要点だけを整理して残す。
+
+remote issue では、メンバーや AI agent 間のタスク状況共有と進捗管理を行う。
+GitHub Projects がある場合は、repository の既定に従い `Backlog`、`Ready`、`In Progress`、`In review`、`Done` などの status を更新する。
+
+作業中は issue に随時記録を残す。
 
 記録する内容:
 
 - 着手開始
 - 方針、調査結果、判断理由
 - blocked / waiting / review など状態変化
+- description 更新
+- status 更新
+- 議論、保留、未決事項
 - PR URL
 - 完了時の要約
 
@@ -73,7 +86,14 @@ PR 作成後:
 1. PR を issue に紐づける。
 1. 必要な reviewer を設定する。(gh コマンドでログイン済みのユーザーを reviewer に設定する)
 1. issue status を review 待ちへ更新する。
-1. local repo の設計資料に変更があれば反映する。
+1. local repository に設計資料ディレクトリがある場合は、設計資料への反映要否を確認する。
+1. 設計変更や判断が残る作業なら、local 設計資料へ反映する。
+1. remote issue の作業記録や議論を整理し、設計資料として必要な情報だけに絞る。
+1. なぜその設計に至ったか、どの議論や制約が判断に影響したかを記録する。
+1. issue URL と PR URL を設計資料から辿れる形で残す。
+
+local 設計資料の置き場は repository の規約に従う。
+例: `docs/`、`design-docs/`、`2_設計前資料/`、`3_設計資料/`。
 
 ## 最終確認
 
