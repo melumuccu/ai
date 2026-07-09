@@ -29,6 +29,19 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レ�
 - ロードマップ上で日付順に並べた時に同日なら並行作業可能。
 - より早い日付が設定されている issue (A) が、より後の issue (B) をブロックしているものとみなし、A が完了するまで B は着手しない。
 
+## Issue 参照
+
+GitHub Projects から issue を参照する時は、`.agents/credentials/github/.env` の `GH_TOKEN` (= user token) を環境変数へ読み込んだ状態で `gh` を実行する。
+host 側の `gh auth login` 済み状態は前提にしない。
+`projectItems` を読むには `read:project` scope が必要。
+token 値は出力しない。
+
+コマンド例:
+
+```sh
+gh issue list --repo melumuccu/gitdoc-v2 --state open --limit 100 --json number,title,state,url,projectItems,labels,assignees
+```
+
 ## Worktree 作成
 
 issue 着手時は repository 外の sibling directory に worktree を作る。
