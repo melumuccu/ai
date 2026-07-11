@@ -25,6 +25,7 @@
         "./kf-g-git-commit-atomic-rules",
         "./kf-g-git-commit-japanese-commit-message",
         "./kf-g-git-commit-staged-only-rules",
+        "./kf-g-github-actions-self-hosted-ci-cache",
         "./kf-g-github-issue-worktree-management",
         "./kf-g-github-operations-bot-workflow",
         "./kf-g-github-pr-review-workflow",
