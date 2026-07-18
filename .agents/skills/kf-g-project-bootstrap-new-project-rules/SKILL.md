@@ -1,6 +1,6 @@
 ---
 name: kf-g-project-bootstrap-new-project-rules
-description: Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, and kiso.css adoption.
+description: Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, kiso.css adoption, and project-local post-edit lint/format hooks that run after AI agent file edits.
 ---
 
 # 新規プロジェクト立ち上げルール
@@ -8,6 +8,7 @@ description: Use this skill when starting a new project and defining baseline re
 この skill は、PJ を新規に立ち上げるときの初期方針を揃えるためのものです。
 まず devcontainer と mise を土台に置き、その上で frontend は pnpm + Vite+ + kiso.css を標準にします。
 加えて、secret scan は gitleaks を GitHub Action と pre-commit framework の両方で組み込みます。
+linter / formatter は PJ ごとに選定し、AI エージェントによるファイル編集の直後に project hooks で lint/fmt を必ず走らせます。
 
 ## 使用するサービス
 
@@ -18,6 +19,8 @@ description: Use this skill when starting a new project and defining baseline re
 - kiso.css
 - gitleaks
 - pre-commit
+- PJ 選定の linter / formatter
+- 編集後 lint/fmt 用の project hooks
 
 ## この skill を使う場面
 
@@ -27,6 +30,7 @@ description: Use this skill when starting a new project and defining baseline re
 - frontend の標準 toolchain を決める
 - pnpm の supply chain 対策を初期設定へ組み込みたい
 - secret scan を初期設定へ組み込みたい
+- AI エージェント編集後の lint/fmt 自動実行を初期設定へ組み込みたい
 
 ## 基本方針
 
@@ -37,6 +41,8 @@ description: Use this skill when starting a new project and defining baseline re
 1. Svelte / SvelteKit を採用する場合は、最新の安定版を使う。
 1. reset css は kiso.css を pnpm で導入する。
 1. secret scan は gitleaks を GitHub Action と pre-commit framework の両方で組み込む。
+1. linter / formatter は PJ ごとに選定し、`package.json` scripts と `mise run` task に載せる。
+1. AI エージェント編集後は project hooks で lint/fmt を必須実行する。Tab 補完後 hook は利用ツールが対応していれば設定する。
 
 ## 作業手順
 
@@ -51,9 +57,13 @@ description: Use this skill when starting a new project and defining baseline re
 1. Vite+ を前提に scaffold と日常コマンドを決める。
 1. Svelte / SvelteKit を採用する場合は、最新安定版を前提に依存関係と scaffold を確認する。
 1. kiso.css を導入し、エントリ側で最初に読み込む。
+1. 言語・FW・既存 toolchain に合わせて linter / formatter を選定し導入する。
+1. lint / format コマンドを `package.json` scripts と `mise` task に載せる。初回のリポジトリ全体一括 format/lint fix はしない。
+1. project hooks 設定と編集後 lint/fmt 実行スクリプトをリポジトリへ置く。
+1. AI エージェント編集後に lint/fmt が走ることを手動試験する。利用ツールが Tab 補完後 hook を提供する場合はそれも確認する。
 1. `mise run hooks-install` で `pre-commit` と `pre-push` の local hook を有効化する。
 1. `pre-commit validate-config` と `pre-commit run --hook-stage pre-push` で hook 設定を検証する。
-1. 最後に `mise run` 系 task で install / dev / check / test / build を揃える。
+1. 最後に `mise run` 系 task で install / dev / check / test / build / lint / format を揃える。
 
 ## PJ全体
 
@@ -82,7 +92,7 @@ description: Use this skill when starting a new project and defining baseline re
 
 - `[tools]` で runtime と主要 CLI を管理する。
 - `[env]` で PJ 固有の環境変数を管理する。
-- `[tasks]` で install / dev / check / test / build などの日常コマンドを管理する。
+- `[tasks]` で install / dev / check / test / build / lint / format などの日常コマンドを管理する。
 - コマンド実行は `mise run <task>` または `mise exec -- <command>` を優先する。
 - README や devcontainer の手順も `mise` ベースで統一する。
 - CI でもローカルと同じ `mise` task 名を使い、コマンド定義を二重化しない。
@@ -129,6 +139,69 @@ pre-commit framework の運用:
 - local hook の導入は、`pre-commit install` と `pre-commit install --hook-type pre-push` の両方を実行する。
 - hook 導入手順は `mise run hooks-install` にまとめる。
 - hook 設定の検証は `pre-commit validate-config` と `pre-commit run --hook-stage pre-push` で行う。
+
+### 7. linter / formatter と編集後 hooks
+
+本節の焦点は、特定の linter / formatter や特定の AI 製品を固定することではない。
+**編集後 lint/fmt の自動実行**を新規 PJ の必須要件として組み込むこと。
+
+#### linter / formatter の扱い
+
+- linter / formatter は PJ ごとに選定する。言語・FW・既存 toolchain に合わせる。
+- この skill 本文に、特定ツール名・設定ファイル名・設定値の固定例は書かない。
+- PJ で lint / format コマンドを決め、`package.json` scripts と `mise run` task の両方に載せる。
+- lint / format の日常実行入口は `mise run` に集約する。CI でも同じ task 名を使えるようにし、コマンド定義を二重化しない。
+- 初回のリポジトリ全体一括 format / lint fix はしない。hooks は編集されたファイルだけを処理する。
+
+#### ignore の扱い
+
+- 各 linter / formatter が `.gitignore` を自動尊重する前提で設計する。
+- `.gitignore` の内容を hooks や設定へ重複列挙しない。
+- hooks 側で `.gitignore` を動的パースする必要は原則なし。
+- 追加除外が必要な場合のみ、各ツールの ignore 設定を使う。これは PJ 判断。
+
+#### 編集後 lint/fmt hooks
+
+新規 PJ では **project 単位** で編集後 lint/fmt を走らせる。
+
+配置:
+
+- リポジトリ内の project hooks 設定と実行スクリプトを置く。
+- user / global 設定への依存は標準にしない。
+
+トリガー:
+
+- 必須: AI エージェントによるファイル編集後（after agent edit）
+- 任意: Tab（インライン補完）によるファイル編集後（after tab edit）。利用中ツールが該当 hook を提供する場合のみ設定。未提供なら省略可
+- 1 本の共通スクリプトを両トリガーで共用してよい
+- 実行 cwd は project root 前提
+
+ツール非依存の要件（実装は PJ が選ぶ AI エディタ / エージェントの hooks 機能に合わせる）:
+
+- hook 入力から編集対象 `file_path` を取得する
+- PJ で定義した lint / format コマンドをそのファイルに対して実行する
+- 対象外拡張子は no-op
+- fail-open（編集フローを止めない）
+- 結果はログで確認可能にする
+
+記述方針:
+
+- 特定 AI 製品名は固定しない
+- 「利用中の AI エージェント / エディタが提供する project hooks で、編集後イベントに lint/fmt スクリプトを登録する」と書く
+- Tab 補完後 hook は「存在すれば設定する（推奨）」に留め、必須要件にしない
+- hooks の設定ファイル名・イベント名は参考例として括弧書き可。必須仕様にはしない
+- 正本はイベント概念（after agent edit / after tab edit if available）とする。将来ツールが変わっても意図が崩れないようにする
+
+既存方針との関係:
+
+- devcontainer / mise / pnpm / gitleaks / pre-commit / Vite+ / kiso.css などの既存必須方針は維持する
+- pre-commit / CI への lint/fmt 組み込みは本 skill では必須にしない。主目的は編集後 hooks 実行。将来拡張可能
+
+骨格サンプル:
+
+- `references/sample-files/scripts/lint-fmt-edited-file.sh`
+- `references/sample-files/hooks/project-hooks.example.json`
+- 配置先ディレクトリ名と設定ファイル名は、利用ツールの project hooks 仕様に合わせて置き換える
 
 ## フロントエンド
 
@@ -194,6 +267,9 @@ frontend を含む新規 PJ では、少なくとも次を用意する。
 - `pnpm-workspace.yaml`
 - `package.json` の `packageManager`
 - kiso.css を読み込む entry 側の style または import
+- lint / format 用の `package.json` scripts と `mise run` task
+- project hooks 設定（編集後 lint/fmt 登録）
+- 編集後 lint/fmt 実行スクリプト
 - `mise run` で叩ける install / dev / check / test / build / hooks-install task
 
 ## 出力方針
@@ -202,6 +278,7 @@ frontend を含む新規 PJ では、少なくとも次を用意する。
 - user settings から再利用した `dev.containers.*`, `dotfiles.*` と、PJ 側で追加した差分を短く説明する。
 - pnpm の allowlist に package を追加した場合は、その理由を残す。
 - Vite+ に乗らない例外を選んだ場合は、理由を明記する。
+- 選定した linter / formatter と、編集後 hooks の登録先を短く説明する。
 
 ## 最終チェック
 
@@ -220,3 +297,7 @@ frontend を含む新規 PJ では、少なくとも次を用意する。
 - Vite+ のコマンド群に寄せた構成になっているか。
 - Svelte / SvelteKit を採用する場合、最新安定版を使っているか。
 - kiso.css を pnpm で導入しているか。
+- lint / format コマンドを `package.json` scripts と `mise run` task に載せたか。
+- project hooks に AI エージェント編集後の lint/fmt を登録したか。
+- 編集後に対象ファイルへ lint/fmt が走ることを確認したか。
+- 利用ツールが Tab 補完後 hook を提供する場合、その登録も確認したか。
