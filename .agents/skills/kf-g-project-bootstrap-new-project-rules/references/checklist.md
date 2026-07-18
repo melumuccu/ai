@@ -2,8 +2,8 @@
 
 入口フローで承認されたルール適用表に **適用** とされた項目だけを確認する。不適用ルールに該当する行はスキップする。
 
-- devcontainer を作成したか。
-- user settings の `dev.containers.*`, `dotfiles.*` を確認したか。
+- devcontainer を **適用** とした場合、`.devcontainer/devcontainer.json` を作成したか。
+- devcontainer を **適用** とした場合、user settings の `dev.containers.*`, `dotfiles.*` を確認したか。
 - `mise.toml` が tools / env / tasks の中心になっているか。
 - `mise.toml` の `[tools]` に `pre-commit` と `gitleaks` を載せているか。
 - `references/sample-files/` の該当サンプルを確認したか。

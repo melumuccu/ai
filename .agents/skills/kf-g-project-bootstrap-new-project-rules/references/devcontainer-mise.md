@@ -1,14 +1,19 @@
 # devcontainer と mise
 
-## 1. devcontainer を必須にする
+devcontainer は**オプション**。ルール適用表で **適用** と確定した場合のみ実装する。デフォルトは devcontainer なしで、ローカル + `mise.toml` を正本とする。
 
-- `.devcontainer/devcontainer.json` を必ず作る。
+## 1. devcontainer（オプション）
+
+- ルール適用表で devcontainer が **適用** のときだけ `.devcontainer/devcontainer.json` を作る。
+- **不適用** のときは devcontainer 関連ファイルを作らない。README もローカル + `mise` 前提で書く。
 - runtime や package manager の版管理は devcontainer 内に分散させず、原則 `mise.toml` を正本にする。
-- devcontainer では `mise install` を実行して、PJ が要求する tool 群を揃える。
+- devcontainer を使う場合は `mise install` を実行して、PJ が要求する tool 群を揃える。
 - `postCreateCommand` や同等の初期化処理は、`mise install` と `mise run` を中心に組む。
 - apt, brew, curl などで個別に runtime を入れるのは、mise で扱えない OS パッケージに限る。
 
-## 2. user settings の dev.containers・dotfiles 設定を先に確認する
+## 2. user settings の dev.containers・dotfiles 設定を先に確認する（devcontainer 適用時）
+
+devcontainer を **適用** する場合のみ実施する。
 
 - まず user settings.json の `dev.containers.*`, `dotfiles.*` を確認する。
 - 既に user settings にある値は、devcontainer 側へ重複して書かない。
@@ -27,7 +32,7 @@
 - `[env]` で PJ 固有の環境変数を管理する。
 - `[tasks]` で install / dev / check / test / build / lint / format などの日常コマンドを管理する。
 - コマンド実行は `mise run <task>` または `mise exec -- <command>` を優先する。
-- README や devcontainer の手順も `mise` ベースで統一する。
+- README や devcontainer（利用時）の手順も `mise` ベースで統一する。
 - CI でもローカルと同じ `mise` task 名を使い、コマンド定義を二重化しない。
 
 活用観点:
@@ -38,9 +43,9 @@
 - 必須 secret や接続先は `required = true` で明示する。
 - OS 依存や install 順依存がある tool は `os` と `depends` を使って `mise.toml` に閉じ込める。
 
-## 4. devcontainer と mise の役割分担
+## 4. devcontainer と mise の役割分担（devcontainer 利用時）
 
-- devcontainer は「実行場所」を揃える。
+- devcontainer は「実行場所」を揃える（利用時のみ）。
 - mise は「PJ が必要とする tools / env / tasks」を揃える。
 - 同じ version 情報を Dockerfile と `mise.toml` の両方に持たない。
 - Dockerfile へ version を直書きするのは、base image の都合で避けられない場合だけにする。

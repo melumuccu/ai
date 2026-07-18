@@ -54,7 +54,7 @@
 
 ## 既存方針との関係
 
-- devcontainer / mise / pnpm / gitleaks / pre-commit / Vite+ / kiso.css などの既存必須方針は維持する
+- mise / pnpm / gitleaks / pre-commit / Vite+ / kiso.css などの既存必須方針は維持する。devcontainer はオプション（デフォルト: 不適用）
 - pre-commit / CI への lint/fmt 組み込みは本 skill では必須にしない。主目的は編集後 hooks 実行。将来拡張可能
 
 ## 骨格サンプル

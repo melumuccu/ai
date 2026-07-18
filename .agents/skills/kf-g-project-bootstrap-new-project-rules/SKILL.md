@@ -1,6 +1,6 @@
 ---
 name: kf-g-project-bootstrap-new-project-rules
-description: Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, kiso.css adoption, and project-local post-edit lint/format hooks that run after AI agent file edits.
+description: Use this skill when starting a new project and defining baseline repository rules, especially for optional devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, kiso.css adoption, and project-local post-edit lint/format hooks that run after AI agent file edits.
 ---
 
 # 新規プロジェクト立ち上げルール
@@ -37,7 +37,8 @@ description: Use this skill when starting a new project and defining baseline re
 | 主要言語・FW    | TypeScript, Go, Python など                               |
 | frontend の有無 | ブラウザ向け UI を提供するか                              |
 | frontend FW     | SvelteKit / React / なし など                             |
-| 開発環境        | devcontainer 利用可否、CI 先（GitHub Actions 等）         |
+| devcontainer    | 利用するか（**デフォルト: なし**）                        |
+| 開発環境        | CI 先（GitHub Actions 等）、ローカル runtime 管理方針   |
 | 特記事項        | monorepo 構成、既存 toolchain 継続、Vite+ 非採用理由 など |
 
 ### フェーズ 2: ルール適用表の作成
@@ -55,7 +56,7 @@ description: Use this skill when starting a new project and defining baseline re
 
 | ルール        | 条件 | 推奨 | 理由               |
 | ------------- | ---- | ---- | ------------------ |
-| devcontainer  | 汎用 | 適用 | 開発環境統一       |
+| devcontainer  | オプション | 不適用 | デフォルトはローカル開発。必要時のみ導入 |
 | mise 中心運用 | 汎用 | 適用 | tools / tasks 集約 |
 | ...           | ...  | ...  | ...                |
 
@@ -100,9 +101,9 @@ description: Use this skill when starting a new project and defining baseline re
 
 | ルール                 | 条件                        | 参照                                                        | 概要                                                                 |
 | ---------------------- | --------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------- |
-| devcontainer           | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `.devcontainer/devcontainer.json` を作成。実行場所を統一             |
+| devcontainer           | オプション（デフォルト: 不適用） | [devcontainer-mise.md](references/devcontainer-mise.md)     | 利用時のみ `.devcontainer/devcontainer.json` を作成。実行場所を統一  |
 | mise 中心運用          | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `mise.toml` に tools / env / tasks を集約                            |
-| user settings 確認     | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `dev.containers.*`, `dotfiles.*` を確認し重複設定を避ける            |
+| user settings 確認     | devcontainer 適用時         | [devcontainer-mise.md](references/devcontainer-mise.md)     | `dev.containers.*`, `dotfiles.*` を確認し重複設定を避ける            |
 | サンプルファイル起点   | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `references/sample-files/` を初期ファイルの起点にする                |
 | gitleaks               | 汎用                        | [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md) | secret scan を GitHub Action と pre-commit の両方で導入              |
 | pre-commit / pre-push  | 汎用                        | [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md) | `pre-commit`, `gitleaks` を mise 管理。local hook を有効化           |
@@ -122,6 +123,8 @@ description: Use this skill when starting a new project and defining baseline re
 | 条件                        | 適用判定                                                                |
 | --------------------------- | ----------------------------------------------------------------------- |
 | 汎用                        | 原則すべての新規 PJ で適用推奨                                          |
+| オプション（デフォルト: 不適用） | 標準では不適用。ユーザが明示的に利用を選んだ場合のみ適用           |
+| devcontainer 適用時         | devcontainer ルールが **適用** と確定している場合のみ適用               |
 | frontend あり               | ブラウザ向け UI または frontend パッケージを含む                        |
 | frontend UI あり            | ユーザー向け画面・スタイルを提供する frontend                           |
 | frontend + Svelte 採用      | frontend があり、Svelte / SvelteKit を採用する                          |
