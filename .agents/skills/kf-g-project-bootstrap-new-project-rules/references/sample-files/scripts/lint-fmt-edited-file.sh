@@ -1,114 +1,30 @@
 #!/usr/bin/env bash
-# 編集後 lint/fmt 共通スクリプト（骨格）
-#
-# 前提:
-# - cwd は project root
-# - PJ で定義した mise task（例: format, lint）を呼ぶ
-# - 初回のリポジトリ全体一括 format/lint fix はしない
-# - fail-open（編集フローを止めない）
-#
-# 入力:
-# - 引数: file_path
-# - または stdin JSON の file_path / path / filePath
-#
-# 使い方:
-# 1. 下の TARGET_EXTENSIONS と mise task 名を PJ に合わせて埋める
-# 2. project hooks の after agent edit（必須）からこのスクリプトを呼ぶ
-# 3. after tab edit があれば同じスクリプトを共用してよい
 
 set -u
 
-LOG_DIR="${TMPDIR:-/tmp}/pj-lint-fmt-hooks"
-mkdir -p "$LOG_DIR"
-LOG_FILE="${LOG_DIR}/lint-fmt-edited-file.log"
+# fail-open: trap で常に exit 0 し、編集フローを止めない
 
-log() {
-  printf '%s %s\n' "$(date -Iseconds 2>/dev/null || date)" "$*" >>"$LOG_FILE"
-}
+# ログ出力先を決め、log() でタイムスタンプ付き追記する
 
-# fail-open: どの経路でも編集フローを止めない
-finish() {
-  exit 0
-}
-trap finish EXIT
+# hook 入力から file_path を解決する
+# - CLI 引数
+# - stdin JSON の file_path / path / filePath
 
-# PJ ごとに調整する。特定ツール名は skill 標準では固定しない
-TARGET_EXTENSIONS='ts|tsx|js|jsx|mjs|cjs|svelte|css|json|md'
-FORMAT_TASK='format'
-LINT_TASK='lint'
+# file_path が空、ファイル不在、非対象拡張子なら no-op
 
-extract_file_path() {
-  local raw="$1"
-  if command -v python3 >/dev/null 2>&1; then
-    FILE_PATH="$(
-      printf '%s' "$raw" | python3 -c '
-import json, sys
-raw = sys.stdin.read().strip()
-if not raw:
-    raise SystemExit(0)
-data = json.loads(raw)
-for key in ("file_path", "path", "filePath"):
-    value = data.get(key)
-    if isinstance(value, str) and value:
-        print(value)
-        raise SystemExit(0)
-file = data.get("file")
-if isinstance(file, dict):
-    for key in ("path", "file_path", "filePath"):
-        value = file.get(key)
-        if isinstance(value, str) and value:
-            print(value)
-            raise SystemExit(0)
-' 2>/dev/null || true
-    )"
-  fi
-}
+# mise 不在なら no-op
 
-FILE_PATH="${1:-}"
+# PJ 固有の対象拡張子と mise task 名を定義する
+# - TARGET_EXTENSIONS
+# - FORMAT_TASK
+# - LINT_TASK
 
-if [[ -z "${FILE_PATH}" ]]; then
-  INPUT="$(cat || true)"
-  extract_file_path "${INPUT}"
-fi
+# mise run "${FORMAT_TASK}" -- "${FILE_PATH}" を実行する
+# - 編集ファイル単位のみ。全体一括 format はしない
+# - 失敗しても編集フローを止めない
 
-if [[ -z "${FILE_PATH:-}" ]]; then
-  log "skip: file_path missing"
-  finish
-fi
+# mise run "${LINT_TASK}" -- "${FILE_PATH}" を実行する
+# - 編集ファイル単位のみ。全体一括 lint はしない
+# - 失敗しても編集フローを止めない
 
-if [[ ! -f "${FILE_PATH}" ]]; then
-  log "skip: not a file path=${FILE_PATH}"
-  finish
-fi
-
-case "${FILE_PATH}" in
-  *.)
-    log "skip: unsupported path=${FILE_PATH}"
-    finish
-    ;;
-esac
-
-if [[ ! "${FILE_PATH}" =~ \.(${TARGET_EXTENSIONS})$ ]]; then
-  log "skip: unsupported extension path=${FILE_PATH}"
-  finish
-fi
-
-if ! command -v mise >/dev/null 2>&1; then
-  log "skip: mise not found path=${FILE_PATH}"
-  finish
-fi
-
-log "start path=${FILE_PATH}"
-
-# ファイル単位で実行する。全体一括はしない
-# task 側の引数受け取り方は PJ の mise.toml / package.json に合わせる
-if ! mise run "${FORMAT_TASK}" -- "${FILE_PATH}" >>"$LOG_FILE" 2>&1; then
-  log "format failed path=${FILE_PATH}"
-fi
-
-if ! mise run "${LINT_TASK}" -- "${FILE_PATH}" >>"$LOG_FILE" 2>&1; then
-  log "lint failed path=${FILE_PATH}"
-fi
-
-log "done path=${FILE_PATH}"
-finish
+# 開始・skip・失敗・完了を log() で記録する

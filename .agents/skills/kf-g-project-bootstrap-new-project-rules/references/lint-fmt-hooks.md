@@ -1,12 +1,14 @@
 # linter / formatter と編集後 hooks
 
-本節の焦点は、特定の linter / formatter や特定の AI 製品を固定することではない。
+本節の焦点は、特定の AI 製品を固定することではない。
 **編集後 lint/fmt の自動実行**を新規 PJ の必須要件として組み込むこと。
 
 ## linter / formatter の扱い
 
-- linter / formatter は PJ ごとに選定する。言語・FW・既存 toolchain に合わせる。
-- この skill 本文に、特定ツール名・設定ファイル名・設定値の固定例は書かない。
+- frontend では Oxlint / Oxfmt を基本推奨とする。
+- Oxlint / Oxfmt が PJ の言語・ライブラリ・フレームワークに未対応の場合は、その時点のデファクトスタンダードを調査して推奨する。
+- frontend 以外は PJ ごとに選定する。言語・FW・既存 toolchain に合わせる。
+- 設定ファイル名・設定値の固定例は skill 本文に書かない。
 - PJ で lint / format コマンドを決め、`package.json` scripts と `mise run` task の両方に載せる。
 - lint / format の日常実行入口は `mise run` に集約する。CI でも同じ task 名を使えるようにし、コマンド定義を二重化しない。
 - 初回のリポジトリ全体一括 format / lint fix はしない。hooks は編集されたファイルだけを処理する。

@@ -16,6 +16,7 @@
 - Svelte / SvelteKit を採用する場合、最新安定版を使っているか。
 - kiso.css を pnpm で導入しているか。
 - lint / format コマンドを `package.json` scripts と `mise run` task に載せたか。
+- frontend なら Oxlint / Oxfmt を基本推奨として選定したか。未対応があれば代替を調査したか。
 - project hooks に AI エージェント編集後の lint/fmt を登録したか。
 - 編集後に対象ファイルへ lint/fmt が走ることを確認したか。
 - 利用ツールが Tab 補完後 hook を提供する場合、その登録も確認したか。

@@ -9,7 +9,7 @@ description: Use this skill when starting a new project and defining baseline re
 PJ を新規に立ち上げるときの初期方針を揃えるための skill。
 devcontainer と mise を土台に置き、frontend は pnpm + Vite+ + kiso.css を標準にする。
 secret scan は gitleaks を GitHub Action と pre-commit framework の両方で組み込む。
-linter / formatter は PJ ごとに選定し、AI エージェントによるファイル編集の直後に project hooks で lint/fmt を必ず走らせる。
+frontend の linter / formatter は Oxlint / Oxfmt を基本推奨とし、AI エージェントによるファイル編集の直後に project hooks で lint/fmt を必ず走らせる。
 
 ## 使用するサービス
 
@@ -20,7 +20,7 @@ linter / formatter は PJ ごとに選定し、AI エージェントによるフ
 - kiso.css
 - gitleaks
 - pre-commit
-- PJ 選定の linter / formatter
+- Oxlint / Oxfmt（frontend 基本推奨。未対応時はデファクトスタンダードを調査）
 - 編集後 lint/fmt 用の project hooks
 
 ## この skill を使う場面
@@ -42,7 +42,7 @@ linter / formatter は PJ ごとに選定し、AI エージェントによるフ
 1. Svelte / SvelteKit を採用する場合は、最新の安定版を使う。
 1. reset css は kiso.css を pnpm で導入する。
 1. secret scan は gitleaks を GitHub Action と pre-commit framework の両方で組み込む。
-1. linter / formatter は PJ ごとに選定し、`package.json` scripts と `mise run` task に載せる。
+1. frontend の linter / formatter は Oxlint / Oxfmt を基本推奨とする。未対応の言語・ライブラリ・FW がある場合はデファクトスタンダードを調査して推奨する。選定結果は `package.json` scripts と `mise run` task に載せる。
 1. AI エージェント編集後は project hooks で lint/fmt を必須実行する。Tab 補完後 hook は利用ツールが対応していれば設定する。
 
 ## 作業手順
@@ -58,7 +58,7 @@ linter / formatter は PJ ごとに選定し、AI エージェントによるフ
 1. Vite+ を前提に scaffold と日常コマンドを決める。→ [frontend-vite-plus.md](references/frontend-vite-plus.md)
 1. Svelte / SvelteKit を採用する場合は、最新安定版を前提に依存関係と scaffold を確認する。→ [frontend-vite-plus.md](references/frontend-vite-plus.md)
 1. kiso.css を導入し、エントリ側で最初に読み込む。→ [frontend-vite-plus.md](references/frontend-vite-plus.md)
-1. 言語・FW・既存 toolchain に合わせて linter / formatter を選定し導入する。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
+1. frontend では Oxlint / Oxfmt を基本推奨とし、未対応の言語・ライブラリ・FW がある場合はデファクトスタンダードを調査して linter / formatter を選定・導入する。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
 1. lint / format コマンドを `package.json` scripts と `mise` task に載せる。初回のリポジトリ全体一括 format/lint fix はしない。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
 1. project hooks 設定と編集後 lint/fmt 実行スクリプトをリポジトリへ置く。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
 1. AI エージェント編集後に lint/fmt が走ることを手動試験する。利用ツールが Tab 補完後 hook を提供する場合はそれも確認する。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
