@@ -5,23 +5,9 @@ description: Use this skill when starting a new project and defining baseline re
 
 # 新規プロジェクト立ち上げルール
 
-この SKILL.md は入口として扱い、詳細は `references` 配下の該当ファイルを読む。
-PJ を新規に立ち上げるときの初期方針を揃えるための skill。
-devcontainer と mise を土台に置き、frontend は pnpm + Vite+ + kiso.css を標準にする。
-secret scan は gitleaks を GitHub Action と pre-commit framework の両方で組み込む。
-frontend の linter / formatter は Oxlint / Oxfmt を基本推奨とし、AI エージェントによるファイル編集の直後に project hooks で lint/fmt を必ず走らせる。
+この SKILL.md は**入口**。詳細は `references` 配下の該当ファイルを読む。
 
-## 使用するサービス
-
-- mise
-- pnpm
-- Vite+
-- Svelte / SvelteKit
-- kiso.css
-- gitleaks
-- pre-commit
-- Oxlint / Oxfmt（frontend 基本推奨。未対応時はデファクトスタンダードを調査）
-- 編集後 lint/fmt 用の project hooks
+**重要**: 新規 PJ のファイル作成・scaffold は、本 skill の [入口フロー](#入口フロー) を完了し、ユーザがルール適用表を承認するまで開始しない。
 
 ## この skill を使う場面
 
@@ -33,79 +19,127 @@ frontend の linter / formatter は Oxlint / Oxfmt を基本推奨とし、AI �
 - secret scan を初期設定へ組み込みたい
 - AI エージェント編集後の lint/fmt 自動実行を初期設定へ組み込みたい
 
-## 基本方針
+## 入口フロー
 
-1. 開発環境は必ず devcontainer を作る。
-1. tools と日常コマンドの中心は `mise.toml` に集約する。
-1. frontend の package manager は pnpm に固定する。
-1. frontend の build / dev / check / test は Vite+ の流れに寄せる。
-1. Svelte / SvelteKit を採用する場合は、最新の安定版を使う。
-1. reset css は kiso.css を pnpm で導入する。
-1. secret scan は gitleaks を GitHub Action と pre-commit framework の両方で組み込む。
-1. frontend の linter / formatter は Oxlint / Oxfmt を基本推奨とする。未対応の言語・ライブラリ・FW がある場合はデファクトスタンダードを調査して推奨する。選定結果は `package.json` scripts と `mise run` task に載せる。
-1. AI エージェント編集後は project hooks で lint/fmt を必須実行する。Tab 補完後 hook は利用ツールが対応していれば設定する。
+新規 PJ 立ち上げは、次の 4 フェーズを順に進める。フェーズ 4 の承認前に devcontainer 作成・scaffold・設定ファイル追加などの実 작業を始めない。
 
-## 作業手順
+### フェーズ 1: PJ 概要の把握
 
-1. PJ に frontend が含まれるか確認する。
-1. VS Code の user settings.json にある `dev.containers.*`, `dotfiles.*` を確認する。→ [devcontainer-mise.md](references/devcontainer-mise.md)
-1. user settings で既に効いている値と、PJ 固有で必要な値を切り分ける。→ [devcontainer-mise.md](references/devcontainer-mise.md)
-1. `.devcontainer/` と `mise.toml` を先に設計する。→ [devcontainer-mise.md](references/devcontainer-mise.md)
-1. frontend がある場合は `pnpm-workspace.yaml` を作り、pnpm のセキュリティ設定を先に入れる。→ [frontend-pnpm.md](references/frontend-pnpm.md)
-1. `pre-commit` と `gitleaks` は `mise.toml` の `[tools]` へ入れ、`mise install` で導入する。→ [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md)
-1. `references/sample-files/` に該当するサンプルがあるか確認し、初期ファイル作成の起点にする。→ [devcontainer-mise.md](references/devcontainer-mise.md)
-1. gitleaks の GitHub Action と `.pre-commit-config.yaml` を追加する。→ [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md)
-1. Vite+ を前提に scaffold と日常コマンドを決める。→ [frontend-vite-plus.md](references/frontend-vite-plus.md)
-1. Svelte / SvelteKit を採用する場合は、最新安定版を前提に依存関係と scaffold を確認する。→ [frontend-vite-plus.md](references/frontend-vite-plus.md)
-1. kiso.css を導入し、エントリ側で最初に読み込む。→ [frontend-vite-plus.md](references/frontend-vite-plus.md)
-1. frontend では Oxlint / Oxfmt を基本推奨とし、未対応の言語・ライブラリ・FW がある場合はデファクトスタンダードを調査して linter / formatter を選定・導入する。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
-1. lint / format コマンドを `package.json` scripts と `mise` task に載せる。初回のリポジトリ全体一括 format/lint fix はしない。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
-1. project hooks 設定と編集後 lint/fmt 実行スクリプトをリポジトリへ置く。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
-1. AI エージェント編集後に lint/fmt が走ることを手動試験する。利用ツールが Tab 補完後 hook を提供する場合はそれも確認する。→ [lint-fmt-hooks.md](references/lint-fmt-hooks.md)
-1. `mise run hooks-install` で `pre-commit` と `pre-push` の local hook を有効化する。→ [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md)
-1. `pre-commit validate-config` と `pre-commit run --hook-stage pre-push` で hook 設定を検証する。→ [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md)
-1. 最後に `mise run` 系 task で install / dev / check / test / build / lint / format を揃える。
-1. 作業完了前に [checklist.md](references/checklist.md) を確認する。
+ユーザから PJ 概要をヒアリングする。プロンプトに既に含まれていれば、それを起点に不足分だけ確認する。
+
+最低限、次を把握する（未記載なら選択肢から選択させる形でユーザに質問する）:
+
+| 項目            | 例                                                        |
+| --------------- | --------------------------------------------------------- |
+| PJ 名 / 目的    | 社内ダッシュボード、CLI ツール、API サーバ                |
+| リポジトリ種別  | 新規 / 既存空リポジトリ / monorepo 追加                   |
+| 提供形態        | Web UI / API のみ / CLI / ライブラリ / 複合               |
+| 主要言語・FW    | TypeScript, Go, Python など                               |
+| frontend の有無 | ブラウザ向け UI を提供するか                              |
+| frontend FW     | SvelteKit / React / なし など                             |
+| 開発環境        | devcontainer 利用可否、CI 先（GitHub Actions 等）         |
+| 特記事項        | monorepo 構成、既存 toolchain 継続、Vite+ 非採用理由 など |
+
+### フェーズ 2: ルール適用表の作成
+
+[ルール一覧](#ルール一覧) を全件走査し、PJ 概要に基づいて各ルールの**推奨**（適用 / 不適用 / 要確認）を決める。
+
+- **適用**: 条件を満たし、標準方針どおり導入する
+- **不適用**: 条件を満たさない、または PJ 方針上不要
+- **要確認**: 条件付きルールで、ユーザ判断が必要
+
+推奨を決めたら、次の形式で**ルール適用表**を提示する。
+
+```markdown
+## ルール適用表（確認用）
+
+| ルール        | 条件 | 推奨 | 理由               |
+| ------------- | ---- | ---- | ------------------ |
+| devcontainer  | 汎用 | 適用 | 開発環境統一       |
+| mise 中心運用 | 汎用 | 適用 | tools / tasks 集約 |
+| ...           | ...  | ...  | ...                |
+
+### 要確認項目
+
+- Vite+: frontend あり → 適用推奨。React 採用のため Svelte / SvelteKit は不適用でよいか
+```
+
+**要確認** がある場合は、適用表提示と同時にユーザへ質問する。回答を反映して表を更新する。
+
+### フェーズ 3: ユーザ確認・調整
+
+ルール適用表を提示し、次を求める。
+
+1. 推奨どおりでよいか
+2. **適用 / 不適用** を変更したいルールがあるか
+3. 表にない例外・追加要件があるか
+
+ユーザが変更を示したら表を更新し、再度提示する。**全ルールについて適用 / 不適用が確定するまでフェーズ 3 を繰り返す。**
+
+確認手段:
+
+- 表全体への明示的な承認（「この表で進めて」等）
+- 個別ルールの変更指示
+- 不明点があれば `AskQuestion` 等で構造化して確認してよい
+
+### フェーズ 4: 承認後に作成開始
+
+ユーザがルール適用表を承認したら、初めて実装作業に入る。
+
+1. 承認済み表の **適用** 行に対応する参照ファイルを読み、実装する（[読み進め方](#読み進め方)）
+2. **不適用** とされたルールに該当するファイル・設定は作らない
+3. 完了前に [checklist.md](references/checklist.md) を、承認済みルールに合わせて確認する
+
+承認済み表は作業ログとして短く残す（どのルールを適用 / 不適用にしたか）。
+
+---
+
+## ルール一覧
+
+全ルールを列挙する。フェーズ 2 ではこの表をベースに、PJ ごとの適用 / 不適用を決める。
+
+| ルール                 | 条件                        | 参照                                                        | 概要                                                                 |
+| ---------------------- | --------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------- |
+| devcontainer           | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `.devcontainer/devcontainer.json` を作成。実行場所を統一             |
+| mise 中心運用          | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `mise.toml` に tools / env / tasks を集約                            |
+| user settings 確認     | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `dev.containers.*`, `dotfiles.*` を確認し重複設定を避ける            |
+| サンプルファイル起点   | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `references/sample-files/` を初期ファイルの起点にする                |
+| gitleaks               | 汎用                        | [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md) | secret scan を GitHub Action と pre-commit の両方で導入              |
+| pre-commit / pre-push  | 汎用                        | [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md) | `pre-commit`, `gitleaks` を mise 管理。local hook を有効化           |
+| pnpm 固定              | frontend あり               | [frontend-pnpm.md](references/frontend-pnpm.md)             | package manager を pnpm に固定                                       |
+| pnpm supply chain      | frontend あり               | [frontend-pnpm.md](references/frontend-pnpm.md)             | `pnpm-workspace.yaml` にセキュリティ設定                             |
+| Vite+                  | frontend あり               | [frontend-vite-plus.md](references/frontend-vite-plus.md)   | build / dev / check / test を Vite+ 流儀に寄せる                     |
+| Svelte / SvelteKit     | frontend + Svelte 採用      | [frontend-vite-plus.md](references/frontend-vite-plus.md)   | 最新安定版を使用                                                     |
+| kiso.css               | frontend UI あり            | [frontend-vite-plus.md](references/frontend-vite-plus.md)   | reset CSS を pnpm で導入し entry で最初に読み込む                    |
+| Oxlint / Oxfmt         | frontend あり               | [lint-fmt-hooks.md](references/lint-fmt-hooks.md)           | frontend の linter / formatter。未対応時は代替を調査                 |
+| lint / format コマンド | コード編集あり              | [lint-fmt-hooks.md](references/lint-fmt-hooks.md)           | `package.json` scripts と `mise run` task に載せる                   |
+| 編集後 lint/fmt hooks  | コード編集あり              | [lint-fmt-hooks.md](references/lint-fmt-hooks.md)           | AI エージェント編集後に project hooks で lint/fmt 実行               |
+| Tab 補完後 hook        | コード編集あり + ツール対応 | [lint-fmt-hooks.md](references/lint-fmt-hooks.md)           | 利用ツールが対応していれば設定（任意）                               |
+| mise 日常 task 一式    | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | install / dev / check / test / build / lint / format / hooks-install |
+
+### 条件の読み方
+
+| 条件                        | 適用判定                                                                |
+| --------------------------- | ----------------------------------------------------------------------- |
+| 汎用                        | 原則すべての新規 PJ で適用推奨                                          |
+| frontend あり               | ブラウザ向け UI または frontend パッケージを含む                        |
+| frontend UI あり            | ユーザー向け画面・スタイルを提供する frontend                           |
+| frontend + Svelte 採用      | frontend があり、Svelte / SvelteKit を採用する                          |
+| コード編集あり              | ソースコードをリポジトリで管理・編集する                                |
+| コード編集あり + ツール対応 | 編集後 lint/fmt hooks を適用し、かつ Cursor 等が Tab 補完後 hook を提供 |
+
+frontend なし PJ では pnpm / Vite+ / kiso.css / Oxlint・Oxfmt 等 frontend 向けルールは**不適用**。lint / format コマンド・編集後 hooks は backend 言語に合わせて選定して適用する。
 
 ## 読み進め方
 
-1. 開発基盤を扱うなら [devcontainer-mise.md](references/devcontainer-mise.md) を読む。
-1. secret scan を扱うなら [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md) を読む。
-1. frontend の package manager や supply chain を扱うなら [frontend-pnpm.md](references/frontend-pnpm.md) を読む。
-1. Vite+ / SvelteKit / kiso.css を扱うなら [frontend-vite-plus.md](references/frontend-vite-plus.md) を読む。
-1. lint / format や編集後 hooks を扱うなら [lint-fmt-hooks.md](references/lint-fmt-hooks.md) を読む。
-1. 初期ファイル生成時は `references/sample-files/` を確認する。
-1. 作業完了前に [checklist.md](references/checklist.md) を確認する。
+承認後の実装手順は `references` 側が正本。SKILL.md は入口とルール選定のみ担う。
 
-## 参照ファイル
-
-- [devcontainer-mise.md](references/devcontainer-mise.md): devcontainer、mise、user settings、サンプルファイル運用
-- [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md): gitleaks と pre-commit / pre-push hook 運用
-- [frontend-pnpm.md](references/frontend-pnpm.md): pnpm 固定と supply chain 設定
-- [frontend-vite-plus.md](references/frontend-vite-plus.md): Vite+ / SvelteKit と kiso.css
-- [lint-fmt-hooks.md](references/lint-fmt-hooks.md): linter / formatter 選定と編集後 hooks
-- [checklist.md](references/checklist.md): 作業完了前の確認項目
-
-## 最低限そろえる対象
-
-frontend を含む新規 PJ では、少なくとも次を用意する。
-
-- `.devcontainer/devcontainer.json`
-- `.github/workflows/gitleaks.yml`
-- `mise.toml`
-- `.pre-commit-config.yaml`
-- `pnpm-workspace.yaml`
-- `package.json` の `packageManager`
-- kiso.css を読み込む entry 側の style または import
-- lint / format 用の `package.json` scripts と `mise run` task
-- project hooks 設定（編集後 lint/fmt 登録）
-- 編集後 lint/fmt 実行スクリプト
-- `mise run` で叩ける install / dev / check / test / build / hooks-install task
+1. [入口フロー](#入口フロー) を完了する。
+2. [ルール一覧](#ルール一覧) で **適用** となった各行の「参照」列のファイルを読み、実装する。
+3. 完了前に [checklist.md](references/checklist.md) を、承認済みルールに合わせて確認する。
 
 ## 出力方針
 
-- 実際に新規 PJ を作る依頼では、方針説明だけで止めずに必要ファイルを作る。
-- user settings から再利用した `dev.containers.*`, `dotfiles.*` と、PJ 側で追加した差分を短く説明する。
-- pnpm の allowlist に package を追加した場合は、その理由を残す。
-- Vite+ に乗らない例外を選んだ場合は、理由を明記する。
-- 選定した linter / formatter と、編集後 hooks の登録先を短く説明する。
+- 入口フロー完了前は、方針説明とルール適用表の提示に留める。ファイル作成は始めない。
+- 承認後は方針説明だけで止めず、承認済みルールに対応するファイルを作る。
+- 承認済みルール適用表を短く残す。

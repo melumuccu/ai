@@ -1,5 +1,7 @@
 # 最終チェック
 
+入口フローで承認されたルール適用表に **適用** とされた項目だけを確認する。不適用ルールに該当する行はスキップする。
+
 - devcontainer を作成したか。
 - user settings の `dev.containers.*`, `dotfiles.*` を確認したか。
 - `mise.toml` が tools / env / tasks の中心になっているか。
