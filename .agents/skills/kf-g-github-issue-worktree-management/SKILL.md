@@ -51,6 +51,21 @@ issue 着手時は repository 外の sibling directory に worktree を作る。
 - branch: `issue-<issue-number>-<slug>`
 - path: `../<repo-name>-issue-<issue-number>-<slug>`
 
+作成手順:
+
+1. リポに `worktree:add` 系 mise task があればそれを使う。
+   ```sh
+   mise run worktree:add -- <issue-number> <slug>
+   ```
+1. なければ `git worktree add` で上記命名規約どおり作成する。
+
+`.worktreeinclude`:
+
+- worktree 側へ継承すると有益と思われる gitignored ファイルは、ユーザに提案し、承認を得た上で `.worktreeinclude` に記載する。
+- 例: `.dev.vars` / `.agent-browser/` / `.agents/credentials/github/`
+- Claude Code `--worktree` も同ファイルを参照する。
+- bootstrap があるリポでは `pnpm install` と `hooks-install`（gitleaks）まで含める。GVS 有効時の install は実質瞬時。
+
 ルール:
 
 - main worktree は同期、確認、緊急操作用に残す。
