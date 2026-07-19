@@ -11,6 +11,7 @@
       "description": "Repository-local skills whose names start with kf-",
       "name": "kf-skills",
       "skills": [
+        "./kf-g-agent-planning-structured-plan-output",
         "./kf-g-agent-research-report-only-unless-approved",
         "./kf-g-code-comment-rules",
         "./kf-g-css-flex-grid",

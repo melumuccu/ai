@@ -45,6 +45,11 @@
     "description": "超圧縮コミュニケーションモード。原始人のように話してトークン使用量を約75%削減。 技術的正確性は完全に維持。強度レベル: 丁寧・通常（デフォルト）・極限の3段階。 「原始人モード」「短く」「簡潔に」「トークン節約」と言うか、/genshijin で起動。"
   },
   {
+    "path": ".agents/skills/kf-g-agent-planning-structured-plan-output/SKILL.md",
+    "name": "kf-g-agent-planning-structured-plan-output",
+    "description": "Formats AI agent planning output with concise Japanese, mermaid diagrams, tables, and footnotes for niche terms. Use when planning implementation, architecture, migration, rollout, phased work, design proposals, or when SwitchMode enters plan mode; also when drafting plans for GitHub issues or PR comments."
+  },
+  {
     "path": ".agents/skills/kf-g-agent-research-report-only-unless-approved/SKILL.md",
     "name": "kf-g-agent-research-report-only-unless-approved",
     "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes."
