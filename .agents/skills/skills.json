@@ -120,6 +120,11 @@
     "description": "Enforce staged-only behavior for git commits. Always use this skill whenever the user asks to commit, wants a commit created, asks to run git commit, wants a commit message based on repo changes, or uses short prompts like \"commit\", \"commit plz\"; combine it with kf-g-git-commit-japanese-commit-message when creating the message."
   },
   {
+    "path": ".agents/skills/kf-g-git-hooks-fix-verify-layering/SKILL.md",
+    "name": "kf-g-git-hooks-fix-verify-layering",
+    "description": "Defines a three-layer quality strategy where editor or AI agent hooks auto-fix and detect issues after edits, pre-commit blocks on verify gates, and pre-push runs heavy checks. Use when setting up or reviewing lint, format, type-check, schema, secret-scan, or test hooks, or when deciding what must block git commit or push versus run only after file edits."
+  },
+  {
     "path": ".agents/skills/kf-g-github-actions-self-hosted-ci-cache/SKILL.md",
     "name": "kf-g-github-actions-self-hosted-ci-cache",
     "description": "Use when optimizing GitHub Actions workflows on self-hosted runners with mise and pnpm. Covers RUNNER_TOOL_CACHE persistence, mise CI config split, and patterns to avoid (GHA cache, PNPM_STORE_DIR). Apply before editing build-and-deploy CI workflows."
@@ -142,7 +147,7 @@
   {
     "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md",
     "name": "kf-g-project-bootstrap-new-project-rules",
-    "description": "Use this skill when starting a new project and defining baseline repository rules, especially for devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, and kiso.css adoption."
+    "description": "Use this skill when starting a new project and defining baseline repository rules, especially for optional devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, kiso.css adoption, pre-push test gates, and project-local post-edit lint/format hooks that run after AI agent file edits."
   },
   {
     "path": ".agents/skills/kf-g-skill-naming-creation-organization-rules/SKILL.md",
