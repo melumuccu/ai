@@ -44,7 +44,8 @@
       "description": "Repository-local commands whose names start with kf-command-",
       "name": "kf-commands",
       "skills": [
-        "./kf-command-do-pr-rev-comment"
+        "./kf-command-do-pr-rev-comment",
+        "./kf-command-do-issue-planning"
       ],
       "source": "./.agents/skills",
       "strict": false
