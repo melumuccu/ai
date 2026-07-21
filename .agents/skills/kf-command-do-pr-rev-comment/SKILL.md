@@ -1,8 +1,8 @@
 ---
-name: kf-command-do-issue-planning
-description: Issue の planning を行うコマンド
+name: kf-command-do-pr-rev-comment
+description: PR のレビューコメントに対応するコマンド
 disable-model-invocation: true
 ---
 
-Issue を参照し、ルールに則って planning を開始してください。
-「なぜその issue を選んだか」は plan document への記載対象外です。
+PR の review comment の中から resolve されていないものを対応してください。
+comment する際は、 bot アカウントがあるならそれを使用してください。
