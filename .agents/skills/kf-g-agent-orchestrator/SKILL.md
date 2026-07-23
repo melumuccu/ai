@@ -15,7 +15,7 @@ disable-model-invocation: true
 
 ## 前提
 
-- worker: 本リポジトリ `.cursor/agents/` の `research-worker`、`implementation-worker`、`verification-worker`。
+- worker: subagents を指す。
 - worker skill: `.agents/skills/kf-g-agent-worker-common/`（全 worker 共通ルール）。
 - 委譲指示テンプレート: [references/delegation-instruction.md](references/delegation-instruction.md)（orchestrator → worker）。
 

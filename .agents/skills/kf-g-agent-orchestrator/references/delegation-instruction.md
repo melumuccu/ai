@@ -2,7 +2,7 @@
 
 委譲ごとにコピーして埋める。不要な節は省略。
 
-報告形式は各 worker の agent 定義（`.cursor/agents/*.md` の「出力形式」）に従う。共通ルールは worker skill（`.agents/skills/kf-g-agent-worker-common/`）に従う。
+報告形式は各 worker の agent 定義の「出力形式」に従う。共通ルールは worker skill（`.agents/skills/kf-g-agent-worker-common/`）に従う。
 
 ```markdown
 ## goal

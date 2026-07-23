@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # worker 共通ルール
 
-orchestrator-workers 構成の subagent worker 共通。各 worker 種別の手順・出力形式は各 agent 定義（`.cursor/agents/*.md`）を優先する。
+orchestrator-workers 構成の subagent worker 共通。各 worker 種別の手順・出力形式は各 agent 定義を優先する。
 
 ## Skill 参照
 
