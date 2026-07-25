@@ -19,6 +19,20 @@
 
 - 既知事実と確定済み設計判断
 
+## builtin_subagents
+
+`/builtin-subagent-worker` 委譲時のみ。1 件以上、最大 3 件。
+
+各要素:
+
+- `subagent_type` — 組み込み subagent 種別（explore, shell, generalPurpose 等）
+- `goal` — 子 subagent の達成状態（1 文）
+- `scope` — URLs / directories / files
+- `acceptance` — 子 subagent の完了条件
+- `run_in_background` — true | false
+
+同一目的の重複禁止。worker は各要素の `goal` / `scope` / `acceptance` を Markdown 結合して子 prompt に渡す。並列起動はファイル編集競合がない場合のみ。
+
 ## permissions
 
 - readonly | write allowed: <paths>

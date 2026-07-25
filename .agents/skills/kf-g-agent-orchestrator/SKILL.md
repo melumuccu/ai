@@ -74,18 +74,19 @@ orchestrator が worker へ渡す skill は、orchestrator の判断で選ぶ。
 
 ## worker 選択
 
-| 用途                                | worker                   | 実行                       |
-| ----------------------------------- | ------------------------ | -------------------------- |
-| Web fetch、ファイル読取、コード探索 | `/research-worker`       | 並列可、background 可      |
-| 承認済み設計に沿った編集            | `/implementation-worker` | ファイル重複なし時のみ並列 |
-| 主張・diff・テストの独立確認        | `/verification-worker`   | 実装後                     |
+| 用途                                | worker                       | 実行                       |
+| ----------------------------------- | ---------------------------- | -------------------------- |
+| Web fetch、ファイル読取、コード探索 | `/research-worker`           | 並列可、background 可      |
+| 組み込み subagent の隔離起動        | `/builtin-subagent-worker`   | 編集競合なし時のみ並列、background 可 |
+| 承認済み設計に沿った編集            | `/implementation-worker`     | ファイル重複なし時のみ並列 |
+| 主張・diff・テストの独立確認        | `/verification-worker`       | 実装後                     |
 
-軽い codebase 探索のみなら built-in `explore` も可。
+組み込み subagent（explore, shell, generalPurpose 等）を隔離コンテキストで起動したいときは orchestrator から直接 Task せず `/builtin-subagent-worker` へ委譲する。目的は model 引継ぎの固定のみ。worker と子の両方で `composer-2.5-fast` を明示指定する。
 
 ## 委譲手順
 
 1. worker 委譲指示を書く（[delegation-instruction.md](references/delegation-instruction.md) 参照）。必要な事実だけ渡す
-1. 明示起動: `/research-worker ...`、`/implementation-worker ...`、`/verification-worker ...`
+1. 明示起動: `/research-worker ...`、`/builtin-subagent-worker ...`、`/implementation-worker ...`、`/verification-worker ...`
 1. 追加入力は **resume**（agent ID）優先。不要な cold start 回避
 1. 予算超過、根拠欠落、prompt 再掲、未許可 skill 参照、worker skill 欠落、出力形式違反の報告は却下。委譲指示を再発行するか resume で修正
 
