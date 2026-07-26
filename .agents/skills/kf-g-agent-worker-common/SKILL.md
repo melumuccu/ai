@@ -30,10 +30,24 @@ orchestrator-workers 構成の subagent worker 共通。各 worker 種別の手�
 - 結論・根拠・検証結果を簡潔に記載する
 - 当該 worker agent の「出力形式」に従う
 
+## 予算と checkpoint
+
+委譲指示 `budget` がある場合、次のいずれかで作業を停止し `needs-escalation` で partial result / checkpoint を返す。
+
+| 停止条件 | 判定 |
+| --- | --- |
+| 予算到達 | `time_budget`（soft budget）または `max_tool_calls` 到達 |
+| 同一失敗反復 | 同一仮説の失敗が `max_retries_per_hypothesis` 超 |
+| 進捗なし | `checkpoint_interval` 単位で phase / 成果物に変化なし |
+
+- `time_budget` は soft budget（推奨上限）。hard timeout ではない
+- `checkpoint_interval` ごとに checkpoint を更新し、停止時は最新を返す
+- checkpoint 最小項目: `phase`, `completed`, `next`, `blocked_on`, `tool_calls`
+
 ## status
 
 | 値                 | 意味                                                                                                 |
 | ------------------ | ---------------------------------------------------------------------------------------------------- |
 | `completed`        | acceptance を満たした                                                                                |
 | `blocked`          | アクセス不足、ツール失敗、ユーザー入力待ちなど外部要因で停止                                         |
-| `needs-escalation` | 仕様曖昧、scope 過大、認証・セキュリティ境界、設計判断が必要、追加 skill が必要、worker skill 未指定 |
+| `needs-escalation` | 仕様曖昧、scope 過大、認証・セキュリティ境界、設計判断が必要、追加 skill が必要、worker skill 未指定、予算到達・同一失敗反復・進捗なし（partial result / checkpoint 同梱） |
