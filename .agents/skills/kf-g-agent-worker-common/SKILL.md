@@ -1,6 +1,6 @@
 ---
 name: kf-g-agent-worker-common
-description: Common rules for orchestrator-worker subagents (research, implementation, verification). Defines skill access, report constraints, and status semantics. orchestrators must list this skill in worker delegation instructions unless explicitly using none.
+description: Common rules for orchestrator-worker subagents (research, general, implementation, verification). Defines skill access, report constraints, and status semantics. orchestrators must list this skill in worker delegation instructions unless explicitly using none.
 disable-model-invocation: true
 ---
 
@@ -10,9 +10,9 @@ orchestrator-workers 構成の subagent worker 共通。各 worker 種別の手�
 
 ## Skill 参照
 
-- 委譲指示 `skills` に列挙された skill のみ参照可
-- 読取: 委譲指示に記載された `path` の `SKILL.md` のみ。同一 skill ディレクトリ内の参照ファイルのみ追加可
-- **禁止**: 委譲指示外 skill の Read、skill 一覧の独自探索、ambient な skill 自動適用、User Rules を skill 代わりに読む
+- 委譲指示 `skills` に列挙された skill のみ参照する
+- 読取対象: 委譲指示に記載された `path` の `SKILL.md`、および同一 skill ディレクトリ内の参照ファイル
+- 列挙外 skill が必要な場合は着手せず `needs-escalation` する
 
 ### 着手前チェック
 
@@ -27,7 +27,7 @@ orchestrator-workers 構成の subagent worker 共通。各 worker 種別の手�
 ## 報告共通ルール
 
 - 委譲指示 `report_budget` を守る（既定 600 tokens、最大 1000）
-- 生ログ、長いコードブロック、inputs の再掲禁止
+- 結論・根拠・検証結果を簡潔に記載する
 - 当該 worker agent の「出力形式」に従う
 
 ## status

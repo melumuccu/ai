@@ -19,23 +19,18 @@
 
 - 既知事実と確定済み設計判断
 
-## builtin_subagents
-
-`/builtin-subagent-worker` 委譲時のみ。1 件以上、最大 3 件。
-
-各要素:
-
-- `subagent_type` — 組み込み subagent 種別（explore, shell, generalPurpose 等）
-- `goal` — 子 subagent の達成状態（1 文）
-- `scope` — URLs / directories / files
-- `acceptance` — 子 subagent の完了条件
-- `run_in_background` — true | false
-
-同一目的の重複禁止。worker は各要素の `goal` / `scope` / `acceptance` を Markdown 結合して子 prompt に渡す。並列起動はファイル編集競合がない場合のみ。
-
 ## permissions
 
 - readonly | write allowed: <paths>
+
+`/general-worker` 委譲時は **必須**。`readonly` または `write allowed: <paths>` のいずれかを明示する。
+
+| permissions | 許可範囲 |
+| --- | --- |
+| `readonly` | Web fetch、Read/Grep/Glob、readonly Shell、browser 読取 |
+| `write allowed: <paths>` | 上記 + scope 内編集、指定検証コマンド |
+
+許可範囲外の操作が必要な場合は worker が `needs-escalation` する。
 
 ## constraints
 
@@ -56,6 +51,12 @@
 
 基本的には worker skill（`kf-g-agent-worker-common`）を含める。その上でタスク固有 skill を追加してよい。
 
+## report_sections
+
+（任意。`/general-worker` 向け）
+
+- 追加で含める見出し名（例: `findings`, `screenshots`, `next_steps`）
+
 ## report_budget
 
 600 tokens（正当化時のみ最大 1000）
@@ -64,4 +65,5 @@
 ## 記載ルール
 
 - `skills` は必須
-- worker は委譲指示 `skills` 以外の skill を読んではならない
+- `/general-worker` 委譲時は `permissions` も必須
+- worker は委譲指示 `skills` に列挙された skill のみ参照する
