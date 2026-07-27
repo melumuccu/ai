@@ -24,8 +24,32 @@ disable-model-invocation: true
 orchestrator は **worker 委譲と、その報告に基づく設計・プランニングのみ** 行う。
 
 - すべての実作業は worker へ委譲する
-- 1 回の worker 起動処理あたり 1〜3 worker。同一質問へは 1 worker のみ起動する
+- 1 回の worker 起動処理あたり 1〜5 worker（分割方針に従う）。同一質問へは 1 worker のみ起動する
 - 安全な場合のみ並列（読取専用、またはファイル所有が分離）
+
+### 分割方針
+
+起動前に独立作業単位を列挙し、重複参照・依存・無理分割がなければその数（上限 5）で起動する。
+
+**独立作業単位の例**: 異なる file / directory / URL 調査、依存なし複数 file 実装、異なる検証対象。
+
+**起動数**
+
+1. 独立単位を数える
+2. ≥5 → 優先度上位 5 件起動（残りは次サイクル）
+3. 1〜4 → その数で起動（5 へ満たす分割禁止）
+4. 1 → 1 worker
+
+**5 未満に留める条件**（該当時分割禁止）:
+
+- 同一 file / 同一 URL・Web サイト参照重複
+- 前後依存で並列不可
+- 作業小さく並列コスト > 利益
+- 人為細分化（同一 file 文言検討を複数 worker へ重複委譲等）
+
+**「可能なら 5」**: 独立単位 ≥5 かつ上記禁止に該当しない → 5 worker 優先。該当しない → 1〜4 許容、無理に 5 へ増やさない。
+
+**所有分離**: 調査は参照範囲、実装は file 所有、検証は検証対象を worker ごとに分離する。verification worker は実装統合後に別起動する。
 
 ### orchestrator が行なってよいこと
 
@@ -69,7 +93,7 @@ orchestrator が worker へ渡す skill を選定し、委譲指示に列挙す�
 
 ## 上限
 
-- **起動バッチ**: 最大 3 worker
+- **起動バッチ**: 最大 5 worker
 - **再委譲**: worker あたり 1 回まで
 - **orchestrator サイクル**: 通常 3（調査 → 実装 → 検証）。合計 5 超、または検証 fail 後の追加サイクルはユーザー承認を得る
 
@@ -86,7 +110,7 @@ orchestrator が worker へ渡す skill を選定し、委譲指示に列挙す�
 
 ## 委譲手順
 
-1. worker 委譲指示を書く（[delegation-instruction.md](references/delegation-instruction.md) 参照）。必要な事実だけ渡す
+1. worker 委譲指示を書く（[delegation-instruction.md](references/delegation-instruction.md) 参照）。必要な事実だけ渡す。複数 worker 並列時は constraints の `並列競合メモ` に file / URL 所有を明記する
 1. 明示起動: `/research-worker ...`、`/general-worker ...`、`/implementation-worker ...`、`/verification-worker ...`
 1. 追加入力は **resume**（agent ID）優先。不要な cold start 回避
 1. 報告に不備（予算超過、根拠欠落、prompt 再掲、未許可 skill 参照、worker skill 欠落、出力形式違反）がある場合は委譲指示を再発行するか resume で修正
