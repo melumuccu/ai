@@ -26,14 +26,14 @@ description: Use this skill when deciding whether font-size should use rem or px
 
 ## 判断順序
 
-### 0. まずは `px` を基準に考える
+### まずは `px` を基準に考える
 
 - 原則として、基準が無いサイズ指定は `px` を基準に考える。
 - 相対値は「何を基準にしたいか」が明確な場合にだけ使う。
 - 文字サイズを基準にする意味がないコンポーネント間余白、装飾的な `border-radius`、なんとなくの固定サイズを、習慣だけで `rem` にしない。
 - 文字拡大の検証フローを維持できない体制、または CSS の運用に不慣れな体制では、無理に `rem` を採用しない。
 
-### 1. `rem` を使ってよい条件
+### `rem` を使ってよい条件
 
 - Chrome の文字拡大機能をサポートしたい `font-size` には `rem` を使ってよい。
 - ただし、`font-size` だけ `rem` にして終わりではない。文字拡大に伴って増えるべき余白やサイズも、必要に応じて相対値にする。
@@ -41,7 +41,7 @@ description: Use this skill when deciding whether font-size should use rem or px
 - 文字が増えても読める、切り取られない、操作できる、という状態まで責任を持てる場合だけ `rem` を使う。
 - `:root` の `font-size` を絶対値で固定して、見かけだけ `rem` を使う実装はしない。
 
-### 2. `em` と `ch` を使う条件
+### `em` と `ch` を使う条件
 
 - `em` は、その要素自身の文字サイズを基準にしたい値へ使う。
 - 例として、「段落間は 1 文字分」「ボタンの `padding` は 1.5 文字分」のように、文字数や文字サイズが意味そのものになっているときは `em` が自然である。
@@ -49,7 +49,7 @@ description: Use this skill when deciding whether font-size should use rem or px
 - 例として、「数字リストは 3 桁分の幅を確保する」のような要件には `ch` を使う。
 - 文字サイズとの関係が要素ローカルで完結するなら、何でも `rem` にせず `em` や `ch` を優先する。
 
-### 3. `px` を選び直す条件
+### `px` を選び直す条件
 
 - 文字拡大の「極大」検証に時間的、労働的コストを割けない。
 - `rem` にしたことでレイアウト崩れや可読性低下が起きても、修正責任を持てない。
@@ -79,8 +79,6 @@ description: Use this skill when deciding whether font-size should use rem or px
 
 - `font-size` だけ `rem` にして、周辺の文字依存寸法をすべて `px` のまま放置しない。
 - 逆に、文字サイズを基準にする意味がない値まで一律に `rem` にしない。
-- `:root { font-size: 16px; }` のように、ルート文字サイズを絶対値で固定したまま文字拡大対応したつもりにならない。
-- `:root { font-size: 62.5%; }` のような簡略化ハックを使わない。
 - `:root` の `font-size` をハックしてリキッドレイアウトを組まない。
 - 文字拡大のためにブレイクポイント設計までこの skill に持ち込まない。ブレイクポイントの単位選定は [../kf-g-css-tak-responsive-rules/SKILL.md](../kf-g-css-tak-responsive-rules/SKILL.md) を参照する。
 - Sass などで `rem()` という独自変換関数を安易に作らない。CSS 標準の `rem()` 関数名と衝突するためである。
@@ -123,7 +121,6 @@ description: Use this skill when deciding whether font-size should use rem or px
 - 相対単位を使っている値に、文字サイズ基準の意味があるか。
 - `font-size` だけでなく、文字依存寸法の追従要否を確認したか。
 - 固定高さや切り取りが、文字の可読性を壊していないか。
-- `:root` の `font-size` を固定値やハックで壊していないか。
 - なんとなくの一括 `rem` 化になっていないか。
 - `em` `ch` を使うべき局所要件を、安易に `rem` で潰していないか。
 - 文字拡大とページズームの責務を混同していないか。

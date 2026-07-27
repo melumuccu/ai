@@ -1,0 +1,21 @@
+.hero {
+  inline-size: 100%;
+}
+
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.btn {
+  transition-property: opacity, transform;
+}
+
+@keyframes --fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

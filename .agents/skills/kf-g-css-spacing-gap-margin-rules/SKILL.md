@@ -25,7 +25,7 @@ description: Use this skill when designing, reviewing, or generating CSS spacing
 
 ## 基本方針
 
-### 1. 規則的な間隔は `gap`
+### 規則的な間隔は `gap`
 
 - 同じコンテナ内で繰り返される子要素間の距離は、まず `gap` を使う。
 - `grid` と `flex` の子要素間隔を、兄弟要素同士の `margin` で表現しない。
@@ -45,12 +45,11 @@ description: Use this skill when designing, reviewing, or generating CSS spacing
 }
 ```
 
-### 2. 構造的な空白は空のグリッドセル
+### 構造的な空白は空のグリッドセル
 
 - 空白そのものが配置の意味を持つなら、`gap` ではなく `grid-template` 上の空セルで表現する。
 - 見出しだけをずらす、画像の横へ意図的な余白列を残す、本文の開始位置を段ごとにそろえる、といった場面が対象である。
 - 空セルは余白の代用品ではなく、レイアウト構造の一部として扱う。
-- 空セルの表記は必ず `...` を使う。
 
 ```css
 .hero {
@@ -62,35 +61,20 @@ description: Use this skill when designing, reviewing, or generating CSS spacing
 }
 ```
 
-### 3. `margin` は補足的に扱う
+### `margin` は補足的に扱う
 
 - `margin` は内部レイアウトの主手段にしない。
 - `margin` を使ってよいのは、コンテナ外との関係を作る場面か、既存構造を変えられず `gap` を持つコンテナを用意できない例外に限る。
 - コンポーネント内部の規則的な余白を、子要素ごとの `margin` で管理しない。
 - 構造的なズレや位置調整を、要素側の `margin` でごまかさない。
 
-### 4. `margin` を使うなら責務を限定する
+### `margin` を使うなら責務を限定する
 
 - 使う場所は、コンポーネントルートか、外部レイアウトとの接続点に寄せる。
 - 同じパターンの繰り返しに複数の child margin が並ぶなら、コンテナへ責務を戻せないか見直す。
 - `margin` を残す場合は、なぜ `gap` や空セルではなく `margin` なのかを説明できる状態にする。
 
 ## よくある書き換え
-
-### 子要素の `margin` を `gap` に戻す
-
-```css
-/* before */
-.list > * + * {
-  margin-block-start: 1rem;
-}
-
-/* after */
-.list {
-  display: grid;
-  gap: 1rem;
-}
-```
 
 ### `margin` で作ったズレを空セルへ戻す
 
@@ -113,7 +97,6 @@ description: Use this skill when designing, reviewing, or generating CSS spacing
 ## AI 出力の確認項目
 
 - 同一コンテナ内の規則的な間隔を `margin` で作っていないか。
-- 共有コンテナを持てるのに、child margin へ責務を逃がしていないか。
 - 構造的な空白を `margin` や `padding` でごまかしていないか。
 - `gap` と child margin を混在させて、二重の間隔になっていないか。
 - `margin` を残す理由が、外部関係か構造制約として説明できるか。
@@ -130,7 +113,6 @@ description: Use this skill when designing, reviewing, or generating CSS spacing
 - 規則的な子要素間隔は `gap` で表現できているか。
 - 構造的な空白は空セルで表現できているか。
 - `margin` を内部レイアウトの主手段にしていないか。
-- child margin の連鎖を放置していないか。
 - `margin` を残す場合、その理由が外部関係か構造制約として説明できるか。
 
 ## 参考資料

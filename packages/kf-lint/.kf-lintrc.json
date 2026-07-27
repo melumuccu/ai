@@ -1,0 +1,4 @@
+{
+  "extendsRecommended": true,
+  "ignore": ["**/fixtures/**"]
+}

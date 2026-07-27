@@ -1,0 +1,30 @@
+[tools]
+node = "v24"
+pnpm = "latest"
+
+[tasks.lint-kf]
+description = "Run @kf/lint tests and self-lint"
+run = '''
+pnpm install --frozen-lockfile
+pnpm test
+node bin/kf-lint.js verify .
+'''
+
+[tasks.lint-kf-smoke]
+description = "Pack @kf/lint and smoke-test global-style install"
+run = '''
+pnpm install --frozen-lockfile
+mkdir -p tmp
+pnpm pack --pack-destination tmp
+VERSION=$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")
+if [ -z "${PNPM_HOME:-}" ]; then
+  case "$(uname -s)" in
+    Darwin) PNPM_HOME="$HOME/Library/pnpm" ;;
+    *) PNPM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm" ;;
+  esac
+fi
+export PNPM_HOME
+export PATH="$PNPM_HOME/bin:$PATH"
+pnpm add -g "./tmp/kf-lint-${VERSION}.tgz"
+kf-lint --version
+'''

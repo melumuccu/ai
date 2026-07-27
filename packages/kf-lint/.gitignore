@@ -1,0 +1,4 @@
+node_modules/
+tmp/
+!bin/
+!bin/kf-lint.js

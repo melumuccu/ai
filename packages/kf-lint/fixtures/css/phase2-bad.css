@@ -1,0 +1,53 @@
+:root {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.note {
+  text-align: justify;
+}
+
+.list > * + * {
+  margin-block-start: 1rem;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    inline-size: 100%;
+  }
+}
+
+.card {
+  container: cards / inline-size;
+}
+
+@container (inline-size >= 20rem) {
+  .card {
+    gap: 1rem;
+  }
+}
+
+@media (width >= var(--bp-md)) {
+  .hero {
+    padding: 1rem;
+  }
+}
+
+.sp-only {
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template:
+    ". title" auto
+    / 1fr;
+}
+
+.slow {
+  transition-duration: 400ms;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}

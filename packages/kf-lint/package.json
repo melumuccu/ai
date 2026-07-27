@@ -1,0 +1,35 @@
+{
+  "name": "@kf/lint",
+  "version": "0.1.1",
+  "description": "Lint rules derived from kf-g-* agent skills",
+  "type": "module",
+  "bin": {
+    "kf-lint": "./bin/kf-lint.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "configs"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "verify": "node bin/kf-lint.js verify .",
+    "lint": "pnpm test && pnpm verify",
+    "pack:local": "mkdir -p tmp && pnpm pack --pack-destination tmp",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
+    "eslint-plugin-svelte": "^3.9.0",
+    "glob": "^11.0.2",
+    "postcss": "^8.5.4",
+    "postcss-safe-parser": "^7.0.1",
+    "svelte": "^5.33.0",
+    "svelte-eslint-parser": "^1.2.0",
+    "yaml": "^2.8.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

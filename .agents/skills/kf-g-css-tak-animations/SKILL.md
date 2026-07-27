@@ -21,15 +21,15 @@ description: UI animations necessity judgment, recommendations for motion design
 ## 基本原則
 
 1. アニメーションは目的ではなく手段である
-2. そのアニメーションが「機能的」か「装飾的」かを常に区別する
-3. 最良のアニメーションは「アニメーション無し」である場合もある
-4. UI の動きは速く、応答的に感じられるべきである。ユーザーが求めているのは「すぐ反応した」という知覚速度である
-5. 高頻度で操作される UI では装飾的なアニメーションを避ける
-6. イージングはアニメーションにおいて最重要である。同じ duration でもイージング次第で体感速度は大きく変わる
-7. 視覚変化はトリガーとの因果関係が感じられるべきである
-8. 複数の視覚変化を同期させたい場合、個別の `transition` では不十分なことがある。`@keyframes` animation、Web Animations API、あるいは CSS トランジションと `transition-behavior` の組み合わせなど、適切な手法を選ぶこと
-9. アニメーションはパフォーマンスに大きく影響する
-10. アクセシビリティのため、`prefers-reduced-motion` を尊重しているユーザーにどう見せるかを常に考える
+1. そのアニメーションが「機能的」か「装飾的」かを常に区別する
+1. 最良のアニメーションは「アニメーション無し」である場合もある
+1. UI の動きは速く、応答的に感じられるべきである。ユーザーが求めているのは「すぐ反応した」という知覚速度である
+1. 高頻度で操作される UI では装飾的なアニメーションを避ける
+1. イージングはアニメーションにおいて最重要である。同じ duration でもイージング次第で体感速度は大きく変わる
+1. 視覚変化はトリガーとの因果関係が感じられるべきである
+1. 複数の視覚変化を同期させたい場合、個別の `transition` では不十分なことがある。`@keyframes` animation、Web Animations API、あるいは CSS トランジションと `transition-behavior` の組み合わせなど、適切な手法を選ぶこと
+1. アニメーションはパフォーマンスに大きく影響する
+1. アクセシビリティのため、`prefers-reduced-motion` を尊重しているユーザーにどう見せるかを常に考える
 
 ## 必須の評価順序
 
@@ -82,7 +82,6 @@ description: UI animations necessity judgment, recommendations for motion design
 
 **タイミング**
 
-- 原則として機能的なアニメーションの duration は `300ms` 以下とする
 - 例外: dialog, drawer, sheet など大型 UI の遷移は `300ms〜500ms` を許容する
 - 日常的に何十回も触る UI では、1 回あたり `100ms` の差でも体感負荷が大きくなる
 
@@ -143,8 +142,8 @@ description: UI animations necessity judgment, recommendations for motion design
 
 - 実装の優先順位
   1. CSS scroll-driven animations（`animation-timeline`, `view-timeline` 等）
-  2. `IntersectionObserver` による状態トグル + CSS transition/animation
-  3. 本当に必要な場合に限って JS で毎フレーム同期
+  1. `IntersectionObserver` による状態トグル + CSS transition/animation
+  1. 本当に必要な場合に限って JS で毎フレーム同期
 - `scrollTop` を毎フレーム読んでアニメーションを駆動している実装には必ず警告すること
 - Scroll-driven animations を使う判断基準
   - スクロール位置に連動して連続的に変化する値がある場合 → CSS scroll-driven animations
@@ -182,22 +181,14 @@ description: UI animations necessity judgment, recommendations for motion design
 
 #### Step 2D: `@keyframes` の命名と設計
 
-`@keyframes` はグローバルスコープで動作するため、命名と管理に厳格なルールを設けること。
-
-詳細なパターンとコード例は [`reference/keyframes.md`](./references/keyframes.md) を参照すること。
-
-**必須ルール**
-
-1. keyframes 名は必ず dashed ident（`--` で始まる名前）にする
-2. グローバル keyframes は `base/keyframes.css` に集約する
-3. コンポーネント固有の keyframes は `--{component-name}--{animation-name}` の形式で命名し、そのコンポーネントの CSS 内に定義する
-4. 条件によってアニメーションの起点・方向を変えたい場合は、API 的カスタムプロパティを keyframes 内に定義し、利用側から値を注入する
+`@keyframes` はグローバルスコープで動作するため、命名と管理にルールを設けること。
 
 **設計原則**
 
-5. グローバル keyframes はユーティリティクラスのように扱う。1 keyframes = 1 プロパティの変化に限定し、`animation-name` のカンマ区切りで組み合わせる
-6. グローバル keyframes は `from` / `to` の 2 フレームで完結するものに限定する。中間フレームを含む keyframes はコンポーネントなどのローカルとして定義する
-7. 自明な `from` や `to` は省略する。省略されたフレームには要素の現在値が使われるため、カスケーディングに沿った自然なアニメーションになる。値をハードコードすると、要素の現在値が想定と異なる場合にジャンプが発生する
+1. グローバル keyframes はユーティリティクラスのように扱う。1 keyframes = 1 プロパティの変化に限定し、`animation-name` のカンマ区切りで組み合わせる
+1. グローバル keyframes は `from` / `to` の 2 フレームで完結するものに限定する。中間フレームを含む keyframes はコンポーネントなどのローカルとして定義する
+1. 自明な `from` や `to` は省略する。省略されたフレームには要素の現在値が使われるため、カスケーディングに沿った自然なアニメーションになる。値をハードコードすると、要素の現在値が想定と異なる場合にジャンプが発生する
+1. 条件によってアニメーションの起点・方向を変えたい場合は、API 的カスタムプロパティを keyframes 内に定義し、利用側から値を注入する
 
 ```css
 /* グローバル keyframes（base/keyframes.css に配置） */
@@ -272,11 +263,6 @@ description: UI animations necessity judgment, recommendations for motion design
   - オーバーフローがクリップされる
   - スタッキングコンテキストが生成される
 
-#### `transition-property` の `all` 指定は厳禁
-
-- 関係ないプロパティにも適用され、意図しない動きや無駄にパフォーマンスを下げる要因になる
-- 必ず必要なプロパティだけを明示すること
-
 #### `transform` の独立プロパティ
 
 - 差分の明確化とコードの読みやすさを優先して独立プロパティ（`translate`, `rotate`, `scale`）を使用する
@@ -336,7 +322,6 @@ description: UI animations necessity judgment, recommendations for motion design
 
 全ての Step を通過した後、最終チェックとして次を確認する。
 
-- [ ] duration が長すぎないか（機能的なら原則 `300ms` 以下、大型 UI でも `500ms` 以下）
 - [ ] イージングが弱すぎないか（CSS 標準キーワードのまま放置していないか）
 - [ ] `transform-origin` がトリガーと合っているか
 - [ ] 物理的に不自然なアニメーションになっていないか（`scale: 0` からなど）
@@ -344,38 +329,38 @@ description: UI animations necessity judgment, recommendations for motion design
 - [ ] 複数の視覚変化がズレていないか
 - [ ] 初回のみ遅延し、その後は即時にすべき UI ではないか（tooltip 等）
 - [ ] 中断・キャンセル時の挙動は考慮されているか
-- [ ] パフォーマンス（layout/paint の最小化、`transition-property: all` の不使用、`will-change` の適切な管理）
+- [ ] パフォーマンス（layout/paint の最小化、`will-change` の適切な管理）
 - [ ] `prefers-reduced-motion` を尊重しているユーザーにとって適切か
 - [ ] scroll-linked animation で初期非表示が必要な場合、`animation-fill-mode: both` + `animation-play-state: paused` パターンを使い、keyframes 外に `opacity: 0` 等を二重定義していないか
-- [ ] `@keyframes` は dashed ident で命名されているか、スコープと配置場所は適切か
+- [ ] `@keyframes` のスコープと配置場所は適切か
 
 ## 返答フォーマット
 
 ### 新規アニメーション提案時
 
 1. **判断**: 必要 / 不要（判断マトリクスの根拠を示す）
-2. **分類**: 機能的 / 装飾的
-3. **動き方**: easing / duration / property / transform-origin
-4. **実装方針**: CSS のみ（`transition` or `@keyframes` or `@starting-style`）/ CSS + JS / Web Animations API / FLIP
-5. **keyframes 設計**（`@keyframes` 使用時）: 命名（dashed ident）/ スコープ（グローバル or コンポーネント固有）/ API 的カスタムプロパティの要否
-6. **中断時の挙動**: 逆再生 / スキップ / 不要
-7. **reduced-motion 対応**: 無効化 / 簡素化 / 短縮 / 維持
-8. **リスク**: アクセシビリティ、繰り返し利用時の摩擦、視覚的不整合、パフォーマンス
+1. **分類**: 機能的 / 装飾的
+1. **動き方**: easing / duration / property / transform-origin
+1. **実装方針**: CSS のみ（`transition` or `@keyframes` or `@starting-style`）/ CSS + JS / Web Animations API / FLIP
+1. **keyframes 設計**（`@keyframes` 使用時）: スコープ（グローバル or コンポーネント固有）/ API 的カスタムプロパティの要否
+1. **中断時の挙動**: 逆再生 / スキップ / 不要
+1. **reduced-motion 対応**: 無効化 / 簡素化 / 短縮 / 維持
+1. **リスク**: アクセシビリティ、繰り返し利用時の摩擦、視覚的不整合、パフォーマンス
 
 ### 既存コードの修正提案時
 
 1. **判断**: 維持 / 修正 / 削除
-2. **理由**: UX 上の目的と利用頻度
-3. **修正内容**: 具体的な変更箇所とコード例
-4. **リスク**: 修正による副作用
+1. **理由**: UX 上の目的と利用頻度
+1. **修正内容**: 具体的な変更箇所とコード例
+1. **リスク**: 修正による副作用
 
 ### 性能レビュー時
 
 1. **分類**: layout / paint / composite
-2. **リスク**: 低 / 中 / 高
-3. **理由**: invalidation の経路と関与スレッド
-4. **より安全な代替案**: `transform` / `clip-path` / observer / ローカル変数 / `@property` など
-5. **ブラウザ注意点**: Chrome 固有最適化、Safari / Firefox の差異
+1. **リスク**: 低 / 中 / 高
+1. **理由**: invalidation の経路と関与スレッド
+1. **より安全な代替案**: `transform` / `clip-path` / observer / ローカル変数 / `@property` など
+1. **ブラウザ注意点**: Chrome 固有最適化、Safari / Firefox の差異
 
 ## 参考資料
 

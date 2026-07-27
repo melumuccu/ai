@@ -14,7 +14,7 @@ description: Use this skill when designing, reviewing, or generating CSS layout 
 - `display: grid` と `display: flex` のどちらを選ぶか決めるとき
 - `grid-template` と `grid-template-areas` のどちらで書くか見直すとき
 - `grid-area` の命名ルールを決めるとき
-- `flex-direction: column` を使いたくなったとき
+- 縦積みレイアウトを `grid` で表現できないか検討するとき
 - AI が生成した CSS に、場当たり的な `flex` が混ざっていないか確認するとき
 
 ## 最初に決めること
@@ -26,24 +26,22 @@ description: Use this skill when designing, reviewing, or generating CSS layout 
 
 ## 選択順序
 
-### 0. 通常フロー
+### 通常フロー
 
 - 文書フローだけで成立する要素に、安易に `grid` や `flex` を足さない。
 - 見出し、本文、単純な縦積みが自然に流れるなら、まず通常フローのままで良い。
 
-### 1. Grid
+### Grid
 
 - セクション、カード、メディアオブジェクト、フォーム、情報パネルのように、行と列の関係で考えたほうが自然なレイアウトでは `grid` を第一候補にする。
 - 見た目を図として説明したくなるなら、まず `grid-template` で書けないか考える。
 - 要素を縦に積みたいだけに見える場面でも、`gap`、開始位置、将来の並び替えを考えると `grid` のほうが崩れにくいことが多い。
-- `flex-direction: column` を書きたくなったら、先に `display: grid` へ置き換えられないか確認する。
 
-### 2. Flex
+### Flex
 
 - `flex` は横一列の整列、両端寄せ、中央寄せ、折り返し可能な軽い並びに限定して使う。
 - 代表例は、ボタン群、チップ列、ツールバー、ナビゲーション、インライン方向の操作群である。
 - `flex` を選ぶ理由は、一方向の分配や整列で十分だからであり、二次元の配置や空白の設計が主題になった時点で `grid` に戻す。
-- `flex-direction: column` は原則使わない。縦積みは `grid` と `gap` で解く。
 
 ## Grid のルール
 
@@ -69,7 +67,6 @@ description: Use this skill when designing, reviewing, or generating CSS layout 
 ### 空のグリッドセルを使う
 
 - 空白がレイアウトの一部なら、空のグリッドセルを積極的に使う。
-- 空のグリッドセルは必ず `...` の 3 つのドットで表現する。
 - 空セルは余白の代用品ではなく、構造を明示するために使う。
 - `gap` と `margin` の使い分けは [../kf-g-css-spacing-gap-margin-rules/SKILL.md](../kf-g-css-spacing-gap-margin-rules/SKILL.md) を参照する。
 
@@ -104,19 +101,6 @@ description: Use this skill when designing, reviewing, or generating CSS layout 
 
 ## Flex のルール
 
-### `flex-direction: column` は使わない
-
-- 縦方向に積みたいだけなら、`grid` と `gap` を使う。
-- 縦積みの並びに対して `flex-direction: column` を入れると、将来の行列化、開始位置調整、空白の設計が窮屈になりやすい。
-- カード本文、フォーム要素群、説明文リスト、メディアの下に続くテキスト群は、まず `grid` で考える。
-
-```css
-.stack {
-  display: grid;
-  gap: 0.75rem;
-}
-```
-
 ### `flex` は横一列の整列に絞る
 
 - 一列方向の配列と分配だけで十分なら `flex` を使ってよい。
@@ -132,34 +116,13 @@ description: Use this skill when designing, reviewing, or generating CSS layout 
 }
 ```
 
-## よくある書き換え
-
-### `flex-direction: column` を `grid` に置き換える
-
-```css
-/* before */
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* after */
-.card {
-  display: grid;
-  gap: 1rem;
-}
-```
-
 ## AI 出力の確認項目
 
 - `grid-template` で書けるのに、`grid-template-areas` と行列定義が分かれていないか。
-- 空セルが `.` になっていないか。必ず `...` になっているか。
 - 行文字列のスペースが崩れていて、列の対応が読み取りにくくなっていないか。
 - `grid-area` 名を class 名から流用していないか。
 - `grid-area` の共通 rule を `*` へ当てていないか。`[grid-area]` へ限定しているか。
 - typed `attr()` を使う前提なのに、対応ブラウザや `@supports` を無視していないか。
-- `flex-direction: column` を惰性で使っていないか。
 - `flex` で二次元レイアウトを無理に組んでいないか。
 
 ## 出力時の方針
@@ -167,7 +130,6 @@ description: Use this skill when designing, reviewing, or generating CSS layout 
 - まず `grid` と `flex` のどちらを選ぶか、その理由を一文で明示する。
 - `grid` を選ぶ場合は、`grid-template` で視覚構造を先に示す。
 - `flex` を選ぶ場合は、一方向の整列だけで十分な理由を示す。
-- `flex-direction: column` を置き換える場合は、なぜ `grid` のほうが自然なレイアウトモデルかを短く説明する。
 - `[grid-area]` を使う場合は、class とレイアウト名の責務分離を明示する。
 - `[grid-area]` の共通 rule を使う場合は、パフォーマンスより互換性が論点であることと、`[grid-area]` 限定かどうかを明示する。
 - 間隔責務が論点なら [../kf-g-css-spacing-gap-margin-rules/SKILL.md](../kf-g-css-spacing-gap-margin-rules/SKILL.md) を併用する。
@@ -176,12 +138,10 @@ description: Use this skill when designing, reviewing, or generating CSS layout 
 
 - 通常フローで足りる要素に `grid` や `flex` を足していないか。
 - 視覚配置を `grid-template` で表現できるのに、別の書き方へ逃げていないか。
-- 空セルは必ず `...` で書かれているか。
 - 列が読み取りやすいよう、行文字列のスペースが整列しているか。
 - `grid-area` 名は `[grid-area]` へ分離されているか。
 - typed `attr()` を使う共通 rule は `:where([grid-area])` へ限定し、`@supports` か対応ブラウザ保証の条件があるか。
 - `flex` は横一列の整列に限定されているか。
-- `flex-direction: column` を使っていないか。
 
 ## 参考資料
 

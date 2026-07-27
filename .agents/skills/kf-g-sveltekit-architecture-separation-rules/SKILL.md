@@ -41,7 +41,7 @@ SvelteKit のファイル名は責務境界として扱う。
 - ユーザー操作は検知してよい
 - フォーム送信は SvelteKit の `actions` へ流す
 - 複雑な加工は、`load` 前の service か小さな pure helper に寄せる
-- `$lib/server`、private env、DB client を import しない
+- private env、DB client を import しない
 - fetch や外部 API 呼び出しを直接書かない
 
 許容する処理:
@@ -129,7 +129,6 @@ UI や route file から独立させ、テストしやすい関数として切�
 
 - 他 route から import しない
 - 汎用ボタンやダイアログを route-local に閉じ込めない
-- server-only module を import しない
 
 ### Shared component
 
@@ -148,8 +147,6 @@ UI や route file から独立させ、テストしやすい関数として切�
 避けること:
 
 - 特定 route の `data` 前提を持ち込まない
-- `src/routes/...` から import しない
-- `$lib/server` を import しない
 - 画面固有の business workflow を混ぜない
 
 ## Import 方向
@@ -168,11 +165,8 @@ $lib/server/<domain>
   -> DB / external API / auth / domain rules
 ```
 
-禁止する依存:
+避ける依存:
 
-- `$lib/components` から `src/routes/...`
-- browser で動く code から `$lib/server`
-- `$lib/server` から `.svelte` component
 - shared component から route-local component
 
 ## レビュー観点
@@ -184,7 +178,7 @@ SvelteKit の実装を見たら、次を確認する。
 - DB、外部 API、認証、ビジネスルールが `$lib/server` にあるか
 - その画面だけの component が route 配下に colocate されているか
 - 複数画面で使う component が `$lib/components` にあるか
-- shared component が route 固有の型や server-only code に依存していないか
+- shared component が route 固有の型に依存していないか
 - import 方向が一方向か
 
 ## 実装時の出力方針
@@ -200,5 +194,4 @@ SvelteKit の実装を見たら、次を確認する。
 - `+page.server.ts` が Controller として読めるか
 - `$lib/server` が server-only の Model / Service として読めるか
 - route-local component と shared component の置き場所が用途で分かれているか
-- client code から server-only code へ import していないか
 - SvelteKit 固有仕様を記憶だけで断定していないか

@@ -73,7 +73,6 @@ kiso.css を採用している前提で整理し、未採用の場合は必要�
 
 - ルートには `overflow-wrap: anywhere` と `line-break: strict` を前提にする
 - `text-align: center` を使う場合は `text-wrap: balance` をセットで考える
-- `text-align: justify` は原則禁止にする。英語混在時の破綻リスクが大きい
 - 英語本文は `text-wrap: pretty`、英語見出しは `text-wrap: balance` を基本にする
 - 日本語本文には `text-wrap` を基本入れない。ベタ組みを崩しやすいため
 - 日本語見出しは `word-break: auto-phrase` と `text-wrap: balance` の組み合わせを第一候補にし、対応ブラウザだけへ段階適用する
@@ -98,7 +97,7 @@ kiso.css を採用している前提で整理し、未採用の場合は必要�
 - 既定の `line-height` は 1.5 以上にする
 - `line-height` は unitless number を使い、トークン化する
 - 本文の目安は和文 1.7 から 2、英文 1.5 から 1.8、見出しの目安は和文 1.25 から 1.5、英文 1.2 から 1.4
-- `line-height: 1` は禁止にする。ハーフレディングを消したいなら `text-box-trim` / `text-box-edge` を検討する
+- ハーフレディングを消したいなら `text-box-trim` / `text-box-edge` を検討する
 - `text-box-trim` はプログレッシブ・エンハンスメントとして使う。英語では `text-box-edge: cap alphabetic`、日本語では既定値 `text` を優先する
 - 厳密に詰めたい場合だけ `margin-block: calc((1em - 1lh) / 2)` を追加検討する
 
@@ -136,7 +135,6 @@ kiso.css を採用している前提で整理し、未採用の場合は必要�
 - フォントサイズ、行間、段落の縦余白、文字を含む幅、ブレイクポイントは `rem` / `em` を優先する
 - 境界線幅や細部装飾、文字サイズと連動して大きくなってほしくない値は `px` を検討する
 - `rem` を使うならブラウザの文字拡大機能を有効にして検証する
-- `:root { font-size: 10px; }` のような固定化は避ける
 
 ## 推奨ベース実装
 
@@ -292,7 +290,6 @@ kiso.css を採用している前提で整理し、未採用の場合は必要�
 - 日本語 UI で `system-ui` を安易に使っていないか
 - `text-align: center` と `text-wrap: balance` を切り離していないか
 - 日本語本文へ `text-wrap` を入れていないか
-- `line-height: 1` を使っていないか
 - `line-clamp` で `overflow: hidden` を安易に使っていないか
 - `hyphens: auto` に言語明示があるか
 - 手動改行を段落へ持ち込んでいないか
