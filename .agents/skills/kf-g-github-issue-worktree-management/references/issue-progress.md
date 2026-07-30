@@ -10,16 +10,12 @@ issue と local 設計資料は用途を分ける。
 remote issue では、メンバーや AI agent 間のタスク状況共有と進捗管理を行う。
 GitHub Projects がある場合は、repository の既定に従い `Backlog`、`Ready`、`In Progress`、`In review`、`Done` などの status を更新する。
 
-## 既存 description がある場合のプランニング前処理
+## プランニング前処理
 
-既存 issue に description がある場合、プランニング着手前に次の順序で行う。
+既存 issue からプランニングする場合、プランニング着手前に次の順序で行う。
 
-1. 既存 description を issue comment へ転記する（planning 開始前の履歴保存）。
-1. 転記した既存 description を参照してプランニングを行う。
+1. 既存 issue の description と既存 comment を読み、プランニングの参考として扱う。
 1. プランニング完了後、計画 Markdown を description へ転記する（次節「プランニング内容の description 転記」参照）。
-
-- この comment 転記は planning 開始前の履歴保存であり、作業ログ comment とは目的が異なる。
-- comment の通常用途（作業ログ、判断、進捗、PR URL 等）は変わらない。
 
 ## プランニング内容の description 転記
 
