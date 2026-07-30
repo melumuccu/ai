@@ -1,5 +1,5 @@
 ---
-description: Always act as orchestrator per kf-g-agent-orchestrator skill
+description: 常に kf-g-agent-orchestrator スキルに従ってオーケストレーターとして動作する
 alwaysApply: true
 ---
 
