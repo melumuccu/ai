@@ -19,6 +19,15 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レ�
 - プランニングしたら、計画 Markdown を issue description へ**そのまま**転記する。AI 側プランニングファイルには 計画 Markdown を記載する代わりに issue リンクのみ記載する。description 更新・ユーザ comment 返答の詳細は [issue-progress.md](references/issue-progress.md)。
 - AI agent が comment を残す時は GitHub App bot credential を優先する。
 
+## Plan mode 中の GitHub 書き込み
+
+Plan mode では確認前の GitHub 書き込みが禁止されていると判明した場合、Issue comment または description を更新する前にユーザーへ明示的な許可を求める。
+
+1. GitHub 書き込みを実行する前に、更新対象（Issue comment / description）と更新内容の概要をユーザーへ明示する。
+1. ユーザーから明示的な許可を得る。
+1. 許可を得るまで GitHub 書き込みを実行しない。
+1. 許可を得た後、本 skill の正規手順（[issue-progress.md](references/issue-progress.md) 等）に従って更新する。
+
 ## Branch / commit / push
 
 - issue branch にだけ作業差分を作る。
