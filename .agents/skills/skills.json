@@ -70,6 +70,11 @@
     "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes."
   },
   {
+    "path": ".agents/skills/kf-g-agent-review-post-implementation-two-stage/SKILL.md",
+    "name": "kf-g-agent-review-post-implementation-two-stage",
+    "description": "Use this skill for programming design and implementation reviews after completion, including code, configuration, tests, and CI/CD changes. Start with a diff-first review, then resume the same reviewer for plan alignment. Route documentation-only, business-planning, general-research, and nontechnical work through the appropriate single-stage review process."
+  },
+  {
     "path": ".agents/skills/kf-g-agent-worker-common/SKILL.md",
     "name": "kf-g-agent-worker-common",
     "description": "Common rules for orchestrator-worker subagents (research, implementation, verification). Defines skill access, report constraints, and status semantics. Orchestrators must list this skill in worker delegation instructions unless explicitly using none."

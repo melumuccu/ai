@@ -13,6 +13,7 @@
       "skills": [
         "./kf-g-agent-planning-structured-plan-output",
         "./kf-g-agent-research-report-only-unless-approved",
+        "./kf-g-agent-review-post-implementation-two-stage",
         "./kf-g-agent-worker-common",
         "./kf-g-agent-orchestrator",
         "./kf-g-code-comment-rules",
