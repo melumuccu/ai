@@ -175,6 +175,11 @@
     "description": "Use this skill when starting a new project and defining baseline repository rules, especially for optional devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, kiso.css adoption, pre-push test gates, and project-local post-edit lint/format hooks that run after AI agent file edits."
   },
   {
+    "path": ".agents/skills/kf-g-skill-authoring-body-structure-rules/SKILL.md",
+    "name": "kf-g-skill-authoring-body-structure-rules",
+    "description": "Use this skill when authoring or revising SKILL.md body structure in this repository. Apply it when writing positive mandatory procedures, using frontmatter description as the applicability gate, and keeping SKILL.md as a table-of-contents with details in references. Covers universal authoring rules for body structure, separate from skill-creator and naming rules."
+  },
+  {
     "path": ".agents/skills/kf-g-skill-naming-creation-organization-rules/SKILL.md",
     "name": "kf-g-skill-naming-creation-organization-rules",
     "description": "Use this skill when creating, naming, renaming, or organizing skills in this repository. Always use it when you need to decide rules for skill directory names, propose names that follow the existing convention, organize skills so related entries stay close together, or distinguish local skills from external ones."

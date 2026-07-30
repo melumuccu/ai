@@ -35,6 +35,7 @@
         "./kf-g-github-operations-bot-workflow",
         "./kf-g-github-pr-review-workflow",
         "./kf-g-project-bootstrap-new-project-rules",
+        "./kf-g-skill-authoring-body-structure-rules",
         "./kf-g-skill-naming-creation-organization-rules",
         "./kf-g-sveltekit-architecture-separation-rules",
         "./kf-g-sveltekit-docs",
