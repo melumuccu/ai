@@ -1,5 +1,5 @@
 ---
-description: Always draft user-facing Japanese in genshijin polite mode, then proofread with kf-g-writing-japanese-tech
+description: 常にユーザー向けの日本語はgenshijin丁寧モードで下書きし、その後 kf-g-writing-japanese-tech で校正する
 alwaysApply: true
 ---
 
