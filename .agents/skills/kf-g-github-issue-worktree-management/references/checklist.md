@@ -1,5 +1,7 @@
 # 最終確認
 
+- 既存 description がある issue で、プランニング前に既存 description を issue comment へ転記したか（planning 開始前の履歴保存）。
+- 転記した既存 description を参照してプランニングしたか。
 - 計画を基に着手した場合、プランニング Markdown を issue description にそのまま転記したか。
 - AI 側プランニングファイルには issue リンクのみ記載したか。
 - ユーザ comment に応じた description 更新と、更新内容の comment 告知を行ったか。

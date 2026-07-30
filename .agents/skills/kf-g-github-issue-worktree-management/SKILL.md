@@ -15,6 +15,7 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レ�
 - 1 issue = 1 branch = 1 worktree。
 - issue 対応時は main worktree で直接作業しない。
 - 作業ログ、判断、進捗、PR URL は issue comment に残す。
+- 既存 issue に description がある場合、プランニング前に description を issue comment へ転記し、その内容を参照してプランニングする。詳細は [issue-progress.md](references/issue-progress.md)。
 - プランニングしたら、計画 Markdown を issue description へ**そのまま**転記する。AI 側プランニングファイルには 計画 Markdown を記載する代わりに issue リンクのみ記載する。description 更新・ユーザ comment 返答の詳細は [issue-progress.md](references/issue-progress.md)。
 - AI agent が comment を残す時は GitHub App bot credential を優先する。
 
