@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-SOURCE_DIR="${REPO_ROOT}/.subagents"
+SOURCE_DIR="${REPO_ROOT}/.agents"
 TARGET_DIR="${HOME}/.cursor/agents"
 
 if [[ ! -d "${SOURCE_DIR}" ]]; then
@@ -15,11 +15,11 @@ fi
 mkdir -p "${TARGET_DIR}"
 
 shopt -s nullglob
-files=("${SOURCE_DIR}"/*)
+files=("${SOURCE_DIR}"/*-worker.md)
 
 if ((${#files[@]} == 0)); then
-  echo "no files to sync in ${SOURCE_DIR}" >&2
-  exit 1
+  echo "no *-worker.md files to sync in ${SOURCE_DIR}" >&2
+  exit 0
 fi
 
 for src in "${files[@]}"; do
