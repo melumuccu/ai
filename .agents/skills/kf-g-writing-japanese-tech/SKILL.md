@@ -1,11 +1,28 @@
 ---
 name: kf-g-writing-japanese-tech
-description: 日本語の技術文書・書籍原稿の文章規範。整形（一文一行、引用ブロック、脚注、コラム記法）、段落と論証の構成（パラグラフライティング）、論証の厳密さ（ツッコミどころの除去）、読み手の負荷の管理、視点と語り、演出の抑制、LLM っぽい空句の禁止、冗長の排除を定める。日本語で技術書の章、草稿、記事、解説文を書くとき、または推敲・リライトするときに使用する。
+description: Japanese writing standards for all user-facing text—user dialogue, technical documents, code comments, and other visible Japanese prose. Covers formatting, paragraph structure, argument rigor, reader load, voice, rhetorical restraint, anti-LLM phrasing, and concision. Use when drafting or revising any Japanese text the user will see—not for agent internal reasoning or internal processing.
 ---
 
-# 日本語技術文書の文章規範
+# 日本語の文章規範
 
-日本語で技術的な原稿（書籍の章、記事、解説文）を書く・推敲するときは、以下の規範に従う。
+ユーザーが目に触れる日本語（対話、技術文書、コードコメント、Markdown など）を書く・推敲するときは、以下の規範に従う。
+
+## 適用範囲
+
+- ユーザーとの日本語対話（チャット回答、説明、確認）
+- 技術文書（書籍の章、記事、解説文、ガイド、runbook）
+- コードコメント（ユーザーが読むコメント）
+- その他、ユーザーが目に触れる日本語の記載
+
+## 適用範囲外
+
+- AI agent の内部思考、内部メモ、委譲指示の下書き
+- ユーザーに見せない中間生成物
+
+## 読み進め方
+
+- 短い対話・コメント: 「論証の厳密さ」「LLM っぽい表現の禁止」「冗長の排除」「視点と語り」を優先
+- 長文の技術文書: 全節を順に適用。書籍向けの整形・見出し・脚注ルールは文書形式に応じて適用
 
 ## 整形
 
