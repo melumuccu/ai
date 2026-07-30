@@ -28,14 +28,27 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、issue 起点の�
 
 ## PR body
 
-PR body には最低限これを含める。
+PR description（body）には、issue 側で完成させた Markdown を**そのまま**記載する。
 
-- 対応 issue
-- 変更概要
+- 理由: repository 設定で squash merge 時に description（= プランニング）を merge commit message に自動反映できるため。
+- Issue 自動 close が必要なら、description 末尾に `Closes #<issue-number>` または repository で定めた closing keyword を追加してよい。これのみ issue Markdown への追記を許可する。
+
+### PR comment に記載する項目
+
+本来 PR description に記載すべき次の項目は、**初回 comment**（または適宜 comment）に記載する。
+
+- Reviewer 向け Summary
 - 検証結果
+- 関連情報（issue リンク、依存 PR など）
 - 未確認事項または残リスク
 
-Issue 自動 close が必要なら、body に `Closes #<issue-number>` または repository で定めた closing keyword を入れる。
+次は GitHub PR UI に既に表示されるため、description にも comment にも**サマリとして記載しない**。
+
+- コミット一覧
+- GitHub Actions / CI 結果の一覧・要約
+- 変更ファイル一覧
+
+調査・障害対応で個別 check run へリンクが必要な場合のみ、comment / reply に URL リンクで記載してよい（`## PR description / comment のリンク化` 参照）。
 
 ## PR description / comment のリンク化
 
@@ -48,7 +61,7 @@ URL が未確定の対象は、URL 判明後に本文更新または comment / r
 - file: `[path/to/file](<repository URL>/blob/<branch-or-commit>/path/to/file)`。
 - file line: `[path/to/file:L<line>](<repository URL>/blob/<branch-or-commit>/path/to/file#L<line>)`。
 - review comment / thread: `[review comment](<comment URL>)`。
-- CI / check run: `[<check name>](<check run URL>)`。
+- CI / check run: 調査・障害対応が必要な場合のみ comment / reply に `[<check name>](<check run URL>)` で記載する。CI 結果の一覧・要約は書かない。
 
 ## PR 作成後
 
@@ -103,5 +116,8 @@ Review event:
 - reviewer を設定したか。
 - AI agent comment / review は bot credential で投稿したか。
 - ユーザからの PR comment / review comment へ個別に reply したか。
+- PR description に issue 完成 Markdown をそのまま記載したか。
+- Summary・検証結果・関連情報は PR comment に記載したか。
+- PR description / comment に GitHub UI と重複する情報（コミット一覧・Actions・変更ファイル）を書いていないか。
 - PR description / comment / reply のリンク化対象を可能な限りリンク形式で書いたか。
 - gitleaks 失敗を回避していないか。

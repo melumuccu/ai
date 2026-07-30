@@ -1,6 +1,9 @@
 # 最終確認
 
-- 計画を基に着手した場合、プランニング内容を issue description に転記したか。
+- 計画を基に着手した場合、プランニング Markdown を issue description にそのまま転記したか。
+- AI 側プランニングファイルには issue リンクのみ記載したか。
+- ユーザ comment に応じた description 更新と、更新内容の comment 告知を行ったか。
+- issue 上のユーザ comment に必要に応じ返答したか。
 - issue ごとの専用 worktree で作業したか。
 - branch 名と worktree path が issue と対応しているか。
 - issue に進捗と PR URL を残したか。

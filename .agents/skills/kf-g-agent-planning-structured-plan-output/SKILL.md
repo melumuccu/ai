@@ -55,7 +55,7 @@ AI agent が設計・実装・移行・段階投入などの**計画**を書く�
 | -------------------------- | -------------------------------- |
 | 標準 IT 用語               | フットノート不要。初出でも平文   |
 | 製品固有・ニッチ | 初出のみフットノート             |
-| GitHub 投稿                | 記法を GitHub フットノート `[^n]` へ変換 |
+| GitHub 投稿（issue description / comment 等） | 記法を GitHub フットノート `[^n]` へ変換 |
 
 判定の詳細と語彙リストは `references/term-glossary.md`。記法・変換・出力先別ルールは `references/footnote-formats.md`。
 
