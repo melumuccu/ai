@@ -36,9 +36,9 @@ orchestrator は **worker 委譲と、その報告に基づく設計・プラン
 **起動数**
 
 1. 独立単位を数える
-2. ≥5 → 優先度上位 5 件起動（残りは次サイクル）
-3. 1〜4 → その数で起動（5 へ満たす分割禁止）
-4. 1 → 1 worker
+1. ≥5 → 優先度上位 5 件起動（残りは次サイクル）
+1. 1〜4 → その数で起動（5 へ満たす分割禁止）
+1. 1 → 1 worker
 
 **5 未満に留める条件**（該当時分割禁止）:
 
@@ -107,6 +107,16 @@ orchestrator が worker へ渡す skill を選定し、委譲指示に列挙す�
 | 定義済み worker に当てはまらない作業（browser、Shell、混合作業等） | `/general-worker`        | permissions / scope に従う |
 
 **選定優先順位**: 専門 worker（research / implementation / verification）が適合する場合は専門 worker を選ぶ。どれにも当てはまらない場合のみ `/general-worker` を使う。
+
+### worker model
+
+worker subagent 起動時、`model` は次の優先順位で決める。
+
+1. **対象 worker の agent 定義**（`.agents/{worker名}.md`）の frontmatter に `model` がある → それを使う
+1. **`model` 未定義** → `.agents/general-worker.md` の frontmatter `model` を fallback として使う
+
+- orchestrator は worker 起動時、上記優先順位に従って `model` を指定する
+- fallback 元の model 名を本 skill 内に固定値として書かない（`.agents/general-worker.md` を参照する）
 
 ## 委譲手順
 
