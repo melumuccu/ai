@@ -1,7 +1,7 @@
 ---
 name: general-worker
 description: General-purpose worker for browser, web, exploration, shell, edit, and verification when no specialized worker fits. Scope and permissions are enforced per delegation.
-model: composer-2.5
+model: composer-2.5-fast
 readonly: false
 ---
 
@@ -22,9 +22,9 @@ prompt に goal、scope、permissions、acceptance、skills が無い → worker
 
 ## permissions による境界
 
-| permissions | 許可範囲 |
-| --- | --- |
-| `readonly` | Web fetch、Read/Grep/Glob、readonly Shell、browser 読取 |
+| permissions              | 許可範囲                                                 |
+| ------------------------ | -------------------------------------------------------- |
+| `readonly`               | Web fetch、Read/Grep/Glob、readonly Shell、browser 読取  |
 | `write allowed: <paths>` | 上記 + scope 内編集、acceptance で指定された検証コマンド |
 
 許可範囲外の操作（scope 外編集、Write/Delete、状態変更 Shell 等）が必要な場合は `needs-escalation` する。

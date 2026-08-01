@@ -1,7 +1,7 @@
 ---
 name: verification-worker
 description: Skeptical verifier. Use after implementation to independently check diffs, requirements, and tests. Does not trust implementer claims. Read-only by default.
-model: composer-2.5
+model: composer-2.5-fast
 readonly: true
 ---
 

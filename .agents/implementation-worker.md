@@ -1,7 +1,7 @@
 ---
 name: implementation-worker
 description: Implementation worker. Use after orchestrator fixed design and scope. Edits files per contract, runs targeted verification, returns minimal change summary. Escalates on ambiguous spec or out-of-scope work.
-model: composer-2.5
+model: composer-2.5-fast
 readonly: false
 ---
 

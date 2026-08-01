@@ -1,7 +1,7 @@
 ---
 name: research-worker
 description: Read-only investigator. Use proactively for web fetch, file reading, codebase search, and gathering evidence. Returns compressed findings with path:line or URL citations only.
-model: composer-2.5
+model: composer-2.5-fast
 readonly: true
 is_background: true
 ---
