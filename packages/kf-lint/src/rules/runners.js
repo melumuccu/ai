@@ -25,7 +25,13 @@ export function runMarkdownLint(config, files) {
     const lines = content.split("\n");
 
     if (resolveSeverity("markdown/no-numbered-heading", config, "warn")) {
+      let inCodeBlock = false;
       lines.forEach((line, index) => {
+        if (/^```/.test(line.trim())) {
+          inCodeBlock = !inCodeBlock;
+          return;
+        }
+        if (inCodeBlock) return;
         // 見出しに項番を付けると Markdown 構造と手順番号が混在し、目次・アンカー運用が崩れやすい。
         if (/^#{1,6}\s+\d+\.\s/.test(line)) {
           diagnostics.push({

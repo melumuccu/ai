@@ -62,7 +62,9 @@ test("docker layer headings", () => {
 test("markdown structure warnings", () => {
   const good = join(ROOT, "fixtures/markdown/good.md");
   const bad = join(ROOT, "fixtures/markdown/bad.md");
+  const fencedGood = join(ROOT, "fixtures/markdown/fenced-code-block-good.md");
   assert.equal(runMarkdownLint(config, [good]).length, 0);
+  assert.equal(runMarkdownLint(config, [fencedGood]).length, 0);
   assert.ok(runMarkdownLint(config, [bad]).length > 0);
 });
 
