@@ -55,6 +55,15 @@
       "strict": false
     },
     {
+      "description": "Repository-local skills whose names start with kf-pj-",
+      "name": "kf-pj-skills",
+      "skills": [
+        "./kf-pj-kf-lint-version-upgrade"
+      ],
+      "source": "./.agents/skills",
+      "strict": false
+    },
+    {
       "description": "Repository skills that from external sources",
       "name": "external-skills",
       "skills": [

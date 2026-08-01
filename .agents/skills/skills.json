@@ -200,6 +200,11 @@
     "path": ".agents/skills/kf-g-writing-japanese-concise-structured-response/SKILL.md"
   },
   {
+    "description": "Use this skill whenever adding, editing, or deleting any file under packages/kf-lint. At the start, verify the package version; before completion, increment the SemVer patch version by one, read the README for the current install or upgrade command, and prompt the user to run that command.",
+    "name": "kf-pj-kf-lint-version-upgrade",
+    "path": ".agents/skills/kf-pj-kf-lint-version-upgrade/SKILL.md"
+  },
+  {
     "description": "Guide users through creating high-quality GitHub Copilot prompts with proper structure, tools, and best practices.",
     "name": "prompt-builder",
     "path": ".agents/skills/prompt-builder/SKILL.md"
