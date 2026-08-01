@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
-import { globSync } from "glob";
-import { resolve } from "node:path";
+import { globSync, escape as escapeGlob } from "glob";
+import { relative, resolve } from "node:path";
 import { loadConfig, inferEngine } from "./config.js";
 import { exitCodeFor, printDiagnostics } from "./diagnostics.js";
 import { runEslint } from "./eslint/runner.js";
@@ -87,7 +87,14 @@ function collectFiles(cwd, paths, ignore) {
   for (const input of paths) {
     const target = resolve(cwd, input);
     if (existsSync(target) && !target.includes("*") && statSync(target).isFile()) {
-      files.add(target);
+      // Cursor hook などが staged file を個別 path で渡すため、ignore を尊重する
+      const matches = globSync(escapeGlob(relative(cwd, target)), {
+        cwd,
+        absolute: true,
+        nodir: true,
+        ignore,
+      });
+      if (matches.length > 0) files.add(matches[0]);
       continue;
     }
     const pattern = existsSync(target) && statSync(target).isDirectory() ? `${input.replace(/\/$/, "")}/**/*` : input;
