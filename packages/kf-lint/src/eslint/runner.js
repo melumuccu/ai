@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import eslint from "eslint";
+import tsParser from "@typescript-eslint/parser";
 import svelteParser from "svelte-eslint-parser";
 import sveltePlugin from "eslint-plugin-svelte";
 
@@ -142,10 +143,23 @@ async function lintSvelteEachKey(config, files) {
     overrideConfigFile: true,
     baseConfig: [
       {
-        files: ["**/*.svelte"],
-        languageOptions: { parser: svelteParser },
         plugins: { svelte: sveltePlugin },
-        rules: { "svelte/require-each-key": severity },
+      },
+      {
+        files: ["**/*.svelte"],
+        languageOptions: {
+          parser: svelteParser,
+          parserOptions: { parser: tsParser },
+        },
+        plugins: { svelte: sveltePlugin },
+        processor: "svelte/svelte",
+        rules: {
+          "no-inner-declarations": "off",
+          "no-self-assign": "off",
+          "svelte/comment-directive": "error",
+          "svelte/system": "error",
+          "svelte/require-each-key": severity,
+        },
       },
     ],
   });
