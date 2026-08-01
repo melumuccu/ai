@@ -169,11 +169,14 @@ export function runCommitLint(config, message) {
   const severity = resolveSeverity("commit/japanese-prefix-format", config);
   if (!severity) return diagnostics;
 
-  const lines = message.trimEnd().split("\n");
+  const lines = message
+    .trimEnd()
+    .split("\n")
+    .map((line) => line.replace(/\r$/, ""));
   const subject = lines[0] ?? "";
 
   // commit 形式を固定すると prefix 選定と subject 分類を機械的に追跡できる。
-  if (!/^[a-z]{3,5}_+:\s\S+_\S+/.test(subject)) {
+  if (!/^[a-z]{3,5}_*:\s\S+_\S+/.test(subject)) {
     diagnostics.push({
       ruleId: "commit/japanese-prefix-format",
       message:
@@ -185,7 +188,7 @@ export function runCommitLint(config, message) {
     });
   }
 
-  if (lines.length > 1 && lines[1] !== "") {
+  if (lines.length > 1 && lines[1].trim() !== "") {
     // 2行目空行は subject と本文を分離し、git log --oneline 表示を安定させる。
     diagnostics.push({
       ruleId: "commit/japanese-prefix-format",

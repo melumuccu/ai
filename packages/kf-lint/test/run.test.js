@@ -69,10 +69,22 @@ test("markdown structure warnings", () => {
 });
 
 test("commit message format", () => {
-  const good = "fix__: skills_lint導入\n\n- 概要: CLI追加\n- Why: 規約を機械検証\n";
-  const bad = "fix skills\n\nbody\n";
-  assert.equal(runCommitLint(config, good).length, 0);
-  assert.ok(runCommitLint(config, bad).length > 0);
+  const goodFix = "fix__: skills_lint導入\n\n- 概要: CLI追加\n- Why: 規約を機械検証\n";
+  const goodChore = "chore: deps_依存更新\n\n- 概要: 更新\n- Why: セキュリティ\n";
+  const goodStyle = "style: kf-lint_フォーマット\n\n- 概要: 整形\n- Why: 可読性\n";
+  const goodCrlf = "fix__: skills_lint導入\r\n\r\n- 概要: CLI追加\n";
+  const goodBlankSecondLine = "fix__: skills_lint導入\n \n- 概要: CLI追加\n";
+  const badSubject = "fix skills\n\nbody\n";
+  const badNoCategory = "chore: 依存更新\n\n- 概要: 更新\n";
+  const badNoBlankLine = "fix__: skills_lint導入\n- 概要: CLI追加\n";
+  const badSecondLine = "fix__: skills_lint導入\nnot blank\n- 概要: CLI追加\n";
+
+  for (const message of [goodFix, goodChore, goodStyle, goodCrlf, goodBlankSecondLine]) {
+    assert.equal(runCommitLint(config, message).length, 0, message);
+  }
+  for (const message of [badSubject, badNoCategory, badNoBlankLine, badSecondLine]) {
+    assert.ok(runCommitLint(config, message).length > 0, message);
+  }
 });
 
 test("errors produce non-zero exit code", async () => {
