@@ -45,17 +45,7 @@
     "path": ".agents/skills/genshijin/SKILL.md"
   },
   {
-    "description": "Issue の planning を行うコマンド",
-    "name": "kf-g-command-do-issue-planning",
-    "path": ".agents/skills/kf-g-command-do-issue-planning/SKILL.md"
-  },
-  {
-    "description": "PR のレビューコメントに対応するコマンド",
-    "name": "kf-command-do-pr-rev-comment",
-    "path": ".agents/skills/kf-g-command-do-pr-rev-comment/SKILL.md"
-  },
-  {
-    "description": "Decomposes complex tasks into research, implementation, and verification workers, then synthesizes results. Use when the user invokes /kf-g-agent-orchestrator or asks for orchestrator-worker execution on multi-step or uncertain-scope work.",
+    "description": "Delegates all execution to workers, then synthesizes results for design and planning. Use when the user invokes /kf-g-agent-orchestrator or asks for orchestrator-worker execution on multi-step or uncertain-scope work.",
     "name": "kf-g-agent-orchestrator",
     "path": ".agents/skills/kf-g-agent-orchestrator/SKILL.md"
   },
@@ -75,7 +65,7 @@
     "path": ".agents/skills/kf-g-agent-review-post-implementation-two-stage/SKILL.md"
   },
   {
-    "description": "Common rules for orchestrator-worker subagents (research, implementation, verification). Defines skill access, report constraints, and status semantics. Orchestrators must list this skill in worker delegation instructions unless explicitly using none.",
+    "description": "Common rules for orchestrator-worker subagents (research, general, implementation, verification). Defines skill access, report constraints, and status semantics. orchestrators must list this skill in worker delegation instructions unless explicitly using none.",
     "name": "kf-g-agent-worker-common",
     "path": ".agents/skills/kf-g-agent-worker-common/SKILL.md"
   },
@@ -83,6 +73,26 @@
     "description": "Use this project skill whenever adding, editing, reviewing, or deciding whether to keep source-code comments in this repository. It is the authoritative rule set for code comments, including WHY-only content, official-doc URL breadcrumbs, and comment placement.",
     "name": "kf-g-code-comment-rules",
     "path": ".agents/skills/kf-g-code-comment-rules/SKILL.md"
+  },
+  {
+    "description": "Issue の planning を行うコマンド",
+    "name": "kf-g-command-do-issue-planning",
+    "path": ".agents/skills/kf-g-command-do-issue-planning/SKILL.md"
+  },
+  {
+    "description": "Compare staged and unstaged Git diffs to extract reusable judgment rules from manual fixes, confirm with the user, then create or update skills.",
+    "name": "kf-g-command-do-manual-fix-to-skill",
+    "path": ".agents/skills/kf-g-command-do-manual-fix-to-skill/SKILL.md"
+  },
+  {
+    "description": "PR のレビューコメントに対応するコマンド",
+    "name": "kf-g-command-do-pr-rev-comment",
+    "path": ".agents/skills/kf-g-command-do-pr-rev-comment/SKILL.md"
+  },
+  {
+    "description": "Orchestrator なしで指示に従う",
+    "name": "kf-g-command-no-orchestrator",
+    "path": ".agents/skills/kf-g-command-no-orchestrator/SKILL.md"
   },
   {
     "description": "Use this skill when designing, reviewing, or generating CSS layout with display grid or flex. Apply it whenever the user asks about grid-template, grid-area naming, flex-direction, or needs to choose between grid and flex for component or page layout.",
@@ -198,6 +208,11 @@
     "description": "Write or revise Japanese Markdown documents in this repository with a concise, structured style. Use this whenever the task involves drafting Markdown, especially maintainable ordered lists with 1.-style numbering and anchor-based cross references.",
     "name": "kf-g-writing-japanese-concise-structured-response",
     "path": ".agents/skills/kf-g-writing-japanese-concise-structured-response/SKILL.md"
+  },
+  {
+    "description": "Japanese writing standards for all user-facing text—user dialogue, technical documents, code comments, and other visible Japanese prose. Covers formatting, paragraph structure, argument rigor, reader load, voice, rhetorical restraint, anti-LLM phrasing, and concision. Use when drafting or revising any Japanese text the user will see—not for agent internal reasoning or internal processing.",
+    "name": "kf-g-writing-japanese-tech",
+    "path": ".agents/skills/kf-g-writing-japanese-tech/SKILL.md"
   },
   {
     "description": "Use this skill whenever adding, editing, or deleting any file under packages/kf-lint. At the start, verify the package version; before completion, increment the SemVer patch version by one, read the README for the current install or upgrade command, and prompt the user to run that command.",

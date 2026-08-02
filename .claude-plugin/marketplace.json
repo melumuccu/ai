@@ -48,8 +48,10 @@
       "description": "Repository-local commands whose names start with kf-command-",
       "name": "kf-commands",
       "skills": [
+        "./kf-g-command-do-issue-planning",
+        "./kf-g-command-do-manual-fix-to-skill",
         "./kf-g-command-do-pr-rev-comment",
-        "./kf-g-command-do-issue-planning"
+        "kf-g-command-no-orchestrator"
       ],
       "source": "./.agents/skills",
       "strict": false
