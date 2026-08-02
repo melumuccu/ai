@@ -13,6 +13,18 @@
 | `test_` | テストの追加・修正 | 単体、結合、E2E テストの変更 |
 | `chore` | ツールやビルドの変更 | 依存関係、CI、ビルド設定、スクリプト |
 
+## 5文字固定の補完
+
+prefix はコロン前で **5文字固定** です。元の type 文字数に応じて末尾を `_` で補完します。
+
+| 元 type | 文字数 | 正規 prefix | 例 |
+| --- | --- | --- | --- |
+| `fix` | 3 | `fix__` | `fix__: skills_lint導入` |
+| `feat` / `docs` / `refa` / `perf` / `test` | 4 | `feat_` など | `feat_: 認証_ログイン追加` |
+| `chore` / `style` | 5 | `chore` / `style`（`_` 不要） | `chore: deps_依存更新` |
+
+`chore` と `style` はもともと5文字のため、末尾に `_` を足しません。`chore_` や `style_` は6文字になり不正です。
+
 ## docs repo の扱い
 
 - docs repo では `docs_` を原則使わない

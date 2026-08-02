@@ -75,6 +75,8 @@ test("commit message format", () => {
   const goodCrlf = "fix__: skills_lint導入\r\n\r\n- 概要: CLI追加\n";
   const goodBlankSecondLine = "fix__: skills_lint導入\n \n- 概要: CLI追加\n";
   const badSubject = "fix skills\n\nbody\n";
+  const badUnpaddedFix = "fix: skills_lint導入\n\n- 概要: CLI追加\n";
+  const badChoreUnderscore = "chore_: deps_依存更新\n\n- 概要: 更新\n";
   const badNoCategory = "chore: 依存更新\n\n- 概要: 更新\n";
   const badNoBlankLine = "fix__: skills_lint導入\n- 概要: CLI追加\n";
   const badSecondLine = "fix__: skills_lint導入\nnot blank\n- 概要: CLI追加\n";
@@ -82,7 +84,14 @@ test("commit message format", () => {
   for (const message of [goodFix, goodChore, goodStyle, goodCrlf, goodBlankSecondLine]) {
     assert.equal(runCommitLint(config, message).length, 0, message);
   }
-  for (const message of [badSubject, badNoCategory, badNoBlankLine, badSecondLine]) {
+  for (const message of [
+    badSubject,
+    badUnpaddedFix,
+    badChoreUnderscore,
+    badNoCategory,
+    badNoBlankLine,
+    badSecondLine,
+  ]) {
     assert.ok(runCommitLint(config, message).length > 0, message);
   }
 });

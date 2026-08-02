@@ -3,6 +3,22 @@ import { join } from "node:path";
 import { resolveSeverity } from "../diagnostics.js";
 import { parseFrontmatter } from "../config.js";
 
+/** 許可された commit prefix（コロン前5文字固定）。 */
+const ALLOWED_COMMIT_PREFIXES = [
+  "feat_",
+  "fix__",
+  "docs_",
+  "style",
+  "refa_",
+  "perf_",
+  "test_",
+  "chore",
+];
+
+const COMMIT_SUBJECT_PATTERN = new RegExp(
+  `^(${ALLOWED_COMMIT_PREFIXES.join("|")}):\\s\\S+_\\S+`,
+);
+
 /** @param {string} cwd */
 function loadExternalSkillNames(cwd) {
   const lockPath = join(cwd, "skills-lock.json");
@@ -176,7 +192,7 @@ export function runCommitLint(config, message) {
   const subject = lines[0] ?? "";
 
   // commit 形式を固定すると prefix 選定と subject 分類を機械的に追跡できる。
-  if (!/^[a-z]{3,5}_*:\s\S+_\S+/.test(subject)) {
+  if (!COMMIT_SUBJECT_PATTERN.test(subject)) {
     diagnostics.push({
       ruleId: "commit/japanese-prefix-format",
       message:
