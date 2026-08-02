@@ -38,7 +38,8 @@ commit 依頼では、次の操作を厳格に禁止する。
 1. `git diff --cached --name-status` または `git diff --cached --stat` で staged 済み変更だけを確認する
 1. staged 済み変更がなければ、その時点で中断する
 1. コミットメッセージは `git diff --cached` の内容だけから作る
-1. commit する場合は、pathspec や `--all` を付けずに `git commit` する
+1. コミットメッセージはリポジトリ外の一時ファイル（例: `/tmp/commit-msg.txt`）へ書き出し、`git commit -F <path>` で渡す。heredoc（`<<`）、`$()`、backtick、`-F -` は使わない（hook が message file を静的に読める一方、前者は展開・外部実行を伴い安全性と lint 対象を確定しにくい）
+1. commit する場合は、pathspec や `--all` を付けずに `git commit -F <path>` する
 1. commit 後の報告では、commit 対象が staged 済み変更だけだったことを必要に応じて明記する
 
 ## staged 変更がない場合
