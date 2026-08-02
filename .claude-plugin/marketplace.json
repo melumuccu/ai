@@ -39,7 +39,8 @@
         "./kf-g-skill-naming-creation-organization-rules",
         "./kf-g-sveltekit-architecture-separation-rules",
         "./kf-g-sveltekit-docs",
-        "./kf-g-writing-japanese-concise-structured-response"
+        "./kf-g-writing-japanese-concise-structured-response",
+        "./kf-g-writing-japanese-tech"
       ],
       "source": "./.agents/skills",
       "strict": false
@@ -51,7 +52,7 @@
         "./kf-g-command-do-issue-planning",
         "./kf-g-command-do-manual-fix-to-skill",
         "./kf-g-command-do-pr-rev-comment",
-        "kf-g-command-no-orchestrator"
+        "./kf-g-command-no-orchestrator"
       ],
       "source": "./.agents/skills",
       "strict": false
