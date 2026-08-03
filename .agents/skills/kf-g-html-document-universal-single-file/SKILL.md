@@ -38,26 +38,39 @@ issue または PR 向けに HTML を生成し R2 へアップロードする場
 1. アップロード後、**実際の公開 URL** を確認する
 1. 確認済みの最新 URL を `kf-g-github-issue-worktree-management` または `kf-g-github-pr-review-workflow` へ渡し、description を更新する
 
-### description の形（issue / PR 共通）
+### description の形（issue / PR で見出しを分ける）
 
-GitHub の description には詳細を載せず、最小サマリと最新 HTML リンクのみを置く。
+GitHub の description には詳細を載せず、最小サマリと用途別 HTML リンクのみを置く。
+
+issue:
 
 ```markdown
 ## 概要
-- <issue または PR の最小サマリ>
+- <issue の最小サマリ>
 
-## 最新版HTML
-[最新版のHTMLを開く](<確認済み latest R2 URL>)
+## プランニング用資料
+[v{N}](<確認済み latest R2 URL>)
 ```
 
+PR:
+
+```markdown
+## 概要
+- <PR の最小サマリ>
+
+## レビュー用資料
+[v{N}](<確認済み latest R2 URL>)
+```
+
+- リンクラベルは版付き HTML オブジェクト名から抽出した **`vN` のみ**（例: `..._v2.html` → `[v2](...)`）。`最新版HTML` やファイル名全体は使わない
 - テスト計画、リスク一覧、実装経緯、計画全文は description に書かない。HTML に置く
 - 既存 workflow で PR comment が必要な項目（Summary、検証結果など）は comment に残す
 
-### URL の扱い
+### URL とラベルの扱い
 
-- **確認済み URL のみ** description に載せる。プレースホルダや推測 URL は禁止
-- 最新 URL が未確定の間は description を確定しない。アップロードと URL 確認後に更新する
-- HTML を改訂したら **新しい `vN` オブジェクト** をアップロードし、description のリンクを最新 URL に差し替える（旧版は上書きしない）
+- **確認済み URL と `vN` のみ** description に載せる。プレースホルダ、推測 URL、未確認の版番号は禁止
+- 最新 URL または `vN` が未確定の間は description を確定しない。アップロードと URL 確認後に更新する
+- HTML を改訂したら **新しい `vN` オブジェクト** をアップロードし、description のリンクとラベルを新しい版へ差し替える（旧版は上書きしない）
 
 ## 出力チェックリスト
 
@@ -71,7 +84,7 @@ GitHub の description には詳細を載せず、最小サマリと最新 HTML 
 - [ ] 本文テキスト選択可能、コメント操作がキーボード可能
 - [ ] デスクトップ右余白 + モバイルでも閲覧可能
 - [ ] バックエンド同期・認証を謳っていない
-- [ ] R2 配布時: 版管理ルールに従い、確認済み最新 URL を GitHub description に渡した（HTML 配布ありの場合）
+- [ ] R2 配布時: 版管理ルールに従い、issue / PR description に用途別見出し（issue: `## プランニング用資料`、PR: `## レビュー用資料`）と、版付き R2 オブジェクト名から確認した `[vN](<確認済み latest R2 URL>)` を記載した（HTML 配布ありの場合）
 
 ## スコープ外
 

@@ -16,7 +16,7 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レ�
 - issue 対応時は main worktree で直接作業しない。
 - 作業ログ、判断、進捗、PR URL は issue comment に残す。
 - 既存 issue からプランニングする場合、プランニング前に既存 issue の description と comment を参照する。詳細は [issue-progress.md](references/issue-progress.md)。
-- HTML 配布あり（`kf-g-html-document-universal-single-file` で生成・R2 アップロード済み）: issue description は最小サマリと最新 HTML リンクのみとする。計画全文・詳細は HTML に置く。description 更新のタイミングと形式は [issue-progress.md](references/issue-progress.md)。
+- HTML 配布あり（`kf-g-html-document-universal-single-file` で生成・R2 アップロード済み）: issue description は最小サマリと `## プランニング用資料` 配下の `[vN](<確認済み latest R2 URL>)` のみとする。計画全文・詳細は HTML に置く。description 更新のタイミングと形式は [issue-progress.md](references/issue-progress.md)。
 - HTML 配布なし: プランニングしたら、計画 Markdown を issue description へ**そのまま**転記する。AI 側プランニングファイルには計画 Markdown を記載する代わりに issue リンクのみ記載する。詳細は [issue-progress.md](references/issue-progress.md)。
 - AI agent が comment を残す時は GitHub App bot credential を優先する。
 

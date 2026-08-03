@@ -34,20 +34,21 @@ PR description（body）の内容は、HTML 配布の有無で分ける。
 
 `kf-g-html-document-universal-single-file` で HTML を生成し R2 へアップロードする場合:
 
-- PR description には **最小サマリと最新 HTML リンクのみ** を置く
+- PR description には **最小サマリと `## レビュー用資料` 配下の HTML リンクのみ** を置く
 - 詳細な計画・テスト計画・リスク・実装経緯は **HTML 本文** に記載し、description に複製しない
-- **R2 アップロードと公開 URL の確認後** に description を確定する。URL 未確定の間はリンクを置かない
-- HTML を改訂したら新しい `vN` をアップロードし、description のリンクを最新 URL に差し替える（旧版は上書きしない）
+- **R2 アップロードと公開 URL の確認後** に description を確定する。URL または `vN` が未確定の間はリンクを置かない
+- リンクラベルは版付きオブジェクト名から抽出した **`vN` のみ**（例: `..._v2.html` → `[v2](...)`）。`最新版HTML` やファイル名全体は使わない
+- HTML を改訂したら新しい `vN` をアップロードし、description のリンクとラベルを最新版へ差し替える（旧版は上書きしない）
 
 ```markdown
 ## 概要
 - <PR の最小サマリ>
 
-## 最新版HTML
-[最新版のHTMLを開く](<確認済み latest R2 URL>)
+## レビュー用資料
+[v{N}](<確認済み latest R2 URL>)
 ```
 
-- 確認済み URL のみ Markdown リンクで記載する。プレースホルダや推測 URL は禁止
+- 確認済み URL と `vN` のみ Markdown リンクで記載する
 - Issue 自動 close が必要なら、description 末尾に `Closes #<issue-number>` または repository で定めた closing keyword を追加してよい
 
 ### HTML 配布なし
@@ -87,7 +88,7 @@ URL が未確定の対象は、URL 判明後に本文更新または comment / r
 - file line: `[path/to/file:L<line>](<repository URL>/blob/<branch-or-commit>/path/to/file#L<line>)`。
 - review comment / thread: `[review comment](<comment URL>)`。
 - CI / check run: 調査・障害対応が必要な場合のみ comment / reply に `[<check name>](<check run URL>)` で記載する。CI 結果の一覧・要約は書かない。
-- R2 HTML（HTML 配布あり）: description の `[最新版のHTMLを開く](<確認済み latest R2 URL>)` に載せる。未確認 URL は載せない。
+- R2 HTML（HTML 配布あり）: description の `## レビュー用資料` 配下 `[vN](<確認済み latest R2 URL>)` に載せる。未確認 URL または `vN` は載せない。
 
 ## PR 作成後
 
@@ -142,7 +143,7 @@ Review event:
 - reviewer を設定したか。
 - AI agent comment / review は bot credential で投稿したか。
 - ユーザからの PR comment / review comment へ個別に reply したか。
-- HTML 配布あり: PR description に最小サマリと確認済み最新 HTML リンクのみを記載したか。HTML 配布なし: issue 完成 Markdown をそのまま記載したか。
+- HTML 配布あり: PR description に最小サマリと `## レビュー用資料` 配下の `[vN](<確認済み latest R2 URL>)` のみを記載したか。HTML 配布なし: issue 完成 Markdown をそのまま記載したか。
 - Summary・検証結果・関連情報は PR comment に記載したか。
 - PR description / comment に GitHub UI と重複する情報（コミット一覧・Actions・変更ファイル）を書いていないか。
 - PR description / comment / reply のリンク化対象を可能な限りリンク形式で書いたか。
