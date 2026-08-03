@@ -40,8 +40,8 @@ const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
 	console.log(`Usage:
-  node .agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
-  node .agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --thread-id THREAD_ID
+  node ~/.agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
+  node ~/.agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --thread-id THREAD_ID
 
 Options:
   --comment-id  Resolve the thread containing this review comment ID.

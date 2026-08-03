@@ -11,7 +11,7 @@ const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
 	console.log(`Usage:
-  node .agents/credentials/github/scripts/github-agent-update-issue-state.mjs OWNER/REPO ISSUE_NUMBER --state open|closed
+  node ~/.agents/credentials/github/scripts/github-agent-update-issue-state.mjs OWNER/REPO ISSUE_NUMBER --state open|closed
 
 Options:
   --state  Issue state to set.`);

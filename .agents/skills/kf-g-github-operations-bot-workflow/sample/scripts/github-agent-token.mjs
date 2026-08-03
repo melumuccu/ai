@@ -10,7 +10,7 @@ const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
 	console.log(`Usage:
-  node .agents/credentials/github/scripts/github-agent-token.mjs [--json]
+  node ~/.agents/credentials/github/scripts/github-agent-token.mjs [--json]
 
 Options:
   --json  Print non-secret installation token metadata only.`);

@@ -5,61 +5,67 @@
 Preflight 診断:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
+node ~/.agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
+```
+
+Issue 作成:
+
+```sh
+node ~/.agents/credentials/github/scripts/github-agent-create-issue.mjs OWNER/REPO --title TITLE BODY_FILE
 ```
 
 Issue または PR conversation comment:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-comment.mjs OWNER/REPO ISSUE_OR_PR_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-comment.mjs OWNER/REPO ISSUE_OR_PR_NUMBER BODY_FILE
 ```
 
 PR review comment:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-review.mjs OWNER/REPO PR_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-review.mjs OWNER/REPO PR_NUMBER BODY_FILE
 ```
 
 Review comment reply:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
 ```
 
 Review thread resolve:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
+node ~/.agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
 ```
 
 Issue description 更新:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-update-issue.mjs OWNER/REPO ISSUE_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-update-issue.mjs OWNER/REPO ISSUE_NUMBER BODY_FILE
 ```
 
 PR description 更新:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR_NUMBER BODY_FILE
 ```
 
 PR 作成:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-create-pr.mjs OWNER/REPO --head BRANCH --base BASE [--title TITLE] BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-create-pr.mjs OWNER/REPO --head BRANCH --base BASE [--title TITLE] BODY_FILE
 ```
 
 Reviewer 設定:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER [REVIEWER...]
+node ~/.agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER [REVIEWER...]
 ```
 
 Issue state 更新:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-update-issue-state.mjs OWNER/REPO ISSUE_NUMBER --state open|closed
+node ~/.agents/credentials/github/scripts/github-agent-update-issue-state.mjs OWNER/REPO ISSUE_NUMBER --state open|closed
 ```
 
 運用:

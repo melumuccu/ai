@@ -12,7 +12,7 @@ const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
 	console.log(`Usage:
-  node .agents/credentials/github/scripts/github-agent-preflight.mjs [--repo OWNER/REPO]
+  node ~/.agents/credentials/github/scripts/github-agent-preflight.mjs [--repo OWNER/REPO]
 
 Options:
   --repo  Verify repository access with the installation token.`);

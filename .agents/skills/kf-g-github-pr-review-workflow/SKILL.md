@@ -70,13 +70,13 @@ URL が未確定の対象は、URL 判明後に本文更新または comment / r
 bot preflight 成功後:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-create-pr.mjs OWNER/REPO --head BRANCH --base BASE [--title TITLE] BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-create-pr.mjs OWNER/REPO --head BRANCH --base BASE [--title TITLE] BODY_FILE
 ```
 
 PR description 更新:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR_NUMBER BODY_FILE
 ```
 
 ## PR 作成後
@@ -92,7 +92,7 @@ node .agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR
 Reviewer 設定:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER [REVIEWER...]
+node ~/.agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER [REVIEWER...]
 ```
 
 ## Bot comment / review
@@ -100,25 +100,25 @@ node .agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REP
 PR conversation comment:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-comment.mjs OWNER/REPO PR_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-comment.mjs OWNER/REPO PR_NUMBER BODY_FILE
 ```
 
 PR review comment:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-review.mjs OWNER/REPO PR_NUMBER BODY_FILE --event COMMENT
+node ~/.agents/credentials/github/scripts/github-agent-review.mjs OWNER/REPO PR_NUMBER BODY_FILE --event COMMENT
 ```
 
 Review comment reply:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
 ```
 
 Review thread resolve（reply 成功後）:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
+node ~/.agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
 ```
 
 Review event:

@@ -15,7 +15,7 @@ issue 管理の進め方は `kf-g-github-issue-worktree-management`、PR 作成�
 - GitHub issue / PR / comment / review を扱う。
 - GitHub repository metadata や remote context を確認する。
 - AI agent が GitHub App bot credential で投稿する。
-- `.agents/credentials/github` の有無や setup 方法を判断する。
+- `~/.agents/credentials/github` の有無や setup 方法を判断する。
 - commit / push 時の gitleaks 検知を扱う。
 
 ## 書き込み gate
