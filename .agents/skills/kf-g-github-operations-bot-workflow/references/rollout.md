@@ -4,7 +4,7 @@ GitHub Bot 書き込み必須化を repository へ導入する手順。
 
 ## Local 開発環境
 
-1. `.agents/credentials/github` が無ければ [github-app-credentials.md](github-app-credentials.md) に従い sample をコピーする。
+1. `~/.agents/credentials/github` が無ければ [github-app-credentials.md](github-app-credentials.md) に従い sample をコピーする。
 1. bot 資格情報（Client ID、Installation ID、private key）を設定する。
 1. GitHub 書き込みをまとめる呼出元で、一意な session ID を設定する:
 
@@ -15,13 +15,13 @@ export AI_AGENT_GITHUB_SESSION_ID="$(uuidgen)"
 1. preflight を実行する:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
+node ~/.agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
 ```
 
 1. write gate 検証 script を実行する:
 
 ```sh
-node .agents/credentials/github/scripts/verify-write-gate.mjs
+node ~/.agents/credentials/github/scripts/verify-write-gate.mjs
 ```
 
 1. セッション内で最初の GitHub 書き込み前に完全 preflight を成功させ、GitHub 書き込みは bot helper script のみ使う。各書き込みでは installation token が再発行される。
@@ -56,11 +56,11 @@ CI で読み取りのみの場合は従来どおり `GH_TOKEN` を使ってよ�
 
 ## 既存 credentials ディレクトリの更新
 
-`.agents/credentials/github` は local-only。skill 更新後、次を実行する:
+`~/.agents/credentials/github` は local-only。skill 更新後、次を実行する:
 
 ```sh
 cp .agents/skills/kf-g-github-operations-bot-workflow/sample/scripts/*.mjs \
-  .agents/credentials/github/scripts/
+  ~/.agents/credentials/github/scripts/
 ```
 
 private key と `.env` は上書きしない。

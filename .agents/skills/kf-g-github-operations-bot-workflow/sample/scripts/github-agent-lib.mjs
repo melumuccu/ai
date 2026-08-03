@@ -1,7 +1,7 @@
 import { createHash, createSign, randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
 import { chmod, mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,24 +15,24 @@ export const agentMarker = "<!-- ai-agent-melumuccu:v1 -->";
 
 export const SETUP_INSTRUCTIONS = `GitHub App bot 資格情報が未設定または無効です。
 
-1. sample を local credential ディレクトリへコピーする:
-   mkdir -p .agents/credentials/github
-   cp -R .agents/skills/kf-g-github-operations-bot-workflow/sample/. .agents/credentials/github/
-   mv .agents/credentials/github/.env.example .agents/credentials/github/.env
+1. sample をホーム credential ディレクトリへコピーする:
+   mkdir -p ~/.agents/credentials/github
+   cp -R .agents/skills/kf-g-github-operations-bot-workflow/sample/. ~/.agents/credentials/github/
+   mv ~/.agents/credentials/github/.env.example ~/.agents/credentials/github/.env
 
 2. .env に bot 投稿用の値を記入する:
    AI_AGENT_GITHUB_CLIENT_ID
    AI_AGENT_GITHUB_INSTALLATION_ID
    AI_AGENT_GITHUB_PRIVATE_KEY_PATH
 
-3. GitHub App private key (.pem) を .agents/credentials/github 直下へ配置する。
+3. GitHub App private key (.pem) を ~/.agents/credentials/github 直下へ配置する。
 
 4. 権限を設定する:
-   chmod 600 .agents/credentials/github/.env
-   chmod 600 .agents/credentials/github/*.private-key.pem
+   chmod 600 ~/.agents/credentials/github/.env
+   chmod 600 ~/.agents/credentials/github/*.private-key.pem
 
 5. preflight で確認する:
-   node .agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
+   node ~/.agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
 
 詳細: .agents/skills/kf-g-github-operations-bot-workflow/references/github-app-credentials.md
 
@@ -378,15 +378,37 @@ function unquoteEnvValue(value) {
 	return value;
 }
 
+function expandHomePath(value) {
+	if (value.startsWith("~/")) {
+		return join(homedir(), value.slice(2));
+	}
+
+	if (value === "~") {
+		return homedir();
+	}
+
+	if (value.startsWith("$HOME/")) {
+		return join(homedir(), value.slice("$HOME/".length));
+	}
+
+	if (value === "$HOME") {
+		return homedir();
+	}
+
+	return value;
+}
+
 function resolveCredentialPath(value) {
-	if (isAbsolute(value)) {
-		return value;
+	const expanded = expandHomePath(value);
+
+	if (isAbsolute(expanded)) {
+		return expanded;
 	}
 
 	const candidates = [
-		resolve(process.cwd(), value),
-		resolve(credentialsDir, value),
-		resolve(credentialsDir, basename(value))
+		resolve(process.cwd(), expanded),
+		resolve(credentialsDir, expanded),
+		resolve(credentialsDir, basename(expanded))
 	];
 
 	for (const candidate of candidates) {

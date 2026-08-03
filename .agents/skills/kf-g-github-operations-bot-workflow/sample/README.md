@@ -1,4 +1,4 @@
-# .agents/credentials/github
+# ~/.agents/credentials/github
 
 このディレクトリは AI agent が GitHub 連携に必要な認証情報を格納するためのもの。
 
@@ -17,7 +17,7 @@
 GH_TOKEN=github_pat_xxx
 AI_AGENT_GITHUB_CLIENT_ID=xxx
 AI_AGENT_GITHUB_INSTALLATION_ID=xxx
-AI_AGENT_GITHUB_PRIVATE_KEY_PATH=.agents/credentials/github/ai-agent-melumuccu.xxxxxxxxxxx.private-key.pem
+AI_AGENT_GITHUB_PRIVATE_KEY_PATH=$HOME/.agents/credentials/github/ai-agent-melumuccu.xxxxxxxxxxx.private-key.pem
 ```
 
 `GH_TOKEN` は読み取り操作で使うユーザ本人 token。
@@ -36,7 +36,7 @@ JWT の `iss` には GitHub docs 推奨の Client ID を使う。
 旧 `GITDOC_AGENT_*` も fallback として読む。
 
 ```sh
-chmod 600 .agents/credentials/github/.env
+chmod 600 ~/.agents/credentials/github/.env
 ```
 
 ## Private key
@@ -44,7 +44,7 @@ chmod 600 .agents/credentials/github/.env
 GitHub App の private key をこのディレクトリに配置する。
 
 ```sh
-chmod 600 .agents/credentials/github/ai-agent-melumuccu.xxxxxxxxxxx.private-key.pem
+chmod 600 ~/.agents/credentials/github/ai-agent-melumuccu.xxxxxxxxxxx.private-key.pem
 ```
 
 private key を紛失した場合は GitHub App 設定画面で再発行する。
@@ -56,18 +56,19 @@ AI agent が使う補助 script。
 人間が日常的に直接使う前提ではない。
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
-node .agents/credentials/github/scripts/github-agent-token.mjs
-node .agents/credentials/github/scripts/github-agent-comment.mjs OWNER/REPO ISSUE_OR_PR_NUMBER BODY_FILE
-node .agents/credentials/github/scripts/github-agent-review.mjs OWNER/REPO PR_NUMBER BODY_FILE
-node .agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
-node .agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
-node .agents/credentials/github/scripts/github-agent-update-issue.mjs OWNER/REPO ISSUE_NUMBER BODY_FILE
-node .agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR_NUMBER BODY_FILE
-node .agents/credentials/github/scripts/github-agent-create-pr.mjs OWNER/REPO --head BRANCH --base BASE BODY_FILE
-node .agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER
-node .agents/credentials/github/scripts/verify-write-gate.mjs
-node .agents/credentials/github/scripts/verify-session-preflight.mjs
+node ~/.agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
+node ~/.agents/credentials/github/scripts/github-agent-token.mjs
+node ~/.agents/credentials/github/scripts/github-agent-comment.mjs OWNER/REPO ISSUE_OR_PR_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-review.mjs OWNER/REPO PR_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
+node ~/.agents/credentials/github/scripts/github-agent-update-issue.mjs OWNER/REPO ISSUE_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR_NUMBER BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-create-issue.mjs OWNER/REPO --title TITLE BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-create-pr.mjs OWNER/REPO --head BRANCH --base BASE BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER
+node ~/.agents/credentials/github/scripts/verify-write-gate.mjs
+node ~/.agents/credentials/github/scripts/verify-session-preflight.mjs
 ```
 
 `github-agent-preflight.mjs` は書き込み前の bot 資格情報診断用。

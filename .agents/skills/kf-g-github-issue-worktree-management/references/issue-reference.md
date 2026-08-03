@@ -1,6 +1,6 @@
 # Issue 参照
 
-GitHub Projects から issue を参照する時は、`.agents/credentials/github/.env` の `GH_TOKEN` (= user token) を環境変数へ読み込んだ状態で `gh` を実行する。
+GitHub Projects から issue を参照する時は、`~/.agents/credentials/github/.env` の `GH_TOKEN` (= user token) を環境変数へ読み込んだ状態で `gh` を実行する。
 host 側の `gh auth login` 済み状態は前提にしない。
 Projects V2 操作（`gh project item-list` など）には `read:project` scope が必要。
 token 値は出力しない。

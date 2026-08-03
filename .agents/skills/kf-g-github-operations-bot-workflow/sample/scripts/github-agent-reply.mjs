@@ -12,7 +12,7 @@ const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
 	console.log(`Usage:
-  node .agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
+  node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
 
 Arguments:
   OWNER/REPO   Target repository.

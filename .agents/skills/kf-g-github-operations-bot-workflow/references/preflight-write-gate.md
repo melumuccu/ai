@@ -7,6 +7,7 @@ AI agent が GitHub へ**書き込む**前に必ず通す gate。
 
 次はすべて bot preflight 成功後にのみ実行する。
 
+- Issue 作成
 - Issue / PR comment 投稿
 - PR review 投稿
 - review comment への reply
@@ -41,7 +42,7 @@ AI agent が GitHub へ**書き込む**前に必ず通す gate。
 
 ## Preflight 手順
 
-1. `.agents/credentials/github/.env` と環境変数から bot 資格情報を読む。
+1. `~/.agents/credentials/github/.env` と環境変数から bot 資格情報を読む。
 1. 必須項目の存在確認:
    - `AI_AGENT_GITHUB_CLIENT_ID` または `AI_AGENT_GITHUB_APP_ID`
    - `AI_AGENT_GITHUB_INSTALLATION_ID`
@@ -80,7 +81,7 @@ preflight が失敗した場合:
 診断コマンド:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
+node ~/.agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
 ```
 
 ## Write helper script 一覧
@@ -90,6 +91,7 @@ bot preflight 内蔵。直接 `gh` や `gh api -X PATCH` を使わない。
 | 操作 | script |
 | --- | --- |
 | preflight 診断 | `github-agent-preflight.mjs` |
+| Issue 作成 | `github-agent-create-issue.mjs` |
 | Issue / PR comment | `github-agent-comment.mjs` |
 | PR review | `github-agent-review.mjs` |
 | review comment reply | `github-agent-reply.mjs` |

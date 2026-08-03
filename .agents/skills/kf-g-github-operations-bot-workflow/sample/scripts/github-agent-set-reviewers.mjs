@@ -11,7 +11,7 @@ const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
 	console.log(`Usage:
-  node .agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER [REVIEWER...]
+  node ~/.agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER [REVIEWER...]
 
 Arguments:
   OWNER/REPO   Target repository.

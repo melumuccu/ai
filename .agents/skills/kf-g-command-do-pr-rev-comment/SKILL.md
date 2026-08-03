@@ -21,7 +21,7 @@ bot 資格情報が未設定または preflight が失敗した場合は、`kf-g
 reply:
 
 ```sh
-node .agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
+node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
 ```
 
 ## 着手条件
