@@ -62,11 +62,12 @@ HTML 配布がない通常の issue プランニング:
 
 - ユーザからの comment に応じて description を随時更新する。
 - HTML 配布あり: HTML を改訂して新しい `v{N}` をアップロードしたら、URL 確認後に description のリンクとラベルを最新版へ差し替える。
-- description を更新した場合は、更新内容を issue 上で comment する。
+- description 更新は bot preflight 成功後、`github-agent-update-issue.mjs` で行う。
+- description を更新した場合は、更新内容を issue 上で bot comment script により告知する。
 
 ### ユーザ comment への返答
 
-- issue 上でユーザから comment があった場合、必要に応じて issue 側で返答する。
+- issue 上でユーザから comment があった場合、必要に応じて bot comment script で返答する。
 
 作業中は issue に随時記録を残す。
 
@@ -81,4 +82,5 @@ HTML 配布がない通常の issue プランニング:
 - PR URL
 - 完了時の要約
 
-AI agent がコメントする場合は `kf-g-github-operations-bot-workflow` の skill に従う。
+AI agent がコメント / description 更新 / status 更新する場合は `kf-g-github-operations-bot-workflow` の preflight / write gate に従う。
+bot preflight 失敗時は setup 手順を表示して停止する。人間 `gh` / `GH_TOKEN` への fallback は禁止。

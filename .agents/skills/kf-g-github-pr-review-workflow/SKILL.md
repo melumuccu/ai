@@ -13,8 +13,9 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、issue 起点の�
 - 1 issue 1 PR を基本にする。
 - PR は対応 issue に紐づけ、merge / close 時に issue が閉じる形を優先する。
 - PR 作成後、issue comment に PR URL を残す。
-- reviewer は　gh コマンドでログイン済みのユーザーを reviewer に設定する
-- AI agent の PR 作成 / comment / review は GitHub App bot credential を優先する。
+- reviewer は bot helper script で設定する。
+- AI agent の PR 作成 / comment / review / reply / resolve / description 更新は、GitHub App bot preflight 成功後にのみ実行する。
+- bot preflight 失敗時は setup 手順を表示して停止する。人間 `gh` / `GH_TOKEN` への fallback は禁止。
 
 ## PR 作成前
 
@@ -25,6 +26,7 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、issue 起点の�
 1. worktree が issue 用 worktree か
 1. unrelated change が混ざっていないか
 1. repository native の check が通るか
+1. bot preflight が成功するか
 
 ## PR body
 
@@ -90,15 +92,35 @@ URL が未確定の対象は、URL 判明後に本文更新または comment / r
 - CI / check run: 調査・障害対応が必要な場合のみ comment / reply に `[<check name>](<check run URL>)` で記載する。CI 結果の一覧・要約は書かない。
 - R2 HTML（HTML 配布あり）: description の `## レビュー用資料` 配下 `[v{N}](https://ai-html.hacksaw.work/<object-key>)` に載せる。未確認 URL または `v{N}` は載せない。
 
+## PR 作成
+
+bot preflight 成功後:
+
+```sh
+node .agents/credentials/github/scripts/github-agent-create-pr.mjs OWNER/REPO --head BRANCH --base BASE [--title TITLE] BODY_FILE
+```
+
+PR description 更新:
+
+```sh
+node .agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR_NUMBER BODY_FILE
+```
+
 ## PR 作成後
 
 実施:
 
 1. PR URL を issue に comment する。
-1. reviewer を設定する。
+1. reviewer を bot script で設定する。
 1. issue status を review 待ちへ更新する。
 1. CI / checks を確認する。
 1. 失敗時は原因を調査し、必要なら issue / PR に状況を残す。
+
+Reviewer 設定:
+
+```sh
+node .agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER [REVIEWER...]
+```
 
 ## Bot comment / review
 
@@ -112,6 +134,18 @@ PR review comment:
 
 ```sh
 node .agents/credentials/github/scripts/github-agent-review.mjs OWNER/REPO PR_NUMBER BODY_FILE --event COMMENT
+```
+
+Review comment reply:
+
+```sh
+node .agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
+```
+
+Review thread resolve（reply 成功後）:
+
+```sh
+node .agents/credentials/github/scripts/github-agent-resolve-thread.mjs OWNER/REPO PR_NUMBER --comment-id COMMENT_ID
 ```
 
 Review event:
@@ -129,19 +163,23 @@ Review event:
 - 複数の review comment が 1 つの review に含まれる場合でも、各 review comment / thread ごとに個別 reply する。
 - 指摘ごとに修正、説明、保留を分ける。
 - 修正、説明、保留の内容は該当 comment / thread の reply に残す。
+- reply 成功を確認してから thread を resolve する。
 - 自分が作った unrelated change を混ぜない。
 
 ## 禁止事項
 
 - Merge 処理
+- bot preflight 前の GitHub 書き込み
+- 人間 `gh` / `GH_TOKEN` による AI 書き込み fallback
 - 複数の comment がまとまった review に対して、まとめて 1 つの comment を作成して reply すること。
 
 ## 最終確認
 
 - 1 issue 1 PR の対応になっているか。
 - issue に PR URL を残したか。
-- reviewer を設定したか。
-- AI agent comment / review は bot credential で投稿したか。
+- reviewer を bot script で設定したか。
+- bot preflight を成功させたか。
+- AI agent comment / review / reply / resolve は bot credential で投稿したか。
 - ユーザからの PR comment / review comment へ個別に reply したか。
 - HTML 配布あり: PR description に最小サマリと `## レビュー用資料` 配下の `[v{N}](https://ai-html.hacksaw.work/<object-key>)` のみを記載したか。HTML 配布なし: issue 完成 Markdown をそのまま記載したか。
 - Summary・検証結果・関連情報は PR comment に記載したか。

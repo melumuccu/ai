@@ -18,7 +18,8 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レ�
 - 既存 issue からプランニングする場合、プランニング前に既存 issue の description と comment を参照する。詳細は [issue-progress.md](references/issue-progress.md)。
 - HTML 配布あり（`kf-g-html-document-universal-single-file` で生成・R2 アップロード済み）: issue description は最小サマリと `## プランニング用資料` 配下の `[v{N}](https://ai-html.hacksaw.work/<object-key>)` のみとする。計画全文・詳細は HTML に置く。description 更新のタイミングと形式は [issue-progress.md](references/issue-progress.md)。
 - HTML 配布なし: プランニングしたら、計画 Markdown を issue description へ**そのまま**転記する。AI 側プランニングファイルには計画 Markdown を記載する代わりに issue リンクのみ記載する。詳細は [issue-progress.md](references/issue-progress.md)。
-- AI agent が comment を残す時は GitHub App bot credential を優先する。
+- AI agent が comment / description 更新 / status 更新を残す時は、GitHub App bot preflight 成功後に bot helper script のみ使う。
+- bot preflight 失敗時は setup 手順を表示して停止する。人間 `gh` / `GH_TOKEN` への fallback は禁止。
 
 ## Plan mode 中の GitHub 書き込み
 
