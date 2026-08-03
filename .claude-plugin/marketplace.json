@@ -71,6 +71,7 @@
       "description": "Repository skills that from external sources",
       "name": "external-skills",
       "skills": [
+        "./daisyui",
         "./docker-expert",
         "./find-skills",
         "./genshijin",
