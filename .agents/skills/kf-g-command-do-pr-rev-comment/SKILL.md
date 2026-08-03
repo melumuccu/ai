@@ -56,7 +56,7 @@ PR の review comment のうち、未解決 thread を対応してください�
 1. reply には、対応した commit（short hash リンク）と変更概要を書く
 1. resolve はユーザーが行う。エージェントは resolve しない
 1. 説明のみ・保留の thread は reply で理由を残す
-1. comment 投稿は bot アカウントがあれば bot credential を使う（`kf-g-github-operations-bot-workflow` 参照）
+1. comment 投稿は必ず bot credential を使う（`kf-g-github-operations-bot-workflow` 参照）
 
 ### reply の禁止事項
 

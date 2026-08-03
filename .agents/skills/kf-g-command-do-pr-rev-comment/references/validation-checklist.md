@@ -18,7 +18,7 @@
 - [ ] 複数 thread を 1 つの reply にまとめていない
 - [ ] push 後に reply している（push 前 reply なし）
 - [ ] エージェントは thread を resolve していない
-- [ ] bot credential が使える環境では bot で投稿している
+- [ ] 必ず bot credential で投稿している
 - [ ] reply に commit リンクと変更概要を含めている
 
 参照: `kf-g-github-pr-review-workflow`
