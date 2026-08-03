@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>インタラクティブ説明ドキュメント（テンプレート）</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     /* Mermaid SVG 内テキストも選択可能にする */
     .mermaid svg text,
@@ -57,45 +58,49 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased">
-  <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
+<body class="bg-base-200 text-base-content antialiased">
+  <header class="navbar sticky top-0 z-30 border-b border-base-300 bg-base-100/95 backdrop-blur">
+    <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4">
       <h1 class="text-lg font-semibold">ドキュメントタイトル</h1>
       <div class="flex items-center gap-2">
         <button
           id="copy-all-btn"
           type="button"
-          class="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="btn btn-sm btn-outline"
           aria-label="すべてのコメントをコピー"
         >
           すべてコピー
         </button>
-        <span id="copy-feedback" class="hidden text-sm text-green-600" aria-live="polite">コピーしました</span>
+        <span id="copy-feedback" class="hidden text-sm text-success" aria-live="polite">コピーしました</span>
       </div>
     </div>
   </header>
 
   <div id="layout-root" class="mx-auto flex max-w-7xl gap-6 px-4 py-6">
     <main id="doc-content" data-content-root class="min-w-0 flex-1 select-text leading-relaxed">
-      <p class="mb-4 text-slate-600">
+      <p class="mb-4 text-base-content/70">
         本文を選択すると、右側（狭い画面では下）にコメントカードが追加されます。再読み込み後も同じ URL 上で復元されます。
       </p>
 
-      <section class="mb-8">
-        <h2 class="mb-3 text-xl font-semibold">概要</h2>
-        <p>
-          このテンプレートはビルド不要の単一 HTML ファイルです。Tailwind CDN でスタイルし、
-          コメントコアはブラウザ標準 API のみで動作します。
-        </p>
+      <section class="card mb-8 bg-base-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title text-xl">概要</h2>
+          <p>
+            このテンプレートはビルド不要の単一 HTML ファイルです。daisyUI v5 と Tailwind browser CDN でスタイルし、
+            コメントコアはブラウザ標準 API のみで動作します。
+          </p>
+        </div>
       </section>
 
-      <section class="mb-8">
-        <h2 class="mb-3 text-xl font-semibold">使い方</h2>
-        <ol class="list-decimal space-y-2 pl-5">
-          <li>説明したい箇所をドラッグして選択する</li>
-          <li>表示される入力欄にコメントを書いて追加する</li>
-          <li>ハイライトまたはカードから個別コピー・削除ができる</li>
-        </ol>
+      <section class="card mb-8 bg-base-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title text-xl">使い方</h2>
+          <ol class="steps steps-vertical lg:steps-horizontal">
+            <li class="step step-primary">説明したい箇所をドラッグして選択する</li>
+            <li class="step step-primary">表示される入力欄にコメントを書いて追加する</li>
+            <li class="step">ハイライトまたはカードから個別コピー・削除ができる</li>
+          </ol>
+        </div>
       </section>
 
       <!-- Mermaid が必要な場合のみ script を読み込み、次の pre を class="mermaid" に差し替える -->
@@ -118,27 +123,32 @@
 
   <!-- モバイル用コメントレール（lg 未満で表示） -->
   <div class="mx-auto max-w-7xl px-4 pb-8 lg:hidden">
-    <h2 class="mb-2 text-sm font-semibold text-slate-500">コメント</h2>
+    <h2 class="mb-2 text-sm font-semibold text-base-content/60">コメント</h2>
     <div id="comment-panel-mobile" class="space-y-3" data-comment-panel></div>
   </div>
 
   <svg id="connector-svg" aria-hidden="true"><g id="connector-lines"></g></svg>
 
-  <dialog id="comment-dialog" class="rounded-lg border border-slate-200 p-0 shadow-xl backdrop:bg-black/30">
-    <form id="comment-form" method="dialog" class="w-80 p-4">
-      <p class="mb-2 text-sm text-slate-500">選択テキスト</p>
-      <blockquote id="dialog-quote" class="mb-3 border-l-4 border-amber-400 bg-amber-50 px-3 py-2 text-sm italic"></blockquote>
-      <label for="comment-input" class="mb-1 block text-sm font-medium">コメント</label>
+  <dialog id="comment-dialog" class="modal">
+    <form id="comment-form" method="dialog" class="modal-box w-11/12 max-w-sm">
+      <p class="mb-2 text-sm text-base-content/60">選択テキスト</p>
+      <blockquote id="dialog-quote" class="mb-3 border-l-4 border-warning bg-warning/10 px-3 py-2 text-sm italic"></blockquote>
+      <label for="comment-input" class="label">
+        <span class="label-text font-medium">コメント</span>
+      </label>
       <textarea
         id="comment-input"
         rows="3"
         required
-        class="mb-3 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="textarea textarea-bordered mb-3 w-full"
       ></textarea>
-      <div class="flex justify-end gap-2">
-        <button type="button" id="comment-cancel" class="rounded-md px-3 py-1.5 text-sm hover:bg-slate-100">キャンセル</button>
-        <button type="submit" class="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700">追加</button>
+      <div class="modal-action">
+        <button type="button" id="comment-cancel" class="btn btn-ghost btn-sm">キャンセル</button>
+        <button type="submit" class="btn btn-primary btn-sm">追加</button>
       </div>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+      <button type="submit">close</button>
     </form>
   </dialog>
 
@@ -277,14 +287,14 @@
 
       function createCard(entry) {
         const card = document.createElement('article');
-        card.className = 'comment-card rounded-lg border border-slate-200 bg-white p-3 shadow-sm';
+        card.className = 'comment-card card bg-base-100 p-3 shadow-sm border border-base-300';
         card.dataset.commentId = entry.id;
         card.innerHTML =
-          '<blockquote class="mb-2 border-l-4 border-amber-400 bg-amber-50 px-2 py-1 text-xs italic text-slate-700"></blockquote>' +
+          '<blockquote class="mb-2 border-l-4 border-warning bg-warning/10 px-2 py-1 text-xs italic text-base-content/80"></blockquote>' +
           '<p class="mb-3 whitespace-pre-wrap text-sm"></p>' +
           '<div class="flex gap-2">' +
-          '<button type="button" data-action="copy" class="rounded border border-slate-300 px-2 py-1 text-xs hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">コピー</button>' +
-          '<button type="button" data-action="delete" class="rounded border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-400">削除</button>' +
+          '<button type="button" data-action="copy" class="btn btn-xs btn-outline">コピー</button>' +
+          '<button type="button" data-action="delete" class="btn btn-xs btn-outline btn-error">削除</button>' +
           '</div>';
         card.querySelector('blockquote').textContent = entry.quote;
         card.querySelector('p').textContent = entry.comment;

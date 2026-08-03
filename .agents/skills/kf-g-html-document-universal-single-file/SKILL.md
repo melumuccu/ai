@@ -20,9 +20,11 @@ description: Build a build-free, single-file interactive HTML document with text
 
 1. 依頼内容からパターンを選ぶ（[content-patterns.md](references/content-patterns.md)）
 1. テンプレート HTML をコピーし、タイトルと `[data-content-root]` 内本文を差し替える
-1. 必要な CDN のみ追加する（Tailwind は常時。Mermaid / Markmap / diff2html / Alpine.js は内容に応じて）
+1. 必要な CDN のみ追加する（daisyUI v5 + `@tailwindcss/browser@4` は常時。Mermaid / Markmap / diff2html / Alpine.js は内容に応じて）
+1. `<html>` に `data-theme` を設定し、ページ chrome と操作 UI は daisyUI コンポーネントクラス（`btn`, `card`, `alert`, `badge`, `collapse`, `steps` など）を使う。コメントコアは vanilla JS のまま維持する
 1. コメントコア契約を満たす DOM ID・属性を維持する（[core-contract.md](references/core-contract.md)）
 1. Mermaid を使う場合は SVG テキスト選択 CSS を入れる
+1. 手動インフラ操作（Dashboard / CLI / ブラウザ検証など）を含む依頼では、[content-patterns.md](references/content-patterns.md) の「手動インフラ操作記録」を必ず本文に含める
 1. ローカルで開き、選択→コメント→再読み込み→削除→コピーを確認する
 1. R2 配布時は [r2-static-delivery.md](references/r2-static-delivery.md) のチェックリストに従う
 1. issue / PR 向けに HTML を生成・アップロードする場合は、次節「GitHub 連携」を完了してから description を確定する
@@ -83,7 +85,9 @@ PR:
 - [ ] 個別コピー `> quote` + 改行 + comment、全件は `---` 区切り、1.5 秒フィードバック
 - [ ] 本文テキスト選択可能、コメント操作がキーボード可能
 - [ ] デスクトップ右余白 + モバイルでも閲覧可能
+- [ ] daisyUI v5 + `@tailwindcss/browser@4` CDN を読み込み、`<html data-theme="...">` と daisyUI コンポーネントクラスで UI を構成している
 - [ ] バックエンド同期・認証を謳っていない
+- [ ] 手動インフラ操作を含む依頼: 操作範囲、前提、Mermaid 等の構成図、画面操作・入力値・期待結果・失敗時、CLI コマンド、検証、失敗復旧、セキュリティ注意、操作ステータスと版情報を本文に記載した
 - [ ] R2 配布時: 版管理ルールに従い、issue / PR description に用途別見出し（issue: `## プランニング用資料`、PR: `## レビュー用資料`）と、版付き R2 オブジェクト名から確認した `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載した（HTML 配布ありの場合）
 
 ## スコープ外
