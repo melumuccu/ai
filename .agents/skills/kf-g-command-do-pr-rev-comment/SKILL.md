@@ -24,7 +24,7 @@ PR の review comment のうち、未解決 thread を対応してください�
 
 1. 未解決 thread を、独立した論理変更単位のグループへ分類する
 1. 分類基準の詳細は [references/review-group-classification.md](references/review-group-classification.md) を読む
-1. 各グループに短い識別名（例: `v{N} 横断統一`）を付ける
+1. 各グループに短い識別名（例: `表記横断統一`）を付ける
 1. 各グループに対応する thread ID / URL を記録する
 1. 同じファイルに複数グループがある場合も、作業順を分けて commit する
 
