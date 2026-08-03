@@ -20,7 +20,6 @@ issue 着手時は repository 外の sibling directory に worktree を作る。
 
 - worktree 側へ継承すると有益と思われる gitignored ファイルは、ユーザに提案し、承認を得た上で `.worktreeinclude` に記載する。
 - 例: `.dev.vars` / `.agent-browser/`
-- GitHub bot 資格情報（`~/.agents/credentials/github`）はホーム配下に置き、worktree 継承対象外。
 - Claude Code `--worktree` も同ファイルを参照する。
 - bootstrap があるリポでは `pnpm install` と `hooks-install`（gitleaks）まで含める。GVS 有効時の install は実質瞬時。
 
