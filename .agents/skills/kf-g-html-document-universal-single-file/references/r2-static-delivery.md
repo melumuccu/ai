@@ -7,18 +7,22 @@
 - オブジェクトは `Content-Type: text/html` でアップロードする
 - 本 repository の公開先は **`https://ai-html.hacksaw.work/<object-key>`**（カスタムドメイン `ai-html.hacksaw.work`）。latest 版リンクもこの URL を使う
 - バケット名: **`ai-html`**
+- GCP プロジェクト名: **`ai-html`**（Google OAuth 同意画面・OAuth クライアント ID をここで設定。ユーザー申告。クリック履歴は未記録）
+- Cloudflare Zero Trust: Google OAuth ログイン方式を設定。Access ポリシーで許可ユーザーを制限（ユーザー申告。ポリシー値・メール・client ID・シークレット・redirect URI は記録していない）
 - Cloudflare Access は **有効**。公開 URL へのアクセスは Access 認証後に HTML を表示する
 - 公開 URL は **オブジェクト URL を明示** する（バケットルートの index 挙動に依存しない）
+- HTML 公開経路: **Wrangler CLI のみ**（Dashboard Upload / Upload objects は使わない）
 
 ## 版管理（上書き禁止）
 
 `v{N}` は **版番号**（例: `v1`, `v2`）を表すプレースホルダ。
 
 - 同一内容の改訂でも、既存オブジェクトは **上書きしない**
-- 改訂のたびに **新しい `v{N}` オブジェクト** としてアップロードする（例: `2026-08-03_今回の対応概要_v1.html` → `..._v2.html` → `..._v3.html`）
+- 改訂のたびに **新しい `v{N}` オブジェクト** としてアップロードする（例: `2026-08-03_今回の対応概要_v1.html` → `..._v2.html` → `..._v3.html` → `..._v4.html`）
 - 初版は `v1` とする。版番号は単調増加させ、欠番や再利用はしない
 - issue / PR の description に載せるリンクは、常に **最新版の確認済み URL**（`https://ai-html.hacksaw.work/<object-key>`）と **`v{N}` ラベル** に差し替える
 - 旧版 URL は R2 上に残す（履歴参照用）。削除や上書きはしない
+- Bucket Lock は本 repository では任意。現状未適用
 
 ## GitHub description へのリンク反映
 
@@ -26,7 +30,7 @@ HTML 配布ありの issue / PR では、description は最小サマリと用途
 
 1. 新バージョンを R2 へアップロードする
 1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
-1. オブジェクト名から版番号を抽出し、リンクラベルを `[v{N}]` にする（例: `..._v3.html` → `[v3](https://ai-html.hacksaw.work/..._v3.html)`）
+1. オブジェクト名から版番号を抽出し、リンクラベルを `[v{N}]` にする（例: `..._v4.html` → `[v4](https://ai-html.hacksaw.work/..._v4.html)`）
 1. issue には `## プランニング用資料`、PR には `## レビュー用資料` の直下にリンクを置く
 1. URL または `v{N}` が未確定の間はリンクを置かない。確認後に description を更新する
 1. 新版アップロード時は、旧リンクと旧ラベルを新版へ差し替える
@@ -40,9 +44,51 @@ HTML 配布ありの issue / PR では、description は最小サマリと用途
 
 コメントは端末ローカルのみ。共有が必要ならコピー機能でテキスト出力する。
 
-## 手動インフラ操作 runbook（本 repository）
+## 手動インフラ構築 runbook（本 repository）
 
 Dashboard のラベルは Cloudflare UI 更新で変わることがある。破壊的操作の前に、表示ラベルを目視で確認する。
+
+インフラを手動作成・設定した場合、または再現性のために必要な場合は、HTML 本文に **手動インフラ構築手順** を含める。**今回の構築内容（ユーザー申告を含む）** と **再現用クリック手順** を区別する。クリック履歴が取れない項目は捏造せず、一般的な再構築手順として記述する。
+
+### GCP プロジェクトと Google OAuth（再現用）
+
+**今回の構築内容:** GCP プロジェクト名 `ai-html` を作成し、Google OAuth 同意画面と OAuth クライアント ID（Web アプリケーション）を設定した（ユーザー申告。詳細クリック履歴は未記録）。
+
+**再現用クリック手順:**
+
+1. GCP Console → プロジェクトセレクタ → **New Project** → プロジェクト名 `ai-html` → **Create**
+1. **APIs & Services** → **OAuth consent screen** を設定
+1. **Credentials** → **Create Credentials** → **OAuth client ID** → **Web application**
+1. Cloudflare Zero Trust が表示する redirect URI を **そのまま使用** する（推測・捏造しない）
+1. client secret は Cloudflare の保護されたフォームにのみ入力する（HTML やチャットに貼らない）
+
+### Cloudflare Zero Trust / Access（再現用）
+
+**今回の構築内容:** Google OAuth ログイン方式を設定。Access ポリシーで許可ユーザーを制限（ユーザー申告。ポリシー値・メールは未記録）。
+
+**再現用クリック手順:**
+
+1. Cloudflare Dashboard → **Zero Trust** → **Settings** / **Authentication** → **Login methods** → **Google**
+1. GCP の client ID / secret を入力して保存
+1. **Access** → **Applications** → **Add application** → **Self-hosted**
+1. public hostname `ai-html.hacksaw.work` を指定
+1. 意図したユーザー/メールセレクタで **Allow** ポリシーを作成し保存・公開（実際のメールアドレスは記載しない）
+
+### R2 バケットとカスタムドメイン（再現用）
+
+**今回の構築内容:** R2 バケット `ai-html`、カスタムドメイン `ai-html.hacksaw.work` を設定（ユーザー申告）。
+
+**再現用クリック手順:**
+
+1. Cloudflare Dashboard → **R2 object storage** → **Create bucket** → バケット名 `ai-html`
+1. バケット **Settings** → **Custom Domains** → **Add** `ai-html.hacksaw.work`
+1. 接続・検証し **Active** を確認
+
+Dashboard Upload / Upload objects は **公開経路に含めない**。
+
+## CLI 配布 runbook（本 repository）
+
+HTML 公開は **Wrangler CLI のみ**。
 
 ### 前提確認と版選択
 
@@ -51,43 +97,14 @@ Dashboard のラベルは Cloudflare UI 更新で変わることがある。破�
 | バケット | `ai-html` |
 | カスタムドメイン | `ai-html.hacksaw.work` |
 | 公開 URL 形式 | `https://ai-html.hacksaw.work/<object-key>` |
-| 今回のアップロード対象 | 新規 `v{N}` のみ（例: `2026-08-03_今回の対応概要_v3.html`） |
-| 上書き禁止 | `v1`, `v2` など既存オブジェクトは変更しない |
+| 今回のアップロード対象 | 新規 `v{N}` のみ（例: `2026-08-03_今回の対応概要_v4.html`） |
+| 上書き禁止 | `v1`, `v2`, `v3` など既存オブジェクトは変更しない |
 
 **画面操作:** Cloudflare Dashboard → 左メニュー **R2 object storage** → **Overview** → バケット **`ai-html`** をクリック
 
-**期待結果:** バケット内オブジェクト一覧が表示される。既存 `v1` / `v2` が残っている
+**期待結果:** バケット内オブジェクト一覧が表示される。既存 `v1` / `v2` / `v3` が残っている
 
 **失敗時:** バケットが見えない場合はアカウント・権限を確認する。別バケット名を推測して操作しない
-
-### カスタムドメイン状態確認
-
-**画面操作:** バケット **`ai-html`** → **Settings**（または **Custom domains**）→ **`ai-html.hacksaw.work`** の行を確認
-
-**入力値:** ドメイン `ai-html.hacksaw.work`
-
-**期待結果:** ドメインが **Active**（または同等の有効表示）。Access ポリシーが有効
-
-**失敗時:** DNS 未設定・証明書待ちの場合はドメイン設定を完了してからアップロードする
-
-### Dashboard からのアップロード（主経路）
-
-**画面操作:** **R2 object storage** → **Overview** → **`ai-html`** → **Upload**（または **Upload objects**）
-
-**入力値:**
-
-| 項目 | 値 |
-| --- | --- |
-| ファイル | ローカルの `artifacts/<object-key>.html` |
-| Object key | 例: `2026-08-03_今回の対応概要_v3.html` |
-| Content-Type | `text/html` |
-
-**期待結果:** オブジェクト一覧に新キーが追加される。既存 `v1` / `v2` はそのまま
-
-**失敗時:**
-
-- 同名キーが既にある → 版番号を上げた **新キー** を使う（上書きしない）
-- Content-Type が `application/octet-stream` → メタデータを `text/html` に修正して再アップロード
 
 ### Wrangler OAuth 認証
 
@@ -109,14 +126,15 @@ npx wrangler@latest r2 bucket list
 - 未ログイン → ブラウザ OAuth を完了してから `whoami` を再実行
 - バケットが見えない → アカウント切替・権限を確認。API トークンやシークレットをチャットに貼らない
 
-### CLI からのアップロード（代替経路）
+### CLI からのアップロード（唯一の公開経路）
 
 **ターミナル:**
 
 ```bash
-npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v3.html \
-  --file=artifacts/2026-08-03_今回の対応概要_v3.html \
-  --content-type=text/html
+npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.html \
+  --file=artifacts/2026-08-03_今回の対応概要_v4.html \
+  --content-type=text/html \
+  --remote
 ```
 
 **入力値:** 上記 object key と `--content-type=text/html` を必ず指定する
@@ -125,19 +143,21 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v3.ht
 
 **失敗時:**
 
-- `403` / 認証エラー → 手順 4 をやり直す
+- `403` / 認証エラー → OAuth 手順をやり直す
 - キー typo → 404 になるため、Dashboard のキー名と完全一致を確認する
 
-### Access 認証付きブラウザ検証
+## 目視確認手順（本 repository）
 
-**画面操作:**
+公開後のブラウザ検証。**手動インフラ構築手順** とは分離する。
 
-1. ブラウザで `https://ai-html.hacksaw.work/2026-08-03_今回の対応概要_v3.html` を開く
+1. バケット **`ai-html`** → **Settings** / **Custom domains** → **`ai-html.hacksaw.work`** が **Active** であることを確認
+1. ブラウザで `https://ai-html.hacksaw.work/<object-key>` を開く
 1. Cloudflare Access ログイン画面が出たら組織アカウントで認証する
-1. HTML が表示されたら、本文選択→コメント追加→再読み込み→削除を確認する
+1. HTML が表示されたら、本文選択 → コメント追加 → **編集保存** → 再読み込みで永続化を確認する
+1. 個別コピー・全件コピーが動的 Markdown ヘッダー付き形式になることを確認する
 1. DevTools → **Network** → 対象 HTML レスポンス → **Content-Type: text/html** を確認する
 
-**期待結果:** Access 後にページが表示され、コメントコアが動作する。`Content-Type` は `text/html`
+**期待結果:** Access 後にページが表示され、コメントコア（追加・編集・削除・コピー）が動作する。`Content-Type` は `text/html`
 
 **失敗時:**
 
@@ -152,17 +172,17 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v3.ht
 ### 失敗復旧とセキュリティ
 
 - **版重複:** 既存キーと衝突したら版番号を上げ、新オブジェクトとして再アップロードする
-- **旧版保護:** `v1` / `v2` を削除・上書きしない
-- **シークレット:** API トークン、Access シークレット、R2 認証情報を HTML やチャットに貼らない
+- **旧版保護:** `v1` / `v2` / `v3` を削除・上書きしない
+- **シークレット:** API トークン、Access シークレット、OAuth client secret、R2 認証情報を HTML やチャットに貼らない
 - **Access:** 公開 HTML は Access 有効のまま運用する（意図的な無効化は別途合意）
-- **Bucket Lock:** 本 repository では任意。現状未適用でも可
+- **Bucket Lock:** 本 repository では任意。現状未適用
 
 ## デプロイ前チェック
 
-1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・再読み込み・削除を確認
+1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **新規 `v{N}` として** アップロードし、既存オブジェクトを上書きしていないことを確認
-1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で Access 認証後に同様に確認
+1. **新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
+1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で Access 認証後に目視確認手順を実施
 
 ## Cloudflare 操作（Wrangler OAuth）
 
@@ -178,4 +198,4 @@ Worker デプロイや HTML への R2 アップロードコード埋め込みは
 
 ## 生成 HTML への反映
 
-インフラ操作を含む依頼では、[content-patterns.md](content-patterns.md) の「手動インフラ操作記録」に従い、上記 runbook の要点（全体図、クリック経路、入力値、期待結果、失敗時、検証、セキュリティ、操作ステータス）を HTML 本文に記載する。
+インフラ操作を含む依頼では、[content-patterns.md](content-patterns.md) の「手動インフラ操作記録」に従い、上記 runbook の要点（全体図、**手動インフラ構築手順**、**目視確認手順**、CLI コマンド、失敗時、セキュリティ、操作ステータス）を HTML 本文に記載する。

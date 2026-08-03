@@ -98,7 +98,7 @@
           <ol class="steps steps-vertical lg:steps-horizontal">
             <li class="step step-primary">説明したい箇所をドラッグして選択する</li>
             <li class="step step-primary">表示される入力欄にコメントを書いて追加する</li>
-            <li class="step">ハイライトまたはカードから個別コピー・削除ができる</li>
+            <li class="step">ハイライトまたはカードから個別コピー・編集・削除ができる</li>
           </ol>
         </div>
       </section>
@@ -144,7 +144,7 @@
       ></textarea>
       <div class="modal-action">
         <button type="button" id="comment-cancel" class="btn btn-ghost btn-sm">キャンセル</button>
-        <button type="submit" class="btn btn-primary btn-sm">追加</button>
+        <button type="submit" id="comment-submit" class="btn btn-primary btn-sm">追加</button>
       </div>
     </form>
     <form method="dialog" class="modal-backdrop">
@@ -168,6 +168,7 @@
       const commentForm = document.getElementById('comment-form');
       const commentInput = document.getElementById('comment-input');
       const dialogQuote = document.getElementById('dialog-quote');
+      const commentSubmit = document.getElementById('comment-submit');
       const copyAllBtn = document.getElementById('copy-all-btn');
       const copyFeedback = document.getElementById('copy-feedback');
       const commentRail = document.getElementById('comment-rail');
@@ -175,6 +176,7 @@
       /** @type {Map<string, { id: string, quote: string, comment: string, anchor: object, createdAt: string, card: HTMLElement|null, mark: HTMLElement|null, targetY: number }>} */
       const state = new Map();
       let pendingRange = null;
+      let editModeId = null;
 
       function storageKey() {
         return STORAGE_PREFIX + location.pathname;
@@ -285,6 +287,12 @@
         return mark;
       }
 
+      function bindCardActions(card, entry) {
+        card.querySelector('[data-action="copy"]').addEventListener('click', () => copyOne(entry));
+        card.querySelector('[data-action="edit"]').addEventListener('click', () => openDialogForEdit(entry));
+        card.querySelector('[data-action="delete"]').addEventListener('click', () => removeComment(entry.id));
+      }
+
       function createCard(entry) {
         const card = document.createElement('article');
         card.className = 'comment-card card bg-base-100 p-3 shadow-sm border border-base-300';
@@ -294,14 +302,12 @@
           '<p class="mb-3 whitespace-pre-wrap text-sm"></p>' +
           '<div class="flex gap-2">' +
           '<button type="button" data-action="copy" class="btn btn-xs btn-outline">コピー</button>' +
+          '<button type="button" data-action="edit" class="btn btn-xs btn-outline">編集</button>' +
           '<button type="button" data-action="delete" class="btn btn-xs btn-outline btn-error">削除</button>' +
           '</div>';
         card.querySelector('blockquote').textContent = entry.quote;
         card.querySelector('p').textContent = entry.comment;
-
-        card.querySelector('[data-action="copy"]').addEventListener('click', () => copyOne(entry));
-        card.querySelector('[data-action="delete"]').addEventListener('click', () => removeComment(entry.id));
-
+        bindCardActions(card, entry);
         return card;
       }
 
@@ -322,8 +328,6 @@
         mobile.innerHTML = '';
         for (const entry of sortedEntries()) {
           const clone = createCard(entry);
-          clone.querySelector('[data-action="delete"]').addEventListener('click', () => removeComment(entry.id));
-          clone.querySelector('[data-action="copy"]').addEventListener('click', () => copyOne(entry));
           mobile.appendChild(clone);
         }
       }
@@ -360,6 +364,18 @@
         state.set(id, entry);
         mountCard(entry);
         persist();
+        layoutCardsAndLines();
+      }
+
+      function updateComment(id, comment) {
+        const entry = state.get(id);
+        if (!entry) return;
+        entry.comment = comment;
+        if (entry.card) {
+          entry.card.querySelector('p').textContent = comment;
+        }
+        persist();
+        syncMobilePanel();
         layoutCardsAndLines();
       }
 
@@ -476,8 +492,24 @@
         }
       }
 
-      function formatCopy(entry) {
+      function getCopyHeader() {
+        const url = location.href.split(/[?#]/)[0];
+        let fileName = 'document.html';
+        try {
+          const segment = url.split('/').filter(Boolean).pop() || '';
+          fileName = decodeURIComponent(segment) || fileName;
+        } catch {
+          /* keep fallback */
+        }
+        return '# [' + fileName + '](' + url + ') へのコメント';
+      }
+
+      function formatCopyBody(entry) {
         return '> ' + entry.quote + '\n\n' + entry.comment;
+      }
+
+      function formatCopy(entry) {
+        return getCopyHeader() + '\n\n' + formatCopyBody(entry);
       }
 
       async function copyText(text) {
@@ -499,8 +531,9 @@
       }
 
       function copyAll() {
-        const text = sortedEntries().map(formatCopy).join('\n\n---\n\n');
-        if (text) copyText(text);
+        const bodies = sortedEntries().map(formatCopyBody);
+        if (!bodies.length) return;
+        copyText(getCopyHeader() + '\n\n' + bodies.join('\n\n---\n\n'));
       }
 
       function showCopyFeedback() {
@@ -508,35 +541,64 @@
         setTimeout(() => copyFeedback.classList.add('hidden'), COPY_FEEDBACK_MS);
       }
 
+      function resetDialogMode() {
+        editModeId = null;
+        pendingRange = null;
+        commentSubmit.textContent = '追加';
+      }
+
+      function openDialogForEdit(entry) {
+        editModeId = entry.id;
+        pendingRange = null;
+        dialogQuote.textContent = entry.quote;
+        commentInput.value = entry.comment;
+        commentSubmit.textContent = '保存';
+        dialog.showModal();
+        commentInput.focus();
+      }
+
       function openDialogForSelection() {
+        if (dialog.open) return;
+
         const sel = window.getSelection();
-        if (!sel || sel.isCollapsed || !contentRoot.contains(sel.anchorNode)) return;
+        if (!sel || sel.isCollapsed) return;
+        if (!contentRoot.contains(sel.anchorNode) || !contentRoot.contains(sel.focusNode)) return;
 
         const range = sel.getRangeAt(0).cloneRange();
         const quote = range.toString().trim();
         if (!quote) return;
 
+        editModeId = null;
         pendingRange = range;
         dialogQuote.textContent = quote;
         commentInput.value = '';
+        commentSubmit.textContent = '追加';
         dialog.showModal();
         commentInput.focus();
       }
 
       commentForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!pendingRange) return;
-        const anchor = extractAnchor(pendingRange);
         const comment = commentInput.value.trim();
         if (!comment) return;
+
+        if (editModeId) {
+          updateComment(editModeId, comment);
+          resetDialogMode();
+          dialog.close();
+          return;
+        }
+
+        if (!pendingRange) return;
+        const anchor = extractAnchor(pendingRange);
         addComment(anchor.quote, comment, anchor);
-        pendingRange = null;
+        resetDialogMode();
         dialog.close();
         window.getSelection()?.removeAllRanges();
       });
 
       document.getElementById('comment-cancel').addEventListener('click', () => {
-        pendingRange = null;
+        resetDialogMode();
         dialog.close();
       });
 
