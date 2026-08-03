@@ -18,9 +18,17 @@ issue 管理の進め方は `kf-g-github-issue-worktree-management`、PR 作成�
 - `.agents/credentials/github` の有無や setup 方法を判断する。
 - commit / push 時の gitleaks 検知を扱う。
 
+## 書き込み gate
+
+AI agent による GitHub **書き込み**は、bot preflight 成功後にのみ実行する。
+preflight 失敗時は setup 手順を表示して停止する。人間 `gh` / `GH_TOKEN` への fallback は禁止。
+
+詳細: [preflight-write-gate.md](references/preflight-write-gate.md)
+
 ## 読み進め方
 
 1. まず [basic-policy.md](references/basic-policy.md) を読む。
+1. GitHub 書き込み前に [preflight-write-gate.md](references/preflight-write-gate.md) を読む。
 1. GitHub 操作先を確認するなら [repository-context.md](references/repository-context.md) を読む。
 1. GitHub App credential の setup や有無を確認するなら [github-app-credentials.md](references/github-app-credentials.md) を読む。
 1. Issue / PR comment または PR review を投稿するなら [bot-comment-review.md](references/bot-comment-review.md) を読む。
@@ -30,8 +38,10 @@ issue 管理の進め方は `kf-g-github-issue-worktree-management`、PR 作成�
 ## 参照ファイル
 
 - [basic-policy.md](references/basic-policy.md): GitHub 操作と secret 取り扱いの基本方針
+- [preflight-write-gate.md](references/preflight-write-gate.md): 書き込み前 bot preflight と write helper 一覧
 - [repository-context.md](references/repository-context.md): 操作先 remote 確認
 - [github-app-credentials.md](references/github-app-credentials.md): GitHub App credential の setup とユーザ残作業
 - [bot-comment-review.md](references/bot-comment-review.md): bot comment / review script の使い方
+- [rollout.md](references/rollout.md): ローカル / CI への段階導入手順
 - [gitleaks.md](references/gitleaks.md): gitleaks 検知時の禁止事項と対応
 - [checklist.md](references/checklist.md): 作業完了前の確認項目

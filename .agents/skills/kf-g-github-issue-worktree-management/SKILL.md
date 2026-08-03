@@ -17,7 +17,8 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レ�
 - 作業ログ、判断、進捗、PR URL は issue comment に残す。
 - 既存 issue からプランニングする場合、プランニング前に既存 issue の description と comment を参照する。詳細は [issue-progress.md](references/issue-progress.md)。
 - プランニングしたら、計画 Markdown を issue description へ**そのまま**転記する。AI 側プランニングファイルには 計画 Markdown を記載する代わりに issue リンクのみ記載する。description 更新・ユーザ comment 返答の詳細は [issue-progress.md](references/issue-progress.md)。
-- AI agent が comment を残す時は GitHub App bot credential を優先する。
+- AI agent が comment / description 更新 / status 更新を残す時は、GitHub App bot preflight 成功後に bot helper script のみ使う。
+- bot preflight 失敗時は setup 手順を表示して停止する。人間 `gh` / `GH_TOKEN` への fallback は禁止。
 
 ## Plan mode 中の GitHub 書き込み
 
