@@ -1,0 +1,11 @@
+---
+description: Applies in the following cases: when requiring detailed communication with users during planning, revision, review, debugging, or evaluation.This rule manages HTML-based communication with users. Regular application UI HTML is excluded from this scope.
+---
+
+# 単一HTML skillの適用
+
+対象作業では次を守る。
+
+1. 着手前に `.agents/skills/kf-g-html-document-universal-single-file/SKILL.md` を Read し、内容に従う。
+2. HTML作業と非HTML作業が混在する場合、HTML部分へ適用する。
+3. 依頼内容とskillの規約が衝突する場合、無視せず確認する。
