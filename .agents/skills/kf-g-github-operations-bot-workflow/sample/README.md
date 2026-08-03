@@ -43,12 +43,27 @@ chmod 600 ~/.agents/credentials/github/.env
 
 GitHub App の private key をこのディレクトリに配置する。
 
+`.pem` ファイルは `koki_fujisawa@hacksaw.work` の Google Drive の `keys/GitHub bot agent` 配下に保管している。
+private key は秘密情報のため、内容を commit したり chat に貼らない。
+
 ```sh
 chmod 600 ~/.agents/credentials/github/ai-agent-melumuccu.xxxxxxxxxxx.private-key.pem
 ```
 
 private key を紛失した場合は GitHub App 設定画面で再発行する。
 古い key が不要なら削除する。
+
+## Sync from sample
+
+repository の sample をホーム credential ディレクトリへ上書き同期する。
+
+```sh
+node .agents/skills/kf-g-github-operations-bot-workflow/sample/scripts/github-agent-sync-home.mjs
+```
+
+`.env.example` はコピー対象外。
+sample に存在しない `.env` や private key (`.pem`) は destination に残る。
+初回 setup 時は同期後に `.env.example` を `.env` にリネームし、値を記入する。
 
 ## Scripts
 
