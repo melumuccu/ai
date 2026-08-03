@@ -55,7 +55,7 @@ HTML 配布がない通常の issue プランニング:
 - **実装着手前**に issue description を更新する
 - description: 作業の仕様・計画を置く場所。プランニングで作成した Markdown を**そのまま**記載する
 - GitHub 投稿前のフットノート記法変換は `kf-g-agent-planning-structured-plan-output` に従う
-- 既存 description がある場合は上書きせず、計画節を追記または整理して統合する
+- 既存 description がある場合は **参考として読み**、プランニングで作成した Markdown へ **統合・上書き** する（追記のみはしない）
 - 理由: AI 側のプランニングはやり取りログが残らず意思決定経緯が追えないため、issue 側でプランニング経緯を管理する
 
 ### description の更新
