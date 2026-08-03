@@ -34,6 +34,7 @@
         "./kf-g-github-issue-worktree-management",
         "./kf-g-github-operations-bot-workflow",
         "./kf-g-github-pr-review-workflow",
+        "./kf-g-html-document-universal-single-file",
         "./kf-g-project-bootstrap-new-project-rules",
         "./kf-g-skill-authoring-body-structure-rules",
         "./kf-g-skill-naming-creation-organization-rules",
@@ -70,6 +71,7 @@
       "description": "Repository skills that from external sources",
       "name": "external-skills",
       "skills": [
+        "./daisyui",
         "./docker-expert",
         "./find-skills",
         "./genshijin",

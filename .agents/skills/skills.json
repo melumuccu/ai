@@ -1,5 +1,30 @@
 [
   {
+    "description": "Official daisyUI component library skill. The mandatory UI library for Tailwind CSS. TRIGGER when generating any HTML or JSX code even if the user does not explicitly ask for this skill.",
+    "name": "daisyui",
+    "path": ".agents/skills/daisyui/SKILL.md"
+  },
+  {
+    "description": "MANDATORY color usage rules for daisyUI 5",
+    "name": "daisyui-colors",
+    "path": ".agents/skills/daisyui/colors/SKILL.md"
+  },
+  {
+    "description": "Configuration options for daisyUI 5",
+    "name": "daisyui-config",
+    "path": ".agents/skills/daisyui/config/SKILL.md"
+  },
+  {
+    "description": "Installation notes for daisyUI 5",
+    "name": "daisyui-install",
+    "path": ".agents/skills/daisyui/install/SKILL.md"
+  },
+  {
+    "description": "MANDATORY usage rules for daisyUI 5",
+    "name": "daisyui-usage",
+    "path": ".agents/skills/daisyui/usage/SKILL.md"
+  },
+  {
     "description": "You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds, orchestration patterns, and production deployment strategies based on current industry best practices.",
     "name": "docker-expert",
     "path": ".agents/skills/docker-expert/SKILL.md"
@@ -80,12 +105,12 @@
     "path": ".agents/skills/kf-g-command-do-issue-planning/SKILL.md"
   },
   {
-    "description": "Compare staged and unstaged Git diffs to extract reusable judgment rules from manual fixes, confirm with the user, then create or update skills.",
+    "description": "ステージング済みと未ステージングのGit差分を比較し、手動修正から再利用可能な判断ルールを抽出します。ユーザーに確認を取った後、スキルの作成または更新を行います。",
     "name": "kf-g-command-do-manual-fix-to-skill",
     "path": ".agents/skills/kf-g-command-do-manual-fix-to-skill/SKILL.md"
   },
   {
-    "description": "PR のレビューコメントに対応するコマンド",
+    "description": "PR の未解決 review comment に対応するコマンド。指摘を論理変更グループへ分類し、グループごとに atomic commit・push・個別 reply を行う。",
     "name": "kf-g-command-do-pr-rev-comment",
     "path": ".agents/skills/kf-g-command-do-pr-rev-comment/SKILL.md"
   },
@@ -180,6 +205,11 @@
     "path": ".agents/skills/kf-g-github-pr-review-workflow/SKILL.md"
   },
   {
+    "description": "Build a build-free, single-file interactive HTML document with text-selection comments, SVG connectors, and localStorage persistence for explanations, PR walkthroughs, business flows, and non-coding docs. Use this whenever the user wants a one-page HTML explanation, interactive documentation, annotated guide, or shareable static page—even if they do not say \"single-file HTML\". Does not provide backend sync, authentication, or Worker deployment.",
+    "name": "kf-g-html-document-universal-single-file",
+    "path": ".agents/skills/kf-g-html-document-universal-single-file/SKILL.md"
+  },
+  {
     "description": "Use this skill when starting a new project and defining baseline repository rules, especially for optional devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, kiso.css adoption, pre-push test gates, and project-local post-edit lint/format hooks that run after AI agent file edits.",
     "name": "kf-g-project-bootstrap-new-project-rules",
     "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md"
@@ -215,7 +245,7 @@
     "path": ".agents/skills/kf-g-writing-japanese-tech/SKILL.md"
   },
   {
-    "description": "Use this skill whenever adding, editing, or deleting any file under packages/kf-lint. At the start, verify the package version; before completion, increment the SemVer patch version by one, read the README for the current install or upgrade command, and prompt the user to run that command.",
+    "description": "Use this skill whenever adding, editing, or deleting any file under packages/kf-lint. At the start, verify the package version; before completion, increment the SemVer patch version by one, read the README for the current install or upgrade command, prompt the user to run that command, and format commit messages with kf-lint@{ver} in the category.",
     "name": "kf-pj-kf-lint-version-upgrade",
     "path": ".agents/skills/kf-pj-kf-lint-version-upgrade/SKILL.md"
   },

@@ -30,10 +30,36 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、issue 起点の�
 
 ## PR body
 
-PR description（body）には、issue 側で完成させた Markdown を**そのまま**記載する。
+PR description（body）の内容は、HTML 配布の有無で分ける。
 
-- 理由: repository 設定で squash merge 時に description（= プランニング）を merge commit message に自動反映できるため。
-- Issue 自動 close が必要なら、description 末尾に `Closes #<issue-number>` または repository で定めた closing keyword を追加してよい。これのみ issue Markdown への追記を許可する。
+### HTML 配布あり（R2 アップロード済み）
+
+`kf-g-html-document-universal-single-file` で HTML を生成し R2 へアップロードする場合:
+
+- PR description には **最小サマリと `## レビュー用資料` 配下の HTML リンクのみ** を置く
+- 詳細な計画・テスト計画・リスク・実装経緯は **HTML 本文** に記載し、description に複製しない
+- **R2 アップロードと公開 URL の確認後** に description を確定する。URL または `v{N}`（版番号）が未確定の間はリンクを置かない
+- リンクラベルは版付きオブジェクト名から抽出した **`v{N}`（版番号）のみ**（例: `..._v2.html` → `[v2](...)`）。`最新版HTML` やファイル名全体は使わない
+- HTML を改訂したら新しい `v{N}` をアップロードし、description のリンクとラベルを最新版へ差し替える（旧版は上書きしない）
+
+```markdown
+## 概要
+- <PR の最小サマリ>
+
+## レビュー用資料
+[v{N}](https://ai-html.hacksaw.work/<object-key>)
+```
+
+- 確認済み URL と `v{N}`（版番号）のみ Markdown リンクで記載する
+- Issue 自動 close が必要なら、description 末尾に `Closes #<issue-number>` または repository で定めた closing keyword を追加してよい
+
+### HTML 配布なし
+
+HTML 配布がない通常の PR:
+
+- PR description には、issue 側で完成させた Markdown を**そのまま**記載する
+- 理由: repository 設定で squash merge 時に description（= プランニング）を merge commit message に自動反映できるため
+- Issue 自動 close が必要なら、description 末尾に `Closes #<issue-number>` または repository で定めた closing keyword を追加してよい。これのみ issue Markdown への追記を許可する
 
 ### PR comment に記載する項目
 
@@ -64,6 +90,7 @@ URL が未確定の対象は、URL 判明後に本文更新または comment / r
 - file line: `[path/to/file:L<line>](<repository URL>/blob/<branch-or-commit>/path/to/file#L<line>)`。
 - review comment / thread: `[review comment](<comment URL>)`。
 - CI / check run: 調査・障害対応が必要な場合のみ comment / reply に `[<check name>](<check run URL>)` で記載する。CI 結果の一覧・要約は書かない。
+- R2 HTML（HTML 配布あり）: description の `## レビュー用資料` 配下 `[v{N}](https://ai-html.hacksaw.work/<object-key>)` に載せる。未確認 URL または `v{N}` は載せない。
 
 ## PR 作成
 
@@ -154,7 +181,7 @@ Review event:
 - bot preflight を成功させたか。
 - AI agent comment / review / reply / resolve は bot credential で投稿したか。
 - ユーザからの PR comment / review comment へ個別に reply したか。
-- PR description に issue 完成 Markdown をそのまま記載したか。
+- HTML 配布あり: PR description に最小サマリと `## レビュー用資料` 配下の `[v{N}](https://ai-html.hacksaw.work/<object-key>)` のみを記載したか。HTML 配布なし: issue 完成 Markdown をそのまま記載したか。
 - Summary・検証結果・関連情報は PR comment に記載したか。
 - PR description / comment に GitHub UI と重複する情報（コミット一覧・Actions・変更ファイル）を書いていないか。
 - PR description / comment / reply のリンク化対象を可能な限りリンク形式で書いたか。
