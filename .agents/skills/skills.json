@@ -180,6 +180,11 @@
     "path": ".agents/skills/kf-g-github-pr-review-workflow/SKILL.md"
   },
   {
+    "description": "Build a build-free, single-file interactive HTML document with text-selection comments, SVG connectors, and localStorage persistence for explanations, PR walkthroughs, business flows, and non-coding docs. Use this whenever the user wants a one-page HTML explanation, interactive documentation, annotated guide, or shareable static page—even if they do not say \"single-file HTML\". Does not provide backend sync, authentication, or Worker deployment.",
+    "name": "kf-g-html-document-universal-single-file",
+    "path": ".agents/skills/kf-g-html-document-universal-single-file/SKILL.md"
+  },
+  {
     "description": "Use this skill when starting a new project and defining baseline repository rules, especially for optional devcontainer setup, mise-first tooling, pnpm security settings, Vite+ workflows, kiso.css adoption, pre-push test gates, and project-local post-edit lint/format hooks that run after AI agent file edits.",
     "name": "kf-g-project-bootstrap-new-project-rules",
     "path": ".agents/skills/kf-g-project-bootstrap-new-project-rules/SKILL.md"
