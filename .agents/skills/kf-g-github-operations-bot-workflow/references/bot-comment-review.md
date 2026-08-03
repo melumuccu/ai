@@ -64,6 +64,7 @@ node .agents/credentials/github/scripts/github-agent-update-issue-state.mjs OWNE
 
 運用:
 
+- GitHub 書き込みをまとめる呼出元は、開始時に一意な `AI_AGENT_GITHUB_SESSION_ID` を設定する。
 - 投稿本文は一時ファイルに作る。
 - 投稿後、URL をユーザに報告する。
 - 失敗時は HTTP status と GitHub API message を読む。
@@ -73,5 +74,6 @@ node .agents/credentials/github/scripts/github-agent-update-issue-state.mjs OWNE
 Token:
 
 - write helper script は投稿直前に installation token を発行する。
+- 同一 session の最初の書き込みだけ repository 権限を完全 preflight で確認する。有効な marker があっても token は投稿ごとに再発行する。
 - 長期間未使用でも、`.env` と private key が有効ならユーザ操作は不要。
 - `github-agent-token.mjs` の手動実行は診断用。token 本体は出力しない。

@@ -23,6 +23,13 @@ AI_AGENT_GITHUB_PRIVATE_KEY_PATH=.agents/credentials/github/ai-agent-melumuccu.x
 `GH_TOKEN` は読み取り操作で使うユーザ本人 token。
 AI agent は sandbox 環境で動くため、host 側の `gh auth login` 済み状態を前提にしない。
 `GH_TOKEN` は AI の GitHub **書き込み**には使わない。
+GitHub 書き込みをまとめる呼出元は、セッションごとに一意な `AI_AGENT_GITHUB_SESSION_ID` を設定する。
+
+```sh
+export AI_AGENT_GITHUB_SESSION_ID="$(uuidgen)"
+```
+
+同一 session の最初の書き込みで repository 権限を完全 preflight し、有効な marker がある後続書き込みでも installation token は毎回再発行する。session ID が未設定の場合は、各書き込みで完全 preflight を実行する。
 
 JWT の `iss` には GitHub docs 推奨の Client ID を使う。
 古い local 設定との互換用に script は `AI_AGENT_GITHUB_APP_ID` も fallback として読む。
@@ -60,6 +67,7 @@ node .agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO PR
 node .agents/credentials/github/scripts/github-agent-create-pr.mjs OWNER/REPO --head BRANCH --base BASE BODY_FILE
 node .agents/credentials/github/scripts/github-agent-set-reviewers.mjs OWNER/REPO PR_NUMBER REVIEWER
 node .agents/credentials/github/scripts/verify-write-gate.mjs
+node .agents/credentials/github/scripts/verify-session-preflight.mjs
 ```
 
 `github-agent-preflight.mjs` は書き込み前の bot 資格情報診断用。

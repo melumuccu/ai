@@ -1,12 +1,15 @@
-import { createSign } from "node:crypto";
+import { createHash, createSign, randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptsDir = dirname(fileURLToPath(import.meta.url));
 const credentialsDir = dirname(scriptsDir);
 const envPath = join(credentialsDir, ".env");
+const sessionMarkerDirectory = join(tmpdir(), "ai-agent-github-preflight");
+const sessionPreflightTtlMs = 15 * 60 * 1000;
 
 export const agentMarker = "<!-- ai-agent-melumuccu:v1 -->";
 
@@ -145,8 +148,9 @@ export async function preflightWriteGate(owner, repo) {
 	};
 
 	let repository = null;
+	const sessionMarkerPath = getSessionPreflightMarkerPath(config, owner, repo);
 
-	if (owner && repo) {
+	if (owner && repo && !(await hasValidSessionPreflightMarker(sessionMarkerPath))) {
 		const response = await fetch(`${config.apiUrl}/repos/${owner}/${repo}`, { headers });
 
 		if (response.status === 404) {
@@ -164,6 +168,7 @@ export async function preflightWriteGate(owner, repo) {
 		}
 
 		repository = await response.json();
+		await createSessionPreflightMarker(sessionMarkerPath);
 	}
 
 	return {
@@ -174,6 +179,16 @@ export async function preflightWriteGate(owner, repo) {
 		repository,
 		token: tokenResponse.token
 	};
+}
+
+export function getSessionPreflightMarkerPath(config, owner, repo, sessionId = process.env.AI_AGENT_GITHUB_SESSION_ID) {
+	if (!sessionId || !owner || !repo) {
+		return null;
+	}
+
+	const markerKey = [sessionId, `${owner}/${repo}`, config.installationId, config.apiUrl].join("\0");
+	const digest = createHash("sha256").update(markerKey).digest("hex");
+	return join(sessionMarkerDirectory, `${digest}.json`);
 }
 
 export async function githubWriteRequest(path, init = {}, repository = null) {
@@ -288,6 +303,41 @@ export function getRequiredRepositoryOption(args) {
 
 async function loadConfig() {
 	return loadBotConfig();
+}
+
+async function hasValidSessionPreflightMarker(markerPath) {
+	if (!markerPath) {
+		return false;
+	}
+
+	try {
+		const marker = JSON.parse(await readFile(markerPath, "utf8"));
+		return typeof marker.expiresAt === "number" && marker.expiresAt > Date.now();
+	} catch {
+		return false;
+	}
+}
+
+async function createSessionPreflightMarker(markerPath) {
+	if (!markerPath) {
+		return;
+	}
+
+	await mkdir(sessionMarkerDirectory, { recursive: true, mode: 0o700 });
+	const marker = JSON.stringify({
+		completedAt: new Date().toISOString(),
+		expiresAt: Date.now() + sessionPreflightTtlMs
+	});
+	const temporaryPath = `${markerPath}.${randomUUID()}.tmp`;
+
+	try {
+		await writeFile(temporaryPath, marker, { encoding: "utf8", mode: 0o600, flag: "wx" });
+		await chmod(temporaryPath, 0o600);
+		await rename(temporaryPath, markerPath);
+		await chmod(markerPath, 0o600);
+	} finally {
+		await unlink(temporaryPath).catch(() => {});
+	}
 }
 
 async function loadDotEnv() {

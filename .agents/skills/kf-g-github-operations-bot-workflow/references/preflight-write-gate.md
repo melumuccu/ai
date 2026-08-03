@@ -25,6 +25,20 @@ AI agent が GitHub へ**書き込む**前に必ず通す gate。
 - Projects item 一覧取得
 - CI / check run 参照
 
+## セッション内の preflight
+
+呼出元は GitHub 書き込みを行うセッションごとに、一意な `AI_AGENT_GITHUB_SESSION_ID` を環境変数で設定する。
+
+1. 同じ session ID、repository、bot installation、API URL の最初の GitHub 書き込み前に完全 preflight を実行する。
+1. 完全 preflight は bot 資格情報、installation token 発行、対象 repository へのアクセス権を確認する。
+1. 成功した repository 確認は OS の一時ディレクトリに marker として保存する。marker は SHA-256 digest をファイル名に使い、成功時刻と期限だけを mode `600` で保存する。
+1. marker の TTL は 15 分。mtime ではなく marker 内容の期限を検証する。壊れた marker は miss として完全 preflight を実行する。
+1. 同一セッションで有効な marker がある場合、repository 権限確認だけを省略する。
+1. **各書き込み操作では、marker の有無にかかわらず installation token を必ず再発行する。marker は token cache ではない。**
+1. `AI_AGENT_GITHUB_SESSION_ID` が未設定の場合、セッションを安全に識別できないため、従来どおり各書き込み前に完全 preflight を実行する。
+
+完全 preflight が失敗した場合、marker は作成せず、setup 手順を表示して非ゼロで停止する。人間の `gh` / `GH_TOKEN` へ fallback しない。
+
 ## Preflight 手順
 
 1. `.agents/credentials/github/.env` と環境変数から bot 資格情報を読む。
@@ -33,7 +47,7 @@ AI agent が GitHub へ**書き込む**前に必ず通す gate。
    - `AI_AGENT_GITHUB_INSTALLATION_ID`
    - `AI_AGENT_GITHUB_PRIVATE_KEY_PATH`（ファイル実在）
 1. installation token を発行する。
-1. `--repo OWNER/REPO` が指定されている場合、対象 repository へのアクセス権を確認する。
+1. `--repo OWNER/REPO` が指定されている場合、対象 repository へのアクセス権を確認する（有効な session marker がある場合を除く）。
 1. 成功時のみ write helper script を実行する。
 
 ## 診断出力
@@ -58,10 +72,10 @@ preflight の出力に含めてはいけない情報:
 preflight が失敗した場合:
 
 1. GitHub API へ書き込みリクエストを送らない。
-2. 人間ユーザの `gh auth login` や `GH_TOKEN` へ fallback しない。
-3. [github-app-credentials.md](github-app-credentials.md) の setup 手順を表示する。
-4. 再実行すべき操作（checkpoint）をユーザへ伝える。
-5. 非ゼロ終了コードで停止する。
+1. 人間ユーザの `gh auth login` や `GH_TOKEN` へ fallback しない。
+1. [github-app-credentials.md](github-app-credentials.md) の setup 手順を表示する。
+1. 再実行すべき操作（checkpoint）をユーザへ伝える。
+1. 非ゼロ終了コードで停止する。
 
 診断コマンド:
 
@@ -91,8 +105,8 @@ bot preflight 内蔵。直接 `gh` や `gh api -X PATCH` を使わない。
 review comment 対応時:
 
 1. `github-agent-reply.mjs` で reply を投稿する。
-2. reply 成功を確認する。
-3. `github-agent-resolve-thread.mjs` で thread を resolve する。
+1. reply 成功を確認する。
+1. `github-agent-resolve-thread.mjs` で thread を resolve する。
 
 reply 成功前に resolve しない。
 

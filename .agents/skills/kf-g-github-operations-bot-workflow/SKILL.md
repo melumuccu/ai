@@ -20,8 +20,9 @@ issue 管理の進め方は `kf-g-github-issue-worktree-management`、PR 作成�
 
 ## 書き込み gate
 
-AI agent による GitHub **書き込み**は、bot preflight 成功後にのみ実行する。
-preflight 失敗時は setup 手順を表示して停止する。人間 `gh` / `GH_TOKEN` への fallback は禁止。
+AI agent による GitHub **書き込み**は、同一 session 内で最初の書き込み前の完全 bot preflight 成功後にのみ実行する。
+呼出元は一意な `AI_AGENT_GITHUB_SESSION_ID` を設定する。有効な session marker がある後続書き込みも installation token は毎回再発行する。
+session ID 未設定時は各書き込みで完全 preflight を実行する。preflight 失敗時は setup 手順を表示して停止し、人間 `gh` / `GH_TOKEN` への fallback は禁止。
 
 詳細: [preflight-write-gate.md](references/preflight-write-gate.md)
 
