@@ -1,21 +1,121 @@
-import { createSign } from "node:crypto";
+import { createHash, createSign, randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptsDir = dirname(fileURLToPath(import.meta.url));
 const credentialsDir = dirname(scriptsDir);
 const envPath = join(credentialsDir, ".env");
+const sessionMarkerDirectory = join(tmpdir(), "ai-agent-github-preflight");
+const sessionPreflightTtlMs = 15 * 60 * 1000;
 
 export const agentMarker = "<!-- ai-agent-melumuccu:v1 -->";
 
-export async function createInstallationToken() {
-	const config = await loadConfig();
-	const jwt = await createAppJwt(config);
-	const apiUrl = config.apiUrl;
+export const SETUP_INSTRUCTIONS = `GitHub App bot 資格情報が未設定または無効です。
+
+1. sample を local credential ディレクトリへコピーする:
+   mkdir -p .agents/credentials/github
+   cp -R .agents/skills/kf-g-github-operations-bot-workflow/sample/. .agents/credentials/github/
+   mv .agents/credentials/github/.env.example .agents/credentials/github/.env
+
+2. .env に bot 投稿用の値を記入する:
+   AI_AGENT_GITHUB_CLIENT_ID
+   AI_AGENT_GITHUB_INSTALLATION_ID
+   AI_AGENT_GITHUB_PRIVATE_KEY_PATH
+
+3. GitHub App private key (.pem) を .agents/credentials/github 直下へ配置する。
+
+4. 権限を設定する:
+   chmod 600 .agents/credentials/github/.env
+   chmod 600 .agents/credentials/github/*.private-key.pem
+
+5. preflight で確認する:
+   node .agents/credentials/github/scripts/github-agent-preflight.mjs --repo OWNER/REPO
+
+詳細: .agents/skills/kf-g-github-operations-bot-workflow/references/github-app-credentials.md
+
+注意: 人間ユーザの gh 認証や GH_TOKEN では AI の GitHub 書き込みを行いません。`;
+
+export class PreflightError extends Error {
+	constructor(code, message, details = {}) {
+		super(message);
+		this.name = "PreflightError";
+		this.code = code;
+		this.details = details;
+	}
+}
+
+export function exitWithPreflightFailure(error) {
+	if (error instanceof PreflightError) {
+		console.error(`GitHub bot preflight failed (${error.code}): ${error.message}`);
+
+		if (error.details.missing?.length) {
+			console.error(`Missing: ${error.details.missing.join(", ")}`);
+		}
+	} else {
+		console.error(`GitHub bot preflight failed: ${error.message}`);
+	}
+
+	console.error(`\n${SETUP_INSTRUCTIONS}`);
+	process.exit(1);
+}
+
+export async function loadBotConfig() {
+	const env = await loadDotEnv();
+	const readEnv = (name) => process.env[name] ?? env[name];
+	const clientId =
+		readEnv("AI_AGENT_GITHUB_CLIENT_ID") ??
+		readEnv("AI_AGENT_GITHUB_APP_ID") ??
+		readEnv("GITDOC_AGENT_CLIENT_ID") ??
+		readEnv("GITDOC_AGENT_APP_ID");
+	const installationId =
+		readEnv("AI_AGENT_GITHUB_INSTALLATION_ID") ??
+		readEnv("GITDOC_AGENT_INSTALLATION_ID");
+	const privateKeyPath =
+		readEnv("AI_AGENT_GITHUB_PRIVATE_KEY_PATH") ??
+		readEnv("GITDOC_AGENT_PRIVATE_KEY_PATH");
+	const apiUrl = (readEnv("AI_AGENT_GITHUB_API_URL") ?? "https://api.github.com").replace(
+		/\/$/,
+		""
+	);
+
+	const missing = [
+		["AI_AGENT_GITHUB_CLIENT_ID or AI_AGENT_GITHUB_APP_ID", clientId],
+		["AI_AGENT_GITHUB_INSTALLATION_ID", installationId],
+		["AI_AGENT_GITHUB_PRIVATE_KEY_PATH", privateKeyPath]
+	]
+		.filter(([, value]) => !value)
+		.map(([name]) => name);
+
+	if (missing.length > 0) {
+		throw new PreflightError("missing_credentials", "Required bot credentials are missing.", {
+			missing
+		});
+	}
+
+	const resolvedPrivateKeyPath = resolveCredentialPath(privateKeyPath);
+
+	if (!existsSync(resolvedPrivateKeyPath)) {
+		throw new PreflightError("missing_private_key", "Private key file not found.", {
+			privateKeyPath: resolvedPrivateKeyPath
+		});
+	}
+
+	return {
+		apiUrl,
+		clientId,
+		installationId,
+		privateKeyPath: resolvedPrivateKeyPath
+	};
+}
+
+export async function createInstallationToken(config) {
+	const resolvedConfig = config ?? (await loadBotConfig());
+	const jwt = await createAppJwt(resolvedConfig);
 	const response = await fetch(
-		`${apiUrl}/app/installations/${config.installationId}/access_tokens`,
+		`${resolvedConfig.apiUrl}/app/installations/${resolvedConfig.installationId}/access_tokens`,
 		{
 			method: "POST",
 			headers: {
@@ -28,22 +128,82 @@ export async function createInstallationToken() {
 	);
 
 	if (!response.ok) {
-		throw new Error(await formatGitHubError(response));
+		throw new PreflightError(
+			"token_issue_failed",
+			`Installation token request failed (${response.status}).`
+		);
 	}
 
 	return response.json();
 }
 
-export async function githubRequest(path, init = {}) {
-	const token = await createInstallationToken();
-	const config = await loadConfig();
-	const response = await fetch(`${config.apiUrl}${path}`, {
+export async function preflightWriteGate(owner, repo) {
+	const config = await loadBotConfig();
+	const tokenResponse = await createInstallationToken(config);
+	const headers = {
+		accept: "application/vnd.github+json",
+		authorization: `Bearer ${tokenResponse.token}`,
+		"content-type": "application/json",
+		"x-github-api-version": "2022-11-28"
+	};
+
+	let repository = null;
+	const sessionMarkerPath = getSessionPreflightMarkerPath(config, owner, repo);
+
+	if (owner && repo && !(await hasValidSessionPreflightMarker(sessionMarkerPath))) {
+		const response = await fetch(`${config.apiUrl}/repos/${owner}/${repo}`, { headers });
+
+		if (response.status === 404) {
+			throw new PreflightError(
+				"repository_not_found",
+				`Repository ${owner}/${repo} is not accessible with the bot installation token.`
+			);
+		}
+
+		if (!response.ok) {
+			throw new PreflightError(
+				"repository_access_failed",
+				`Repository access check failed (${response.status}).`
+			);
+		}
+
+		repository = await response.json();
+		await createSessionPreflightMarker(sessionMarkerPath);
+	}
+
+	return {
+		apiUrl: config.apiUrl,
+		expiresAt: tokenResponse.expires_at,
+		headers,
+		permissions: tokenResponse.permissions ?? {},
+		repository,
+		token: tokenResponse.token
+	};
+}
+
+export function getSessionPreflightMarkerPath(config, owner, repo, sessionId = process.env.AI_AGENT_GITHUB_SESSION_ID) {
+	if (!sessionId || !owner || !repo) {
+		return null;
+	}
+
+	const markerKey = [sessionId, `${owner}/${repo}`, config.installationId, config.apiUrl].join("\0");
+	const digest = createHash("sha256").update(markerKey).digest("hex");
+	return join(sessionMarkerDirectory, `${digest}.json`);
+}
+
+export async function githubWriteRequest(path, init = {}, repository = null) {
+	let owner;
+	let repo;
+
+	if (repository) {
+		({ owner, repo } = parseRepository(repository));
+	}
+
+	const gate = await preflightWriteGate(owner, repo);
+	const response = await fetch(`${gate.apiUrl}${path}`, {
 		...init,
 		headers: {
-			accept: "application/vnd.github+json",
-			authorization: `Bearer ${token.token}`,
-			"content-type": "application/json",
-			"x-github-api-version": "2022-11-28",
+			...gate.headers,
 			...init.headers
 		}
 	});
@@ -52,7 +212,46 @@ export async function githubRequest(path, init = {}) {
 		throw new Error(await formatGitHubError(response));
 	}
 
-	return response.json();
+	if (response.status === 204) {
+		return null;
+	}
+
+	const text = await response.text();
+	return text ? JSON.parse(text) : null;
+}
+
+export async function githubGraphqlRequest(query, variables = {}, repository = null) {
+	let owner;
+	let repo;
+
+	if (repository) {
+		({ owner, repo } = parseRepository(repository));
+	}
+
+	const gate = await preflightWriteGate(owner, repo);
+	const response = await fetch(`${gate.apiUrl}/graphql`, {
+		method: "POST",
+		headers: gate.headers,
+		body: JSON.stringify({ query, variables })
+	});
+
+	if (!response.ok) {
+		throw new Error(await formatGitHubError(response));
+	}
+
+	const payload = await response.json();
+
+	if (payload.errors?.length) {
+		throw new Error(
+			`GitHub GraphQL request failed:\n${payload.errors.map((error) => error.message).join("\n")}`
+		);
+	}
+
+	return payload.data;
+}
+
+export async function githubRequest(path, init = {}, repository = null) {
+	return githubWriteRequest(path, init, repository);
 }
 
 export function parseRepository(value) {
@@ -92,45 +291,53 @@ export function getOption(args, name) {
 	return value;
 }
 
+export function getRequiredRepositoryOption(args) {
+	const repository = getOption(args, "--repo") ?? args.shift();
+
+	if (!repository) {
+		throw new Error("--repo OWNER/REPO is required.");
+	}
+
+	return repository;
+}
+
 async function loadConfig() {
-	const env = await loadDotEnv();
-	const readEnv = (name) => process.env[name] ?? env[name];
-	const clientId =
-		readEnv("AI_AGENT_GITHUB_CLIENT_ID") ??
-		readEnv("AI_AGENT_GITHUB_APP_ID");
-	const installationId =
-		readEnv("AI_AGENT_GITHUB_INSTALLATION_ID");
-	const privateKeyPath =
-		readEnv("AI_AGENT_GITHUB_PRIVATE_KEY_PATH");
-	const apiUrl = (readEnv("AI_AGENT_GITHUB_API_URL") ?? "https://api.github.com").replace(
-		/\/$/,
-		""
-	);
+	return loadBotConfig();
+}
 
-	const missing = [
-		["AI_AGENT_GITHUB_CLIENT_ID or AI_AGENT_GITHUB_APP_ID", clientId],
-		["AI_AGENT_GITHUB_INSTALLATION_ID", installationId],
-		["AI_AGENT_GITHUB_PRIVATE_KEY_PATH", privateKeyPath]
-	]
-		.filter(([, value]) => !value)
-		.map(([name]) => name);
-
-	if (missing.length > 0) {
-		throw new Error(`Missing required env: ${missing.join(", ")}`);
+async function hasValidSessionPreflightMarker(markerPath) {
+	if (!markerPath) {
+		return false;
 	}
 
-	const resolvedPrivateKeyPath = resolveCredentialPath(privateKeyPath);
+	try {
+		const marker = JSON.parse(await readFile(markerPath, "utf8"));
+		return typeof marker.expiresAt === "number" && marker.expiresAt > Date.now();
+	} catch {
+		return false;
+	}
+}
 
-	if (!existsSync(resolvedPrivateKeyPath)) {
-		throw new Error(`Private key file not found: ${resolvedPrivateKeyPath}`);
+async function createSessionPreflightMarker(markerPath) {
+	if (!markerPath) {
+		return;
 	}
 
-	return {
-		apiUrl,
-		clientId,
-		installationId,
-		privateKeyPath: resolvedPrivateKeyPath
-	};
+	await mkdir(sessionMarkerDirectory, { recursive: true, mode: 0o700 });
+	const marker = JSON.stringify({
+		completedAt: new Date().toISOString(),
+		expiresAt: Date.now() + sessionPreflightTtlMs
+	});
+	const temporaryPath = `${markerPath}.${randomUUID()}.tmp`;
+
+	try {
+		await writeFile(temporaryPath, marker, { encoding: "utf8", mode: 0o600, flag: "wx" });
+		await chmod(temporaryPath, 0o600);
+		await rename(temporaryPath, markerPath);
+		await chmod(markerPath, 0o600);
+	} finally {
+		await unlink(temporaryPath).catch(() => {});
+	}
 }
 
 async function loadDotEnv() {

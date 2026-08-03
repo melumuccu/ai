@@ -7,6 +7,23 @@ disable-model-invocation: true
 PR の review comment のうち、未解決 thread を対応してください。
 1 コメント = 1 commit ではなく、**1 commit = 1 logical change** を基準に分割します。
 
+## Bot 書き込み必須
+
+GitHub への comment / reply / resolve は、bot preflight 成功後に bot helper script のみ使う。
+bot 資格情報が未設定または preflight が失敗した場合は、`kf-g-github-operations-bot-workflow` の setup 手順を表示して停止する。
+人間 `gh` 認証や `GH_TOKEN` への fallback は禁止。
+
+参照:
+
+- `kf-g-github-operations-bot-workflow` — preflight / write gate
+- `kf-g-github-pr-review-workflow` — reply / resolve 手順
+
+reply:
+
+```sh
+node .agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
+```
+
 ## 着手条件
 
 1. 対応 PR の branch と worktree を特定する
@@ -56,7 +73,8 @@ PR の review comment のうち、未解決 thread を対応してください�
 1. reply には、対応した commit（message 1 行目をラベルとしたリンク）と変更概要を書く
 1. resolve はユーザーが行う。エージェントは resolve しない
 1. 説明のみ・保留の thread は reply で理由を残す
-1. comment 投稿は必ず bot credential を使う（`kf-g-github-operations-bot-workflow` 参照）
+1. reply 前に bot preflight を成功させ、上記 bot helper script を使う
+1. bot preflight 失敗時は setup 手順を表示して停止し、人間 `gh` 認証や `GH_TOKEN` へ fallback しない
 
 ### reply の禁止事項
 

@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 
-import { createInstallationToken } from "./github-agent-lib.mjs";
+import {
+	createInstallationToken,
+	exitWithPreflightFailure,
+	loadBotConfig
+} from "./github-agent-lib.mjs";
 
 const args = process.argv.slice(2);
 
@@ -9,14 +13,29 @@ if (args.includes("--help") || args.includes("-h")) {
   node .agents/credentials/github/scripts/github-agent-token.mjs [--json]
 
 Options:
-  --json  Print the full GitHub installation token response.`);
+  --json  Print non-secret installation token metadata only.`);
 	process.exit(0);
 }
 
-const token = await createInstallationToken();
+try {
+	await loadBotConfig();
+	const token = await createInstallationToken();
 
-if (args.includes("--json")) {
-	console.log(JSON.stringify(token, null, 2));
-} else {
-	console.log(token.token);
+	if (args.includes("--json")) {
+		console.log(
+			JSON.stringify(
+				{
+					expires_at: token.expires_at,
+					permissions: token.permissions ?? {},
+					repository_selection: token.repository_selection
+				},
+				null,
+				2
+			)
+		);
+	} else {
+		console.log(`Installation token expires_at: ${token.expires_at}`);
+	}
+} catch (error) {
+	exitWithPreflightFailure(error);
 }
