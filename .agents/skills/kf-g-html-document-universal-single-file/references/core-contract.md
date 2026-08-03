@@ -89,6 +89,7 @@
 
 ```text
 > 引用テキスト
+
 コメント本文
 ```
 
@@ -96,9 +97,13 @@
 
 ```text
 > quote1
+
 comment1
+
 ---
+
 > quote2
+
 comment2
 ```
 

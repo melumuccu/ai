@@ -467,7 +467,7 @@
       }
 
       function formatCopy(entry) {
-        return '> ' + entry.quote + '\n' + entry.comment;
+        return '> ' + entry.quote + '\n\n' + entry.comment;
       }
 
       async function copyText(text) {
@@ -489,7 +489,7 @@
       }
 
       function copyAll() {
-        const text = sortedEntries().map(formatCopy).join('\n---\n');
+        const text = sortedEntries().map(formatCopy).join('\n\n---\n\n');
         if (text) copyText(text);
       }
 
