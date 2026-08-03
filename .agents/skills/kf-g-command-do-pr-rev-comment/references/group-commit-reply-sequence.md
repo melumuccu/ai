@@ -17,12 +17,12 @@ flowchart TD
 
 ## 1 グループあたりの手順
 
-各グループ Gn について、次を順に実行する。
+各グループ G{n} について、次を順に実行する。
 
-1. Gn に割り当てた thread だけを参照し、修正方針を確定する
-1. Gn の変更だけを実装する。他グループの修正を混ぜない
+1. G{n} に割り当てた thread だけを参照し、修正方針を確定する
+1. G{n} の変更だけを実装する。他グループの修正を混ぜない
 1. lint・テスト・必要な差分確認を実行する
-1. Gn の変更ファイルだけを stage する
+1. G{n} の変更ファイルだけを stage する
 1. `git diff --cached --stat` と `git diff --cached --name-status` を確認する
 1. 1 つの関心事だけが staged なら commit する
 1. commit message は `kf-g-git-commit-japanese-commit-message` に従う
@@ -40,8 +40,8 @@ flowchart TD
 
 1. すべてのグループの commit が完了するまで push しない
 1. `git push` で remote に反映する
-1. push 後、グループ Gn ごとに次を実行する
-   1. Gn に対応する thread へ個別 reply する
+1. push 後、グループ G{n} ごとに次を実行する
+   1. G{n} に対応する thread へ個別 reply する
    1. reply に commit リンクと変更概要を含める
    1. resolve はユーザーが行う。エージェントは resolve しない
 
@@ -53,8 +53,8 @@ flowchart TD
 
 ## 同じファイルに複数グループがある場合
 
-1. 先に G1 だけを編集し、commit する
-1. 続けて G2 だけを編集し、commit する
+1. 先に G{1} だけを編集し、commit する
+1. 続けて G{2} だけを編集し、commit する
 1. 1 ファイル内でも、無関係な修正を同じ commit に入れない
 
 ## 委譲時の指示
