@@ -53,7 +53,7 @@ PR の review comment のうち、未解決 thread を対応してください�
 1. すべてのグループの commit が完了したら push する
 1. push 前に thread へ reply しない
 1. push 後、各グループに対応する thread だけ個別 reply する
-1. reply には、対応した commit（short hash リンク）と変更概要を書く
+1. reply には、対応した commit（message 1 行目をラベルとしたリンク）と変更概要を書く
 1. resolve はユーザーが行う。エージェントは resolve しない
 1. 説明のみ・保留の thread は reply で理由を残す
 1. comment 投稿は必ず bot credential を使う（`kf-g-github-operations-bot-workflow` 参照）

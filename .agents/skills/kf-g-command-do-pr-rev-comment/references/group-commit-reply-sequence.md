@@ -48,7 +48,7 @@ flowchart TD
 ## reply 本文の最低項目
 
 - 対応した変更の概要（1〜3 行）
-- 対応 commit へのリンク（`[{short hash}]({PR base URL}/changes/{commit id})`）
+- 対応 commit へのリンク（`[{commit message 1 行目}]({PR base URL}/changes/{commit id})`）
 - 説明のみ・保留の場合はその理由
 
 ## 同じファイルに複数グループがある場合
