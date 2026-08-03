@@ -1,28 +1,24 @@
 # R2 静的配信ベースライン
 
-生成物は **単一 HTML ファイル** を Cloudflare R2 に置き、ビルドなしで公開する。Worker・Wrangler・API は **本 skill のスコープ外**。
+生成物は **単一 HTML ファイル** を Cloudflare R2 に置き、ビルドなしで公開する。
 
 ## 配信前提
 
 - オブジェクトは `Content-Type: text/html` でアップロードする
+- 本 repository の公開先は **`https://ai-html.hacksaw.work/<object-key>`**（カスタムドメイン `ai-html.hacksaw.work`）。latest 版リンクもこの URL を使う
 - 公開 URL は **オブジェクト URL を明示** する（バケットルートの index 挙動に依存しない）
-- 公開方法:
-  - カスタムドメイン付きパブリックバケット、または
-  - レート制限付き `r2.dev` サブドメイン
 
-## 公式参照
+## Cloudflare 操作（Wrangler OAuth）
 
-- パブリックバケット: https://developers.cloudflare.com/r2/buckets/public-buckets/
-- CORS: https://developers.cloudflare.com/r2/buckets/cors/
-- オブジェクトアップロード: https://developers.cloudflare.com/r2/objects/upload-objects/
-- localStorage（origin スコープ）: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+R2 へのアップロード・確認は **OAuth 認証済み Wrangler CLI** で行う。
 
-## localStorage の制約
+1. 操作前に `npx wrangler@latest whoami` で認証状態を確認する
+1. バケットへのアクセス権も確認する
+1. 認証切れ・未ログインの場合は、ユーザーに `npx wrangler@latest login` の実行を依頼する
+1. ログイン後、再度 `whoami` とバケットアクセスを確認してから続行する
+1. **チャットで API トークン・シークレットを要求しない**
 
-- `localStorage` は **origin 単位**（スキーム + ホスト + ポート）
-- 同じ HTML でも URL パスが違えば `comments_${location.pathname}` は別キー
-- R2 のカスタムドメインを変えるとコメントは引き継がれない
-- プライベートブラウジング・ストレージ拒否時は永続化不可（[core-contract.md](core-contract.md) の失敗時扱い）
+Worker デプロイや HTML への R2 アップロードコード埋め込みは **本 skill のスコープ外**。
 
 ## HTML 側でやらないこと
 
@@ -35,10 +31,12 @@
 
 ## 版管理（上書き禁止）
 
+`v{N}` は **版番号**（例: `v1`, `v2`）を表すプレースホルダ。
+
 - 同一内容の改訂でも、既存オブジェクトは **上書きしない**
-- 改訂のたびに **新しい `vN` オブジェクト** としてアップロードする（例: `2026-08-03_今回の対応概要_v1.html` → `..._v2.html`）
+- 改訂のたびに **新しい `v{N}` オブジェクト** としてアップロードする（例: `2026-08-03_今回の対応概要_v1.html` → `..._v2.html`）
 - 初版は `v1` とする。版番号は単調増加させ、欠番や再利用はしない
-- issue / PR の description に載せるリンクは、常に **最新版の確認済み URL** と **`vN` ラベル** に差し替える
+- issue / PR の description に載せるリンクは、常に **最新版の確認済み URL**（`https://ai-html.hacksaw.work/<object-key>`）と **`v{N}` ラベル** に差し替える
 - 旧版 URL は R2 上に残す（履歴参照用）。削除や上書きはしない
 
 ## GitHub description へのリンク反映
@@ -46,16 +44,15 @@
 HTML 配布ありの issue / PR では、description は最小サマリと用途別 HTML リンクのみとする（詳細は [SKILL.md](../SKILL.md) の「GitHub 連携」参照）。
 
 1. 新バージョンを R2 へアップロードする
-1. **実際の公開 URL** をブラウザまたは HTTP で確認する
-1. オブジェクト名から版番号を抽出し、リンクラベルを `[vN]` にする（例: `..._v2.html` → `[v2](<確認済み URL>)`）
+1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
+1. オブジェクト名から版番号を抽出し、リンクラベルを `[v{N}]` にする（例: `..._v2.html` → `[v2](https://ai-html.hacksaw.work/..._v2.html)`）
 1. issue には `## プランニング用資料`、PR には `## レビュー用資料` の直下にリンクを置く
-1. URL または `vN` が未確定の間はリンクを置かない。確認後に description を更新する
+1. URL または `v{N}` が未確定の間はリンクを置かない。確認後に description を更新する
 1. 新版アップロード時は、旧リンクと旧ラベルを新版へ差し替える
 
 ## デプロイ前チェック
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・再読み込み・削除を確認
 1. 使用 CDN がネットワーク到達可能か確認
-1. **新規 `vN` として** アップロードし、既存オブジェクトを上書きしていないことを確認
-1. アップロード後、**実際の公開 URL** で同様に確認
-1. CORS は HTML 単体表示では通常不要。別 origin から fetch する場合のみ [CORS ドキュメント](https://developers.cloudflare.com/r2/buckets/cors/) を参照
+1. **新規 `v{N}` として** アップロードし、既存オブジェクトを上書きしていないことを確認
+1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で同様に確認

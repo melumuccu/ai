@@ -13,7 +13,7 @@ description: Build a build-free, single-file interactive HTML document with text
 | --- | --- |
 | [references/core-contract.md](references/core-contract.md) | コメントコアの DOM・データ・レイアウト・永続化を実装するとき |
 | [references/content-patterns.md](references/content-patterns.md) | PR 説明・業務フロー・非コーディング向けの構成と CDN 選定 |
-| [references/r2-static-delivery.md](references/r2-static-delivery.md) | R2 公開前提・localStorage 制約の確認 |
+| [references/r2-static-delivery.md](references/r2-static-delivery.md) | R2 公開前提・Wrangler OAuth・版管理の確認 |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html) | 実装の起点テンプレート |
 
 ## 生成ワークフロー
@@ -49,7 +49,7 @@ issue:
 - <issue の最小サマリ>
 
 ## プランニング用資料
-[v{N}](<確認済み latest R2 URL>)
+[v{N}](https://ai-html.hacksaw.work/<object-key>)
 ```
 
 PR:
@@ -59,18 +59,18 @@ PR:
 - <PR の最小サマリ>
 
 ## レビュー用資料
-[v{N}](<確認済み latest R2 URL>)
+[v{N}](https://ai-html.hacksaw.work/<object-key>)
 ```
 
-- リンクラベルは版付き HTML オブジェクト名から抽出した **`vN` のみ**（例: `..._v2.html` → `[v2](...)`）。`最新版HTML` やファイル名全体は使わない
+- リンクラベルは版付き HTML オブジェクト名から抽出した **`v{N}`（版番号）のみ**（例: `..._v2.html` → `[v2](...)`）。`最新版HTML` やファイル名全体は使わない
 - テスト計画、リスク一覧、実装経緯、計画全文は description に書かない。HTML に置く
 - 既存 workflow で PR comment が必要な項目（Summary、検証結果など）は comment に残す
 
 ### URL とラベルの扱い
 
-- **確認済み URL と `vN` のみ** description に載せる。プレースホルダ、推測 URL、未確認の版番号は禁止
-- 最新 URL または `vN` が未確定の間は description を確定しない。アップロードと URL 確認後に更新する
-- HTML を改訂したら **新しい `vN` オブジェクト** をアップロードし、description のリンクとラベルを新しい版へ差し替える（旧版は上書きしない）
+- **確認済み URL**（`https://ai-html.hacksaw.work/<object-key>`）**と `v{N}`（版番号）のみ** description に載せる。プレースホルダ、推測 URL、未確認の版番号は禁止
+- 最新 URL または `v{N}` が未確定の間は description を確定しない。アップロードと URL 確認後に更新する
+- HTML を改訂したら **新しい `v{N}` オブジェクト** をアップロードし、description のリンクとラベルを新しい版へ差し替える（旧版は上書きしない）
 
 ## 出力チェックリスト
 
@@ -84,7 +84,7 @@ PR:
 - [ ] 本文テキスト選択可能、コメント操作がキーボード可能
 - [ ] デスクトップ右余白 + モバイルでも閲覧可能
 - [ ] バックエンド同期・認証を謳っていない
-- [ ] R2 配布時: 版管理ルールに従い、issue / PR description に用途別見出し（issue: `## プランニング用資料`、PR: `## レビュー用資料`）と、版付き R2 オブジェクト名から確認した `[vN](<確認済み latest R2 URL>)` を記載した（HTML 配布ありの場合）
+- [ ] R2 配布時: 版管理ルールに従い、issue / PR description に用途別見出し（issue: `## プランニング用資料`、PR: `## レビュー用資料`）と、版付き R2 オブジェクト名から確認した `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載した（HTML 配布ありの場合）
 
 ## スコープ外
 
