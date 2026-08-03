@@ -1,0 +1,14 @@
+---
+description: PJ ルールやユーザー指示で上書きされない限り、作業は worktree 必須・あらゆる変更で GitHub issue / PR 必須とする
+alwaysApply: true
+---
+
+# Worktree / Issue / PR 常時適用
+
+**優先順位**: 本ルールは常時適用する。ただし **PJ ルール** または **ユーザー指示** が明示的に異なる手順を指定した場合は、そちらを優先してよい。
+
+作業を行うときは次を守る。
+
+1. **worktree 必須**: 変更を加える前に専用 worktree を作成し、その worktree 内だけで作業する。main worktree で直接変更しない。手順は `.agents/skills/kf-g-github-issue-worktree-management/SKILL.md` に従う。
+2. **issue / PR 必須**: あらゆる変更に対して GitHub issue と PR を作成する。1 issue = 1 branch = 1 worktree = 1 PR を基本とする。GitHub 操作は `.agents/skills/kf-g-github-operations-bot-workflow/SKILL.md` と `.agents/skills/kf-g-github-pr-review-workflow/SKILL.md` に従う。
+3. **上書き**: ユーザーが worktree 不要・issue/PR 不要を明示した場合、または PJ ルールが別手順を定めている場合は、本ルールよりそちらを優先する。
