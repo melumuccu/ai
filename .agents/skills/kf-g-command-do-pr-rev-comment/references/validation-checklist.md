@@ -17,7 +17,7 @@
 - [ ] 各 review comment / thread へ個別 reply している
 - [ ] 複数 thread を 1 つの reply にまとめていない
 - [ ] push 後に reply している（push 前 reply なし）
-- [ ] 修正完了 thread のみ resolve している
+- [ ] エージェントは thread を resolve していない
 - [ ] bot credential が使える環境では bot で投稿している
 - [ ] reply に commit リンクと変更概要を含めている
 
@@ -28,15 +28,15 @@
 - [ ] 作業前に論理グループ一覧を作成した
 - [ ] 各グループと thread の対応を記録した
 - [ ] 各 commit とグループの対応を報告できる
-- [ ] 未 resolve thread と理由を報告できる
+- [ ] 未 resolve thread と理由を報告できる（resolve はユーザーが行う）
 
 ## 完了報告に含める項目
 
 1. 論理グループ一覧（識別名・変更理由）
 1. commit 一覧（hash・message・対応グループ）
-1. thread 対応表（thread URL → commit hash → resolve 有無）
+1. thread 対応表（thread URL → commit hash → reply 有無）
 1. 実行した検証内容
-1. 未 resolve thread があれば理由
+1. 未 resolve thread があれば理由（resolve はユーザーが行う）
 
 ## 既存 PR への適用注意
 

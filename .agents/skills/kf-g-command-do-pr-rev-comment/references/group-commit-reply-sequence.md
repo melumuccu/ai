@@ -12,8 +12,7 @@ flowchart TD
   F --> C
   C -->|No| G[push]
   G --> H[グループごとに個別 reply]
-  H --> I[対応済み thread を resolve]
-  I --> J[対応表を報告]
+  H --> J[対応表を報告]
 ```
 
 ## 1 グループあたりの手順
@@ -43,8 +42,8 @@ flowchart TD
 1. `git push` で remote に反映する
 1. push 後、グループ Gn ごとに次を実行する
    1. Gn に対応する thread へ個別 reply する
-   1. reply に commit short hash と変更概要を含める
-   1. 修正完了した thread を resolve する
+   1. reply に commit リンクと変更概要を含める
+   1. resolve はユーザーが行う。エージェントは resolve しない
 
 ## reply 本文の最低項目
 
@@ -65,6 +64,6 @@ orchestrator が worker へ委譲する場合、次を明示する。
 - 対象グループ名と対象 thread
 - 「当該グループの変更だけを 1 commit にする」
 - 「他グループの変更を同じ commit に混ぜない」
-- push・reply・resolve は全グループ完了後に行う
+- push・reply は全グループ完了後に行う（resolve はユーザーが行う）
 
 「N ファイルを 1 commit」というファイル数基準の指示は使わない。

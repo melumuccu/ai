@@ -1,6 +1,6 @@
 ---
 name: kf-g-command-do-pr-rev-comment
-description: PR の未解決 review comment に対応するコマンド。指摘を論理変更グループへ分類し、グループごとに atomic commit・push・個別 reply・resolve を行う。
+description: PR の未解決 review comment に対応するコマンド。指摘を論理変更グループへ分類し、グループごとに atomic commit・push・個別 reply を行う。
 disable-model-invocation: true
 ---
 
@@ -11,7 +11,7 @@ PR の review comment のうち、未解決 thread を対応してください�
 
 1. 対応 PR の branch と worktree を特定する
 1. `kf-g-git-commit-atomic-rules` を読み、commit 粒度の基準を確認する
-1. `kf-g-github-pr-review-workflow` を読み、reply・resolve 運用を確認する
+1. `kf-g-github-pr-review-workflow` を読み、reply 運用を確認する
 1. 未解決 thread、requested changes、CI failure を一覧化する
 
 ## 未解決 thread の収集
@@ -48,27 +48,27 @@ PR の review comment のうち、未解決 thread を対応してください�
 
 詳細手順は [references/group-commit-reply-sequence.md](references/group-commit-reply-sequence.md) を読む。
 
-## push 後の reply・resolve
+## push 後の reply
 
 1. すべてのグループの commit が完了したら push する
 1. push 前に thread へ reply しない
 1. push 後、各グループに対応する thread だけ個別 reply する
 1. reply には、対応した commit（short hash リンク）と変更概要を書く
-1. 修正完了した thread は resolve する
-1. 説明のみ・保留の thread は resolve せず、reply で理由を残す
+1. resolve はユーザーが行う。エージェントは resolve しない
+1. 説明のみ・保留の thread は reply で理由を残す
 1. comment 投稿は bot アカウントがあれば bot credential を使う（`kf-g-github-operations-bot-workflow` 参照）
 
 ### reply の禁止事項
 
 - 複数 thread を 1 つの reply にまとめない
-- push 前に resolve しない
-- 未対応 thread を resolve しない
+- push 前に reply しない
+- thread を resolve しない
 
 ## 完了確認
 
 1. [references/validation-checklist.md](references/validation-checklist.md) のチェックリストをすべて確認する
 1. 各 commit と対象 thread の対応表を報告する
-1. 未 resolve thread とその理由があれば報告する
+1. 未 resolve thread とその理由があれば報告する（resolve はユーザーが行う）
 
 ## 参照 skill
 
