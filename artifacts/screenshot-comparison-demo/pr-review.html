@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PR レビュー — UI 変更 before/after 比較</title>
+  <link rel="stylesheet" href="https://unpkg.com/img-comparison-slider@8/dist/styles.css" />
+  <script defer src="https://unpkg.com/img-comparison-slider@8/dist/index.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.6;
+      padding: 2rem;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .meta {
+      background: #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    .meta dt { font-weight: 600; margin-top: 0.5rem; }
+    .meta dt:first-child { margin-top: 0; }
+    .meta dd { margin-left: 0; color: #334155; }
+    h2 { font-size: 1.125rem; margin: 2rem 0 1rem; }
+    p { margin-bottom: 1rem; color: #475569; }
+    img-comparison-slider {
+      display: block;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    }
+    img-comparison-slider img { width: 100%; display: block; }
+    .caption { font-size: 0.875rem; color: #64748b; margin-top: 0.75rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>UI 変更 — before/after 比較</h1>
+    <p>見出し色（青 → 紫）と CTA 色（オレンジ → 緑）の変更をスライダーで確認できます。</p>
+
+    <dl class="meta">
+      <dt>撮影条件</dt>
+      <dd>ビューポート: 1280 × 800 px / deviceScaleFactor: 1</dd>
+      <dt>修正前 URL</dt>
+      <dd><code>before.html</code>（ローカル file://）</dd>
+      <dt>修正後 URL</dt>
+      <dd><code>after.html</code>（ローカル file://）</dd>
+      <dt>変更内容</dt>
+      <dd>見出し: <code>#1e40af</code> → <code>#6b21a8</code> / CTA: <code>#ea580c</code> → <code>#16a34a</code></dd>
+    </dl>
+
+    <h2>スクリーンショット比較</h2>
+    <p>左（first）が修正前、右（second）が修正後です。中央のハンドルをドラッグして比較してください。</p>
+
+    <img-comparison-slider>
+      <img slot="first" src="before.png" alt="修正前" />
+      <img slot="second" src="after.png" alt="修正後" />
+    </img-comparison-slider>
+    <p class="caption">before.png（修正前） / after.png（修正後） — 同一ビューポートで撮影</p>
+  </div>
+</body>
+</html>
