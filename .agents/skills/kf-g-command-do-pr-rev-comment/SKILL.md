@@ -25,7 +25,7 @@ PR の review comment のうち、未解決 thread を対応してください�
 1. 未解決 thread を、独立した論理変更単位のグループへ分類する
 1. 分類基準の詳細は [references/review-group-classification.md](references/review-group-classification.md) を読む
 1. 各グループに短い識別名（例: `表記横断統一`）を付ける
-1. 各グループに対応する thread ID / URL を記録する
+1. 各グループに対応する thread ID / URL を記録する（ユーザー向け完了報告に含める）
 1. 同じファイルに複数グループがある場合も、作業順を分けて commit する
 
 ### 分類の原則
@@ -33,7 +33,7 @@ PR の review comment のうち、未解決 thread を対応してください�
 - 1 コメント = 1 commit とは限らない（論理変更単位で分類した結果、1 コメント = 1 commit になる場合もある）
 - 複数 thread が同じ論理変更なら 1 グループにまとめる
 - 独立した修正理由・レビュー観点を持つ thread は別グループにする
-- 分類結果を作業前に一覧として残す
+- 分類結果を作業前に一覧として残す（チャットまたは完了報告でユーザーに提示する）
 
 ## グループごとの実装・commit
 
