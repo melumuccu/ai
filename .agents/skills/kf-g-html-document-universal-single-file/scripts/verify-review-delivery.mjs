@@ -40,18 +40,20 @@ function decodeDataUrlBytes(dataUrl) {
 
 function usage() {
   console.error(
-    'usage: node scripts/verify-review-delivery.mjs <html-file> [--frontend] [--public-url URL] [--pr-body-file FILE]'
+    'usage: node scripts/verify-review-delivery.mjs <html-file> [--frontend] [--r2-required] [--public-url URL] [--pr-body-file FILE]'
   );
 }
 
 function parseArgs(argv) {
   const positional = [];
-  const options = { frontend: false, publicUrl: null, prBodyFile: null };
+  const options = { frontend: false, r2Required: false, publicUrl: null, prBodyFile: null };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--frontend') {
       options.frontend = true;
+    } else if (arg === '--r2-required') {
+      options.r2Required = true;
     } else if (arg === '--public-url') {
       options.publicUrl = argv[i + 1];
       if (!options.publicUrl) throw new Error('--public-url requires a URL');
@@ -197,6 +199,28 @@ function validateFrontend(html, run) {
   run.check('capture URL', urlMention);
 }
 
+function validateR2Required(html, run) {
+  const firstSrc = extractSlotImgSrc(html, 'first');
+  const secondSrc = extractSlotImgSrc(html, 'second');
+
+  run.check(
+    'R2 required: no data:image/ in slot="first" src',
+    !firstSrc || !isDataUrl(firstSrc)
+  );
+  run.check(
+    'R2 required: no data:image/ in slot="second" src',
+    !secondSrc || !isDataUrl(secondSrc)
+  );
+  run.check(
+    'R2 required: before image src (slot="first") is verified R2 URL',
+    Boolean(firstSrc && isR2PublicUrl(firstSrc))
+  );
+  run.check(
+    'R2 required: after image src (slot="second") is verified R2 URL',
+    Boolean(secondSrc && isR2PublicUrl(secondSrc))
+  );
+}
+
 function validatePublicUrl(publicUrl, run) {
   run.check(`public URL must start with ${R2_BASE}`, publicUrl.startsWith(R2_BASE));
 
@@ -242,6 +266,10 @@ function main() {
 
   if (args.frontend) {
     validateFrontend(html, run);
+  }
+
+  if (args.r2Required) {
+    validateR2Required(html, run);
   }
 
   if (args.publicUrl) {

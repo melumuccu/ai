@@ -93,21 +93,16 @@ PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) 
 
 **適用しない:** 上記 condition を満たさない場合（本番限定・VPN 必須・2FA で agent が撮影不能など）は `img-comparison-slider` を読み込まない。代替として変更箇所の説明テキスト・Mermaid・diff2html でレビューを補完する。
 
-### 画像参照方式の選定
+### 画像参照方式
 
-before/after 画像を HTML から参照するとき、次の 2 方式から選ぶ。**いずれも condition（スクリーンショット撮影可能）を満たす場合にのみ適用**する。撮影不能時は本節を使わず、上記「適用しない」の代替手段に従う。
+before/after 画像は **HTML 本体と同じ R2 バケット**（`ai-html`）へアップロードし、**確認済み公開 URL**（`https://ai-html.hacksaw.work/<object-key>`）のみ `src` に指定する。**data URL 埋め込みは選択肢に含めない。**
 
-| 方式 | 概要 | 選ぶ条件 |
-| --- | --- | --- |
-| **data URL 埋め込み** | 画像を `src="data:image/...;base64,..."` として HTML 内に直接埋め込む | 単一 HTML で完結させたい。画像を HTML に含めても配布・閲覧に問題ない |
-| **確認済み公開 URL** | R2 等にアップロード済みの `https://...` を `src` に指定する | 画像サイズが大きく HTML 単体への埋め込みが扱いにくい。画像用の **認証なし公開 URL** を確認できる |
+**前提:** condition（スクリーンショット撮影可能）を満たす場合にのみ適用する。撮影不能時は本節を使わず、上記「適用しない」の代替手段に従う。
 
 **判断基準:**
 
-- **単一 HTML 性**: data URL は HTML 1 ファイルで完結する。公開 URL は HTML 本体とは別オブジェクトだが、HTML を開くだけで比較 UI が動く（画像 URL が有効であることが前提）
 - **認証・公開可否**: 画像 `src` はレビュアーが HTML を開いたとき **追加認証なし** で取得できる必要がある。VPN 限定・ログイン必須・未確認 URL は使わない
-- **R2 要否**: R2 は必須ではない。data URL で単一 HTML 原則を満たせるなら R2 画像アップロードは不要。HTML 本体を R2 配布する場合でも、小さい画像は data URL 埋め込みを優先してよい
-- **R2 公開条件**: R2 等を使う場合は HTML 本体と同様、**確認済み公開 URL**（例: `https://ai-html.hacksaw.work/<object-key>`）のみ使う（[r2-static-delivery.md](references/r2-static-delivery.md) の公開前提に従う）。画像用オブジェクトキーは HTML と別でもよいが、アップロード後に HTTP で取得できることを確認する
+- **R2 必須**: HTML 本体と同じバケットへ画像を put し、アップロード後に HTTP で取得できる **確認済み公開 URL** のみ使う（[r2-static-delivery.md](references/r2-static-delivery.md) の公開前提に従う）。画像用オブジェクトキーは HTML と別でもよい
 
 ### img-comparison-slider と画像形式
 
@@ -162,19 +157,21 @@ wc -c /tmp/check-image
 
 ### 容量ゲート（repository 推奨上限）
 
-Cloudflare R2 の object 上限（例: 5 TB）とは **別物**。本 repository の **推奨上限** として次を採用する（超過時は validator が fail）。
+Cloudflare R2 の object 上限（例: 5 TB）とは **別物**。本 repository の **推奨上限** として次を採用する。
 
 | 対象 | 推奨上限 |
 | --- | --- |
-| data URL 埋め込み **1 画像** | decoded bytes **2 MiB 以下** |
-| data URL 埋め込み **合計**（before + after） | decoded bytes **5 MiB 以下** |
+| R2 画像オブジェクト **1 枚** | **2 MiB 以下**（推奨） |
+| R2 画像 **合計**（before + after） | **5 MiB 以下**（推奨） |
 
-超過時は WebP 変換、解像度調整、または **確認済み公開 URL（R2 画像オブジェクト）** 方式へ切り替える。R2 画像のサイズ確認は上記 `wrangler r2 object get` + `wc -c` で行う。
+超過時は WebP 変換、解像度調整を行う。R2 画像のサイズ確認は上記 `wrangler r2 object get` + `wc -c` で行う。
+
+**注:** 新規 HTML では data URL 埋め込みを使わない（R2 必須）。legacy data URL HTML を通常 validator（`--frontend` のみ）で検証する間は、従来の data URL 容量上限（1 画像 2 MiB / 合計 5 MiB）も適用される。
 
 ### 手順
 
 1. 変更前（base branch）と変更後（PR branch）の **同一 URL・同一ビューポート** でスクリーンショットを撮影する
-1. [画像参照方式の選定](#画像参照方式の選定) に従い、data URL 埋め込みまたは **確認済み公開 URL** で参照する（単一 HTML 原則を満たす方式を選ぶ）
+1. [画像参照方式](#画像参照方式) に従い、**確認済み公開 URL（R2 同一バケット）** で参照する
 1. `<head>` に CDN で custom element を読み込む:
 
 ```html
@@ -225,6 +222,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 | --- | --- |
 | （常時） | doctype、`data-theme`、daisyUI / Tailwind CDN、コメントコア DOM・`data-action`・localStorage key |
 | `--frontend` | `img-comparison-slider` CDN、`slot="first"` / `"second"`、width 100%、画像 src（data URL または確認済み R2 URL）、data URL 容量（1 画像 2 MiB / 合計 5 MiB）、撮影条件（viewport・branch・URL）。R2 URL はネットワーク取得せず CLI 確認手順を出力 |
+| `--r2-required` | `data:image/` 禁止。`slot="first"` / `"second"` の src が `https://ai-html.hacksaw.work/` の確認済み R2 URL であること（G5 移行完了後の厳格ゲート） |
 | `--public-url` | URL が `https://ai-html.hacksaw.work/` で、オブジェクトキーに `_vN.html` を含む |
 | `--pr-body-file` | body に `## レビュー用資料` と、確認済み URL に一致する `[vN](URL)` がある |
 
@@ -252,7 +250,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] R2 配布時: issue / PR description に用途別見出し（issue: `## プランニング用資料`、PR: `## レビュー用資料`）と、版付き R2 オブジェクト名から確認した `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載した（HTML 配布ありの場合）
 - [ ] PR レビュー用 HTML + フロントエンド変更: **when** と **condition（スクリーンショット撮影可能）** を確認した。撮影不能なら `img-comparison-slider` を読み込まない
 - [ ] PR レビュー用 HTML + フロントエンド変更 + スクリーンショット撮影可能: `img-comparison-slider` を CDN で読み込み、修正前（`slot="first"`）・修正後（`slot="second"`）の before/after 比較を提示した
-- [ ] before/after 画像: 形式選定（WebP 第一候補・PNG フォールバック）と容量ゲート（data URL 1 画像 2 MiB / 合計 5 MiB）を満たした。R2 方式なら画像 object を別 key（同一 `v{N}` prefix）で put し Content-Type・公開 URL を確認した
+- [ ] before/after 画像: HTML 本体と同じ R2 バケットへ put し、確認済み公開 URL のみ `src` に指定した（data URL 埋め込みは使わない）。形式選定（WebP 第一候補・PNG フォールバック）と容量ゲートを満たし、Content-Type・公開 URL を確認した
 - [ ] issue / PR 向け R2 配布: [完了ゲート](#完了ゲートissue--pr-向け-html-配布) の upload 前・PR body 更新後 validator が合格した
 
 ## スコープ外
