@@ -6,7 +6,7 @@ description: Enforce frequent atomic commits while doing coding work. Always use
 # Git Commit Rules / コミットのルール
 
 この skill は、コーディングタスク開始時に必ず参照する commit 粒度の規約。
-変更はアトミックな単位に分け、作業中にこまめに commit する。
+変更はアトミックな単位に分け、必要な検証が通った論理単位で commit する。
 
 ## 基本方針
 
@@ -33,8 +33,8 @@ You must make frequent, atomic commits for each logical change.
 
 ## Execution Instructions / 実行指示
 
-- Execute `git commit` immediately after completing a small, self-contained task.
-- 1つの小さなタスクやファイル修正が完了するたびに、即座に `git commit` を実行する。
+- Commit each small, self-contained logical change when it is ready for review.
+- 小さな論理変更がレビュー可能になった時点で commit する。通常実装では agent が必要な変更を随時 stage・commit・push・PR 作成してよい。
 - Never bundle multiple issues into a single massive commit. Commit messages like `Fix multiple issues` are strictly prohibited.
 - タスク全体の完了を待ってから一括で大きな commit を作ることは禁止。
 
@@ -84,7 +84,7 @@ You must make frequent, atomic commits for each logical change.
 ## staged-only commit skill との関係
 
 この skill は、エージェントがコーディング作業を進めるときの commit 粒度を扱う。
-ユーザーが単に `commit` と依頼した場合は、`kf-g-git-commit-staged-only-rules` を優先し、依頼時点ですでに staged 済みの変更だけを commit 対象にする。
+ユーザーが明示的に commit を依頼した場合だけ、`kf-g-git-commit-staged-only-rules` を優先し、依頼時点ですでに staged 済みの変更だけを commit 対象にする。
 
 ## 禁止事項
 

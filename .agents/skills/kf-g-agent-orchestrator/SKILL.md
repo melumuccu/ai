@@ -21,7 +21,7 @@ disable-model-invocation: true
 
 ## orchestrator のルール
 
-orchestrator は **worker 委譲と、その報告に基づく設計・プランニングのみ** 行う。
+orchestrator は **worker 委譲と、その報告に基づく設計・プランニングのみ** 行う。対象リポジトリの探索・実装・検証は worker に委譲する。
 
 - すべての実作業は worker へ委譲する
 - 1 回の worker 起動処理あたり 1〜5 worker（分割方針に従う）。同一質問へは 1 worker のみ起動する
@@ -54,7 +54,10 @@ orchestrator は **worker 委譲と、その報告に基づく設計・プラン
 ### orchestrator が行なってよいこと
 
 - 設計・プラン・方針の作成
-- 当 skill と委譲指示テンプレの Read
+- 当 skill のメタデータと委譲指示テンプレの Read
+- worker に渡す skill の `name` / `description` の確認
+
+対象リポジトリのファイル探索・読取は直接行わず、探索 worker に委譲する。
 
 ### 作業の流れ (例)
 

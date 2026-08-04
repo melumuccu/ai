@@ -1,6 +1,6 @@
 ---
 name: kf-g-github-pr-review-workflow
-description: Use this skill whenever creating, updating, reviewing, commenting on, or preparing a GitHub pull request. Always use it for issue-linked PRs, reviewer assignment, PR body conventions, PR comments, PR reviews, and deciding whether to use GitHub App bot review scripts.
+description: Use this skill whenever creating, updating, reviewing, commenting on, or preparing a GitHub pull request. File changes require a PR; an HTML-only R2 report with no file diff is the documented exception.
 ---
 
 # GitHub PR 作成・レビュー運用
@@ -11,7 +11,8 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、issue 起点の�
 ## 基本方針
 
 - 1 issue 1 PR を基本にする。
-- PR は対応 issue に紐づけ、merge / close 時に issue が閉じる形を優先する。
+- コード・skill・ruleなどファイル変更差分がある作業は PR を作成する。HTML報告を生成してR2へアップロードするだけでファイル変更差分がない場合は、R2公開を完了としPRを作成しない。
+- issue-linked workでは PR を対応 issue に紐づけ、merge / close 時に issue が閉じる形を優先する。直接依頼で issue が未作成の場合、issue番号を捏造しない。
 - PR 作成後、issue comment に PR URL を残す。
 - reviewer は bot helper script で設定する。
 - AI agent の PR 作成 / comment / review / reply / resolve / description 更新は、GitHub App bot preflight 成功後にのみ実行する。
@@ -21,9 +22,8 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、issue 起点の�
 
 確認:
 
-1. issue 番号、issue URL、完了条件
-1. branch が issue 用 branch か
-1. worktree が issue 用 worktree か
+1. issue-linked work の場合は issue 番号、issue URL、完了条件
+1. issue-linked work の場合は branch が issue 用 branch か、worktree が issue 用 worktree か
 1. unrelated change が混ざっていないか
 1. repository native の check が通るか
 1. bot preflight が成功するか
@@ -94,6 +94,8 @@ URL が未確定の対象は、URL 判明後に本文更新または comment / r
 
 ## PR 作成
 
+HTML-only でファイル変更差分がない場合は、この節を実行せず、R2 upload と公開 URL の確認で完了する。コード・skill・ruleなどのファイル変更差分がある場合は、issue の有無にかかわらず PR を作成する。
+
 bot preflight 成功後:
 
 ```sh
@@ -110,9 +112,9 @@ node ~/.agents/credentials/github/scripts/github-agent-update-pr.mjs OWNER/REPO 
 
 実施:
 
-1. PR URL を issue に comment する。
+1. issue-linked work の場合は PR URL を issue に comment する。
 1. reviewer を bot script で設定する。
-1. issue status を review 待ちへ更新する。
+1. issue-linked work の場合は issue status を review 待ちへ更新する。
 1. CI / checks を確認する。
 1. 失敗時は原因を調査し、必要なら issue / PR に状況を残す。
 
@@ -175,8 +177,8 @@ Review event:
 
 ## 最終確認
 
-- 1 issue 1 PR の対応になっているか。
-- issue に PR URL を残したか。
+- issue-linked work の場合は 1 issue 1 PR の対応になっているか。
+- issue-linked work の場合は issue に PR URL を残したか。
 - reviewer を bot script で設定したか。
 - bot preflight を成功させたか。
 - AI agent comment / review / reply / resolve は bot credential で投稿したか。

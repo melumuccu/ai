@@ -16,7 +16,7 @@ gh project item-list 3 --owner melumuccu --format json --limit 100
 - `--limit 100` 必須（デフォルト 30）。プロジェクト item 数 >30 なら漏れリスク。
 - 出力の各 item に `status`, `"start Date"`, `content.number`, `title` 等がフラットに入る。
 - JSON キー `"start Date"` は jq で `.["start Date"]` アクセスが必要。
-- 取得失敗時は [issue-selection.md](issue-selection.md) の「選定中止」に従い、プランニング・実装着手を止める。
+- 取得失敗時は [issue-selection.md](issue-selection.md) の汎用的な選定不能時の扱いに従う。PJ固有の停止条件は `.agents/rules/` の該当 rule に従う。
 
 ## Issue 詳細（body / labels / assignees）— 選定後の確認用
 

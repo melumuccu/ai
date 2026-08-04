@@ -1,12 +1,12 @@
 ---
 name: kf-g-github-issue-worktree-management
-description: Use this skill whenever starting, planning, implementing, tracking, or closing GitHub issue work. Always use it when the user says to start implementation/planning from issues, asks to pick the next issue, or asks for issue-linked work, because issue work should use a dedicated worktree and continuous issue progress records.
+description: Use this skill for issue-linked starting, planning, implementation, tracking, or closing work. Issue selection is generic here; PJ-specific selection and stop conditions belong in rules.
 ---
 
 # GitHub issue 管理と worktree 運用
 
 この SKILL.md は入口として扱い、詳細は `references` 配下の該当ファイルを読む。
-この skill は issue 対応の進め方を扱う。
+この skill は issue 対応の進め方を扱う。直接依頼で issue が未作成の場合は、issue番号を捏造せず、issue-linked work の手順だけを適用する。
 
 GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レビューは `kf-g-github-pr-review-workflow` も使う。
 
@@ -14,8 +14,8 @@ GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レ�
 
 - 1 issue = 1 branch = 1 worktree。
 - issue 対応時は main worktree で直接作業しない。
-- 作業ログ、判断、進捗、PR URL は issue comment に残す。
-- 既存 issue からプランニングする場合、プランニング前に既存 issue の description と comment を参照する。詳細は [issue-progress.md](references/issue-progress.md)。
+- issue-linked work の作業ログ、判断、進捗、PR URL は issue comment に残す。
+- 既存 issue からプランニングする場合、プランニング前に既存 issue の description と comment を参照する。詳細は [issue-progress.md](references/issue-progress.md)。直接依頼では issue 参照を着手条件にしない。
 - HTML 配布あり（`kf-g-html-document-universal-single-file` で生成・R2 アップロード済み）: issue description は最小サマリと `## プランニング用資料` 配下の `[v{N}](https://ai-html.hacksaw.work/<object-key>)` のみとする。計画全文・詳細は HTML に置く。description 更新のタイミングと形式は [issue-progress.md](references/issue-progress.md)。
 - HTML 配布なし: プランニングしたら、計画 Markdown を issue description へ**そのまま**転記する。AI 側プランニングファイルには計画 Markdown を記載する代わりに issue リンクのみ記載する。詳細は [issue-progress.md](references/issue-progress.md)。
 - AI agent が comment / description 更新 / status 更新を残す時は、GitHub App bot preflight 成功後に bot helper script のみ使う。
