@@ -93,10 +93,26 @@ PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) 
 
 **適用しない:** 上記 condition を満たさない場合（本番限定・VPN 必須・2FA で agent が撮影不能など）は `img-comparison-slider` を読み込まない。代替として変更箇所の説明テキスト・Mermaid・diff2html でレビューを補完する。
 
+### 画像参照方式の選定
+
+before/after 画像を HTML から参照するとき、次の 2 方式から選ぶ。**いずれも condition（スクリーンショット撮影可能）を満たす場合にのみ適用**する。撮影不能時は本節を使わず、上記「適用しない」の代替手段に従う。
+
+| 方式 | 概要 | 選ぶ条件 |
+| --- | --- | --- |
+| **data URL 埋め込み** | 画像を `src="data:image/...;base64,..."` として HTML 内に直接埋め込む | 単一 HTML で完結させたい。画像を HTML に含めても配布・閲覧に問題ない |
+| **確認済み公開 URL** | R2 等にアップロード済みの `https://...` を `src` に指定する | 画像サイズが大きく HTML 単体への埋め込みが扱いにくい。画像用の **認証なし公開 URL** を確認できる |
+
+**判断基準:**
+
+- **単一 HTML 性**: data URL は HTML 1 ファイルで完結する。公開 URL は HTML 本体とは別オブジェクトだが、HTML を開くだけで比較 UI が動く（画像 URL が有効であることが前提）
+- **認証・公開可否**: 画像 `src` はレビュアーが HTML を開いたとき **追加認証なし** で取得できる必要がある。VPN 限定・ログイン必須・未確認 URL は使わない
+- **R2 要否**: R2 は必須ではない。data URL で単一 HTML 原則を満たせるなら R2 画像アップロードは不要。HTML 本体を R2 配布する場合でも、小さい画像は data URL 埋め込みを優先してよい
+- **R2 公開条件**: R2 等を使う場合は HTML 本体と同様、**確認済み公開 URL**（例: `https://ai-html.hacksaw.work/<object-key>`）のみ使う（[r2-static-delivery.md](references/r2-static-delivery.md) の公開前提に従う）。画像用オブジェクトキーは HTML と別でもよいが、アップロード後に HTTP で取得できることを確認する
+
 ### 手順
 
 1. 変更前（base branch）と変更後（PR branch）の **同一 URL・同一ビューポート** でスクリーンショットを撮影する
-1. 画像は単一 HTML 原則に従い data URL 埋め込み、または R2 等の **確認済み公開 URL** で参照する
+1. [画像参照方式の選定](#画像参照方式の選定) に従い、data URL 埋め込みまたは **確認済み公開 URL** で参照する（単一 HTML 原則を満たす方式を選ぶ）
 1. `<head>` に CDN で custom element を読み込む:
 
 ```html
