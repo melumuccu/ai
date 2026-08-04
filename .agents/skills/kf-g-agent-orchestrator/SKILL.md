@@ -61,8 +61,6 @@ orchestrator は **worker 委譲と、その報告に基づく設計・プラン
 
 ### 作業の流れ (例)
 
-この章に記載されている作業も orchestrator が行なうことができるものとする。
-
 1. 要件が曖昧なら goal と完了条件をユーザーと確認
 1. 委譲前に、各 worker が参照すべき skill を `name` / `description` から判断し、委譲指示に明記する
 1. worker 報告を統合。矛盾は先に解消
