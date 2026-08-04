@@ -70,6 +70,11 @@
     "path": ".agents/skills/genshijin/SKILL.md"
   },
   {
+    "description": "Patterns for invoking the GitHub CLI (gh) from agents. Covers structured output, pagination, repo targeting, search vs list, gh api fallback.",
+    "name": "gh",
+    "path": ".agents/skills/gh/SKILL.md"
+  },
+  {
     "description": "Delegates all execution to workers, then synthesizes results for design and planning. Use when the user invokes /kf-g-agent-orchestrator or asks for orchestrator-worker execution on multi-step or uncertain-scope work.",
     "name": "kf-g-agent-orchestrator",
     "path": ".agents/skills/kf-g-agent-orchestrator/SKILL.md"
@@ -188,6 +193,11 @@
     "description": "Use when optimizing GitHub Actions workflows on self-hosted runners with mise and pnpm. Covers RUNNER_TOOL_CACHE persistence, mise CI config split, and patterns to avoid (GHA cache, PNPM_STORE_DIR). Apply before editing build-and-deploy CI workflows.",
     "name": "kf-g-github-actions-self-hosted-ci-cache",
     "path": ".agents/skills/kf-g-github-actions-self-hosted-ci-cache/SKILL.md"
+  },
+  {
+    "description": "Use when authoring or bootstrapping GitHub Actions workflows that run on Mac Studio self-hosted runners with a repository-specific label. Covers runs-on label convention, runner-name pairing, bootstrap workflow integration, and prerequisites before merge.",
+    "name": "kf-g-github-actions-self-hosted-runner-label",
+    "path": ".agents/skills/kf-g-github-actions-self-hosted-runner-label/SKILL.md"
   },
   {
     "description": "Use this skill whenever starting, planning, implementing, tracking, or closing GitHub issue work. Always use it when the user says to start implementation/planning from issues, asks to pick the next issue, or asks for issue-linked work, because issue work should use a dedicated worktree and continuous issue progress records.",
