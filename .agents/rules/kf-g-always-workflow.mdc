@@ -1,0 +1,19 @@
+---
+description: 作業の issue・worktree・PR・コミット運用を定義する。コミュ用HTMLを使う作業ではR2配布とURL掲載を必須にする
+alwaysApply: true
+---
+
+# 作業 workflow
+
+作業を行うときは次を守る。
+
+1. **issue**: プランニングが必要な作業は、専用 worktree を作る前に issue を作成し、プランニングに必要な情報を issue に集約する。既存 issue を使う場合は description と comment を確認する。直接依頼で issue が未作成の場合は、issue 番号を捏造しない。
+2. **worktree**: 変更を加える前に専用 worktree を作成し、その worktree 内だけで作業する。issue を起点にする場合は 1 issue = 1 branch = 1 worktree とする。main worktree で直接変更しない。
+3. **対象の選定**: 指定がない場合は、プロジェクトまたは issue 一覧から候補を取得し、status、依存関係、優先度、ユーザー指定の順序など確認できる根拠で選ぶ。候補を合理的に決められない場合は推測で着手しない。
+4. **PR**: コード・skill・ruleなどファイル変更差分がある作業は PR を作成する。issue を起点にする場合は対応する issue と PR を紐づけ、PR URL を issue に記録する。ファイル変更差分がないHTML報告のR2配布だけは PR を作成しない。
+5. **通常実装の git 操作**: 通常実装では、必要な変更を stage・commit・push し、PRを作成してよい。ユーザーが明示的に commit を依頼した場合は、依頼時点で staged 済みの変更だけを commit 対象にする。
+6. **安全確認**: commit または push 前に gitleaks などの hook が失敗した場合は、`--no-verify` で回避せず停止する。
+
+## GitHub上の記録
+
+issueを起点にする場合は、作業ログ、判断、進捗、PR URLを issue に記録する。GitHubへの書き込みは GitHub App bot の preflight 成功後に、指定された bot helper のみで行う。
