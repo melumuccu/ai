@@ -15,6 +15,7 @@ description: Build a build-free, single-file interactive HTML document with text
 | [references/content-patterns.md](references/content-patterns.md) | PR 説明・業務フロー・非コーディング向けの構成と CDN 選定 |
 | [references/r2-static-delivery.md](references/r2-static-delivery.md) | R2 公開前提・Wrangler OAuth・版管理の確認 |
 | [scripts/verify-review-delivery.mjs](scripts/verify-review-delivery.mjs) | HTML / R2 URL / PR description の機械検証 |
+| [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh) | スクリーンショット PNG → AVIF 固定変換 |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html) | 実装の起点テンプレート |
 
 ## 生成ワークフロー
@@ -112,11 +113,39 @@ before/after 画像は **HTML 本体と同じ R2 バケット**（`ai-html`）�
 
 | 段階 | 扱い |
 | --- | --- |
-| **撮影** | Playwright 等のブラウザ自動化では **PNG が一般的**（lossless、UI キャプチャ向け）。ツールや設定により JPEG 等になる場合もある |
-| **変換** | 配布前に容量・可読性を見て WebP / JPEG 等へ変換してよい。変換コマンドや品質設定は環境依存のため、**変換後に目視比較** し、元 PNG は削除しない |
-| **第一候補** | **WebP**（UI スクリーンショットの容量と可読性のバランス） |
-| **フォールバック** | WebP で文字・細線が劣化する場合は **PNG** |
-| **JPEG** | 文字・細線の劣化が許容できる写真寄り画面のみ。UI 文字の可読性を優先する |
+| **撮影** | Playwright 等のブラウザ自動化では **PNG** を保持する（lossless、UI キャプチャ向け）。撮影元は変換入力として残す |
+| **R2 upload** | **AVIF 標準**。`Content-Type: image/avif` を必ず指定する。WebP / JPEG / PNG を R2 upload 形式の第一候補やフォールバックとして使わない |
+| **変換** | 配布前に [固定変換手順](#固定変換手順) のスクリプトで PNG → AVIF する。**変換後に目視比較** し、codec / 寸法 / サイズを確認する。元 PNG は削除しない |
+| **例外** | AVIF を使えない場合は **ユーザー承認** を得てから別形式を選ぶ（通常フローでは想定しない） |
+
+### 固定変換手順
+
+**実行前提:** `ffmpeg`（`libaom-av1` encoder 内蔵）と `ffprobe` が PATH にあること。不在時はユーザーへ導入を依頼し、変換・アップロードを停止する。
+
+**固定スクリプト:**
+
+```bash
+scripts/convert-screenshot-to-avif.sh INPUT_PNG OUTPUT.avif
+```
+
+- 入力: `.png` のみ。出力: `.avif` のみ
+- 出力先が既存なら **上書きせず失敗** する
+- 内部 ffmpeg 引数: `-frames:v 1 -c:v libaom-av1 -still-picture 1 -crf 18 -b:v 0`
+- 変換後: `ffprobe` で codec `av1` と width / height を検証し、`file` で AVIF 実体を確認する
+- 元 PNG は削除しない
+
+**変換後検証（目視 + CLI）:**
+
+1. 変換前 PNG と AVIF を並べて目視比較（文字・細線の劣化がないこと）
+2. `ffprobe` で codec `av1`、元 PNG と同一の width / height であること
+3. `file --mime-type` で `image/avif` 相当であること
+4. `wc -c` で repository 推奨上限（1 画像 2 MiB 以下）に収まること
+
+**失敗時（ユーザー依頼）:**
+
+- `ffmpeg` / `libaom-av1` / `ffprobe` が見つからない → ユーザーに ffmpeg（libaom 有効）の導入を依頼し停止
+- 変換失敗、寸法不一致、AVIF 実体確認失敗 → エラー内容を報告し、再変換またはユーザー判断を待つ
+- 2 MiB 超過 → CRF 調整は固定スクリプト外。ユーザー承認のうえ解像度調整等を検討する
 
 ### R2 画像オブジェクト（確認済み公開 URL 方式）
 
@@ -130,9 +159,9 @@ HTML 本体とは **別オブジェクト** として R2 に put する。HTML �
 | 画像オブジェクトキー | `{html_basename}_before.{ext}` / `{html_basename}_after.{ext}`（`html_basename` = HTML キーから `.html` を除いた部分） |
 | 版管理 | HTML と同じ `v{N}`。既存 key **上書き禁止**、欠番・再利用禁止 |
 | 命名例 | `2026-08-04_スクリーンショット比較デモ_v1_before.avif`、`..._v1_after.avif` |
-| 拡張子 | 画像形式に合わせて任意（G5 以降は AVIF 必須化予定）。キー拡張子と `--content-type` を一致させる |
-| Content-Type | 拡張子に合わせて明示（`image/avif`、`image/webp`、`image/png`、`image/jpeg`） |
-| HTML 側 | **確認済み R2 URL のみ** `src` に記載。put 後に get / 公開 URL で目視確認する |
+| 拡張子 | **`.avif` 固定**（キー拡張子と `--content-type` を一致させる） |
+| Content-Type | **`image/avif` 必須** |
+| HTML 側 | **確認済み R2 URL のみ** `src` に記載。put 後に `--remote` で get / 公開 URL で目視確認する |
 
 **upload 例（AVIF）:**
 
@@ -167,7 +196,7 @@ Cloudflare R2 の object 上限（例: 5 TB）とは **別物**。本 repository
 | R2 画像オブジェクト **1 枚** | **2 MiB 以下**（推奨） |
 | R2 画像 **合計**（before + after） | **5 MiB 以下**（推奨） |
 
-超過時は WebP 変換、解像度調整を行う。R2 画像のサイズ確認は上記 `wrangler r2 object get` + `wc -c` で行う。
+超過時は [固定変換手順](#固定変換手順) の CRF 固定（18）のまま解像度調整等を検討する（ユーザー承認が必要な場合あり）。R2 画像のサイズ確認は上記 `wrangler r2 object get --remote` + `wc -c` で行う。
 
 **注:** 新規 HTML では data URL 埋め込みを使わない（R2 必須）。legacy data URL HTML を通常 validator（`--frontend` のみ）で検証する間は、従来の data URL 容量上限（1 画像 2 MiB / 合計 5 MiB）も適用される。
 
@@ -225,7 +254,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 | --- | --- |
 | （常時） | doctype、`data-theme`、daisyUI / Tailwind CDN、コメントコア DOM・`data-action`・localStorage key |
 | `--frontend` | `img-comparison-slider` CDN、`slot="first"` / `"second"`、width 100%、画像 src（data URL または確認済み R2 URL）、data URL 容量（1 画像 2 MiB / 合計 5 MiB）、撮影条件（viewport・branch・URL）。R2 URL はネットワーク取得せず CLI 確認手順を出力 |
-| `--r2-required` | `data:image/` 禁止。`slot="first"` / `"second"` の src が `https://ai-html.hacksaw.work/` の確認済み R2 URL かつ `.avif` 拡張子であること（G5 移行完了後の厳格ゲート） |
+| `--r2-required` | `data:image/` 禁止。`slot="first"` / `"second"` の src が `https://ai-html.hacksaw.work/` の確認済み R2 URL かつ `.avif` 拡張子であること |
 | `--html-object-key` | HTML オブジェクトキーが `_vN.html` 形式であること。`--r2-required` と併用時は、画像 src の R2 オブジェクトキーが `{html_basename}_before.avif` / `{html_basename}_after.avif` と一致すること |
 | `--public-url` | URL が `https://ai-html.hacksaw.work/` で、オブジェクトキーに `_vN.html` を含む |
 | `--pr-body-file` | body に `## レビュー用資料` と、確認済み URL に一致する `[vN](URL)` がある |
@@ -254,7 +283,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] R2 配布時: issue / PR description に用途別見出し（issue: `## プランニング用資料`、PR: `## レビュー用資料`）と、版付き R2 オブジェクト名から確認した `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載した（HTML 配布ありの場合）
 - [ ] PR レビュー用 HTML + フロントエンド変更: **when** と **condition（スクリーンショット撮影可能）** を確認した。撮影不能なら `img-comparison-slider` を読み込まない
 - [ ] PR レビュー用 HTML + フロントエンド変更 + スクリーンショット撮影可能: `img-comparison-slider` を CDN で読み込み、修正前（`slot="first"`）・修正後（`slot="second"`）の before/after 比較を提示した
-- [ ] before/after 画像: HTML 本体と同じ R2 バケットへ put し、確認済み公開 URL のみ `src` に指定した（data URL 埋め込みは使わない）。形式選定（WebP 第一候補・PNG フォールバック）と容量ゲートを満たし、Content-Type・公開 URL を確認した
+- [ ] before/after 画像: HTML 本体と同じ R2 バケットへ AVIF（`image/avif`）として `--remote` put し、確認済み公開 URL のみ `src` に指定した（data URL 埋め込みは使わない）。固定変換手順で PNG → AVIF 変換・検証済みで、容量ゲート（1 画像 2 MiB / 合計 5 MiB 推奨）を満たした
 - [ ] issue / PR 向け R2 配布: [完了ゲート](#完了ゲートissue--pr-向け-html-配布) の upload 前・PR body 更新後 validator が合格した
 
 ## スコープ外

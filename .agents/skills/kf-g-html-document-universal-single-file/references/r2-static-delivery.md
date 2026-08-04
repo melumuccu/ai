@@ -96,6 +96,8 @@ Dashboard Upload / Upload objects は **公開経路に含めない**。
 
 PR レビュー HTML で **確認済み公開 URL** 方式を選んだ場合、before/after 画像を HTML 本体とは **別オブジェクト** としてアップロードする。
 
+**R2 upload 形式は AVIF 標準。** 撮影元は PNG を保持し、配布前に固定スクリプトで AVIF へ変換する。WebP / JPEG / PNG を R2 upload 形式の第一候補やフォールバックとして使わない。AVIF を使えない例外はユーザー承認がある場合のみ。
+
 ### 前提
 
 | 項目 | 値 |
@@ -112,12 +114,12 @@ HTML 本体キーと **同じバケット・同じ版 prefix**（HTML キーか�
 
 ```
 HTML:   <日付>_<概要>_v{N}.html
-before: <html_basename>_before.<ext>
-after:  <html_basename>_after.<ext>
+before: <html_basename>_before.avif
+after:  <html_basename>_after.avif
 ```
 
 - `html_basename` = HTML オブジェクトキーから `.html` を除いた部分
-- before / after の拡張子は一致させなくてよいが、各キーの拡張子と `--content-type` は一致させる
+- 拡張子は **`.avif` 固定**。キー拡張子と `--content-type` は **`image/avif`** で一致させる
 - 既存 key の上書き禁止（HTML・画像とも）
 
 例:
@@ -130,12 +132,26 @@ after:  <html_basename>_after.<ext>
 
 | 拡張子 | `--content-type` |
 | --- | --- |
-| `.avif` | `image/avif` |
-| `.webp` | `image/webp` |
-| `.png` | `image/png` |
-| `.jpg` / `.jpeg` | `image/jpeg` |
+| `.avif` | `image/avif`（**必須**） |
+
+### PNG → AVIF 固定変換
+
+**実行前提:** `ffmpeg`（`libaom-av1` encoder）と `ffprobe` が PATH にあること。不在時はユーザーへ導入を依頼し停止する。
+
+```bash
+scripts/convert-screenshot-to-avif.sh artifacts/before.png artifacts/before.avif
+scripts/convert-screenshot-to-avif.sh artifacts/after.png artifacts/after.avif
+```
+
+- 入力 `.png`、出力 `.avif` のみ。出力先が既存なら上書きせず失敗
+- ffmpeg 引数: `-frames:v 1 -c:v libaom-av1 -still-picture 1 -crf 18 -b:v 0`
+- 変換後: `ffprobe` で codec `av1` と寸法一致、`file` で AVIF 実体確認、目視比較。元 PNG は削除しない
+
+**失敗時:** ffmpeg / libaom-av1 不足、変換エラー、寸法不一致、2 MiB 超過（repository 推奨上限）→ ユーザーへ報告し判断を待つ
 
 ### CLI upload（画像）
+
+**put / get は必ず `--remote` を付ける。** Wrangler の local default バケットと混同しない。
 
 ```bash
 npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.avif \
@@ -169,8 +185,8 @@ wc -c /tmp/check-image
 
 1. `https://ai-html.hacksaw.work/<html-object-key>` を Access 認証後に開く
 2. `img-comparison-slider` 内の before/after 画像が表示されることを確認
-3. DevTools → **Network** で画像リクエストが 200、Content-Type が画像形式であることを確認
-4. HTML `src` のオブジェクトキーが `{html_basename}_before.<ext>` / `{html_basename}_after.<ext>` と一致することを確認
+3. DevTools → **Network** で画像リクエストが 200、Content-Type が **`image/avif`** であることを確認
+4. HTML `src` のオブジェクトキーが `{html_basename}_before.avif` / `{html_basename}_after.avif` と一致することを確認
 
 ## CLI 配布 runbook（本 repository）
 
@@ -267,7 +283,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`。R2 移行後は `--r2-required --html-object-key <object-key>` も付ける）。data URL 埋め込み時は 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
+1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`。R2 AVIF 必須なら `--r2-required --html-object-key <object-key>` も付ける）。legacy data URL 埋め込み時のみ 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
 
 ```bash
 node scripts/verify-review-delivery.mjs <html-file> [--frontend]
