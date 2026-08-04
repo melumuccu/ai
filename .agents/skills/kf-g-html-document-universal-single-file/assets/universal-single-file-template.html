@@ -78,28 +78,86 @@
 
   <div id="layout-root" class="mx-auto flex max-w-7xl gap-6 px-4 py-6">
     <main id="doc-content" data-content-root class="min-w-0 flex-1 select-text leading-relaxed">
-      <p class="mb-4 text-base-content/70">
+      <p class="mb-6 text-base-content/70">
         本文を選択すると、右側（狭い画面では下）にコメントカードが追加されます。再読み込み後も同じ URL 上で復元されます。
       </p>
 
-      <section class="card mb-8 bg-base-100 shadow-sm">
-        <div class="card-body">
-          <h2 class="card-title text-xl">概要</h2>
-          <p>
-            このテンプレートはビルド不要の単一 HTML ファイルです。daisyUI v5 と Tailwind browser CDN でスタイルし、
-            コメントコアはブラウザ標準 API のみで動作します。
-          </p>
+      <!-- 要約 -->
+      <section class="card mb-6 border border-primary/30 bg-primary/5 shadow-sm">
+        <div class="card-body py-4">
+          <div class="flex items-center gap-2">
+            <span class="badge badge-primary badge-outline">概要</span>
+            <h2 class="card-title text-lg">ドキュメントの目的</h2>
+          </div>
+          <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+            <li>ビルド不要の単一 HTML で説明ページを作る。</li>
+            <li>daisyUI v5 + Tailwind browser CDN でスタイルする。</li>
+            <li>コメントコアは vanilla JS のみで動作する。</li>
+          </ul>
         </div>
       </section>
 
-      <section class="card mb-8 bg-base-100 shadow-sm">
-        <div class="card-body">
-          <h2 class="card-title text-xl">使い方</h2>
-          <ol class="steps steps-vertical lg:steps-horizontal">
-            <li class="step step-primary">説明したい箇所をドラッグして選択する</li>
-            <li class="step step-primary">表示される入力欄にコメントを書いて追加する</li>
-            <li class="step">ハイライトまたはカードから個別コピー・編集・削除ができる</li>
-          </ol>
+      <p class="mb-4 text-sm text-base-content/70">
+        要約の次は、比較なら <code class="text-xs">table</code>、手順なら <code class="text-xs">steps</code> や Mermaid で構造化する。表・図に載せた事実は段落で繰り返さない。
+      </p>
+
+      <!-- 使い方（steps） -->
+      <section class="mb-6">
+        <h2 class="mb-3 text-xl font-semibold">使い方</h2>
+        <ol class="steps steps-vertical lg:steps-horizontal w-full">
+          <li class="step step-primary">説明したい箇所をドラッグして選択する</li>
+          <li class="step step-primary">表示される入力欄にコメントを書いて追加する</li>
+          <li class="step">ハイライトまたはカードから個別コピー・編集・削除ができる</li>
+        </ol>
+      </section>
+
+      <p class="mb-4 text-sm text-base-content/70">
+        表・steps で拾い切れない補足は、1段落1論点の短い段落にまとめる。
+      </p>
+
+      <div class="divider my-6">リスク表現例</div>
+
+      <!-- リスク badge + 薄背景 + 枠線 -->
+      <section class="mb-6">
+        <h2 class="mb-3 text-xl font-semibold">リスク表現（デモ）</h2>
+        <div class="grid gap-3 sm:grid-cols-3">
+          <div class="card border border-error/40 bg-error/10 shadow-sm">
+            <div class="card-body gap-2 py-3">
+              <span class="badge badge-error w-fit">高リスク</span>
+              <h3 class="font-semibold">破壊的変更</h3>
+              <p class="text-sm">データ移行・認証・課金への影響。確認手順を明記する。</p>
+            </div>
+          </div>
+          <div class="card border border-warning/40 bg-warning/10 shadow-sm">
+            <div class="card-body gap-2 py-3">
+              <span class="badge badge-warning w-fit">中リスク</span>
+              <h3 class="font-semibold">互換性</h3>
+              <p class="text-sm">API 契約変更・表示崩れの可能性。回帰確認が必要。</p>
+            </div>
+          </div>
+          <div class="card border border-success/40 bg-success/10 shadow-sm">
+            <div class="card-body gap-2 py-3">
+              <span class="badge badge-success w-fit">低リスク</span>
+              <h3 class="font-semibold">軽微な変更</h3>
+              <p class="text-sm">文言・スタイル・ドキュメント追記。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="mb-4 text-sm text-base-content/70">
+        根拠・手順全文・参考資料などの詳細は、最後に <code class="text-xs">collapse</code> へ置く。
+      </p>
+
+      <!-- 補足（collapse） -->
+      <section class="mb-6">
+        <h2 class="mb-3 text-xl font-semibold">補足</h2>
+        <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+          <input type="checkbox" />
+          <div class="collapse-title font-medium">Mermaid 図の追加方法</div>
+          <div class="collapse-content text-sm">
+            <p>フローが複雑な場合のみ Mermaid を読み込み、次の pre を class="mermaid" に差し替える。SVG 内テキストも選択可能。</p>
+          </div>
         </div>
       </section>
 
