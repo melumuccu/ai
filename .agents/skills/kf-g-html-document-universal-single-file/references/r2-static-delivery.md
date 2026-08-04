@@ -92,6 +92,97 @@ Dashboard のラベルは Cloudflare UI 更新で変わることがある。破�
 
 Dashboard Upload / Upload objects は **公開経路に含めない**。
 
+## R2 画像オブジェクト（before/after スクリーンショット）
+
+PR レビュー HTML で **確認済み公開 URL** 方式を選んだ場合、before/after 画像を HTML 本体とは **別オブジェクト** としてアップロードする。
+
+**R2 upload 形式は AVIF 標準。** 撮影元は PNG を保持し、配布前に固定スクリプトで AVIF へ変換する。WebP / JPEG / PNG を R2 upload 形式の第一候補やフォールバックとして使わない。AVIF を使えない例外はユーザー承認がある場合のみ。
+
+### 前提
+
+| 項目 | 値 |
+| --- | --- |
+| バケット | `ai-html` |
+| 公開 URL | `https://ai-html.hacksaw.work/<object-key>` |
+| 公開経路 | Wrangler CLI のみ |
+| 版管理 | HTML 本体と同じ `v{N}` prefix。既存 key **上書き禁止** |
+| Access | HTML と同様、Access 認証後に取得・目視確認 |
+
+### オブジェクトキー命名
+
+HTML 本体キーと **同じバケット・同じ版 prefix**（HTML キーから `.html` を除いた basename）に、**撮影対象 slug** と画像種別 suffix を付ける。
+
+```
+HTML:   <日付>_<概要>_v{N}.html
+before: <html_basename>_<target>_before.avif
+after:  <html_basename>_<target>_after.avif
+```
+
+- `html_basename` = HTML オブジェクトキーから `.html` を除いた部分
+- `<target>` = **撮影対象 slug**（validator では `--screenshot-target TARGET` で指定）。英数字・ハイフン・アンダースコアのみ（例: `home`, `settings-modal`）
+- 拡張子は **`.avif` 固定**。before / after は **同一拡張子** とする。キー拡張子と `--content-type` は **`image/avif`** で一致させる
+- 既存 key の上書き禁止（HTML・画像とも）
+
+例（`--screenshot-target home`）:
+
+- HTML: `2026-08-04_スクリーンショット比較デモ_v2.html`
+- before: `2026-08-04_スクリーンショット比較デモ_v2_home_before.avif`
+- after: `2026-08-04_スクリーンショット比較デモ_v2_home_after.avif`
+
+### PNG → AVIF 固定変換
+
+**実行前提:** `ffmpeg`（`libaom-av1` encoder）と `ffprobe` が PATH にあること。不在時はユーザーへ導入を依頼し停止する。
+
+```bash
+scripts/convert-screenshot-to-avif.sh artifacts/before.png artifacts/before.avif
+scripts/convert-screenshot-to-avif.sh artifacts/after.png artifacts/after.avif
+```
+
+- 入力 `.png`、出力 `.avif` のみ。出力先が既存なら上書きせず失敗
+- ffmpeg 引数: `-frames:v 1 -c:v libaom-av1 -still-picture 1 -crf 18 -b:v 0`
+- 変換後: `ffprobe` で codec `av1` と寸法一致、`file` で AVIF 実体確認、目視比較。元 PNG は削除しない
+
+**失敗時:** ffmpeg / libaom-av1 不足、変換エラー、寸法不一致、2 MiB 超過（repository 推奨上限）→ ユーザーへ報告し判断を待つ
+
+### CLI upload（画像）
+
+**put / get は必ず `--remote` を付ける。** Wrangler の local default バケットと混同しない。
+
+```bash
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v2_home_before.avif \
+  --file=artifacts/before.avif \
+  --content-type=image/avif \
+  --remote
+
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v2_home_after.avif \
+  --file=artifacts/after.avif \
+  --content-type=image/avif \
+  --remote
+```
+
+**期待結果:** コマンド成功。Dashboard オブジェクト一覧に新 key が表示される（既存 key は変更されない）
+
+### size / Content-Type / 公開 URL 確認
+
+validator は R2 画像 URL を **ネットワーク取得しない**。以下でローカル確認する。
+
+**get + MIME + サイズ:**
+
+```bash
+npx wrangler@latest r2 object get ai-html/<object-key> --file=/tmp/check-image --remote
+file --mime-type /tmp/check-image
+wc -c /tmp/check-image
+```
+
+**期待結果:** MIME がキー拡張子と一致（例: `.avif` → `image/avif`）。サイズが repository 推奨（1 画像 2 MiB 以下）に収まる
+
+**公開 URL 確認:**
+
+1. `https://ai-html.hacksaw.work/<html-object-key>` を Access 認証後に開く
+2. `img-comparison-slider` 内の before/after 画像が表示されることを確認
+3. DevTools → **Network** で画像リクエストが 200、Content-Type が **`image/avif`** であることを確認
+4. HTML `src` のオブジェクトキーが `{html_basename}_{target}_before.avif` / `{html_basename}_{target}_after.avif` と一致することを確認
+
 ## CLI 配布 runbook（本 repository）
 
 HTML 公開は **Wrangler CLI のみ**。
@@ -187,8 +278,23 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
+1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`。R2 AVIF 必須なら `--r2-required --html-object-key <object-key> --screenshot-target <target>` も付ける）。legacy data URL 埋め込み時のみ 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
+
+```bash
+node scripts/verify-review-delivery.mjs <html-file> [--frontend]
+```
+
+1. validator 合格後、**新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
 1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で Access 認証後に目視確認手順を実施
+1. PR description を更新したら、確認済み URL と body ファイルで validator を再実行する
+
+```bash
+node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
+  --public-url https://ai-html.hacksaw.work/<object-key> \
+  --pr-body-file <pr-body.md>
+```
+
+1. 再検証合格後に description を確定する
 
 ## Cloudflare 操作（Wrangler OAuth）
 
