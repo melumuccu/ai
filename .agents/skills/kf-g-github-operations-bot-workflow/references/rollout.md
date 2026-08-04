@@ -31,7 +31,7 @@ node ~/.agents/credentials/github/scripts/verify-write-gate.mjs
 次の skill は bot 書き込み必須ルールを参照する。
 
 - `kf-g-github-operations-bot-workflow`（正本）
-- `kf-g-github-pr-review-workflow`
+- `.agents/rules/kf-g-always-workflow.mdc`
 - `kf-g-github-issue-worktree-management`
 - `kf-g-command-do-pr-rev-comment`
 - `kf-g-command-do-issue-planning`

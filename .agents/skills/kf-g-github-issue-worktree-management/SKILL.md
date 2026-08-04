@@ -13,7 +13,7 @@ description: Use this skill whenever starting, planning, implementing, tracking,
 - issue 対応時は main worktree で直接作業しない。
 - 作業ログ、判断、進捗、PR URL は issue comment に残す。
 - 作業順、worktree、issue 進行、プランニング、HTML 配布の詳細は `.agents/rules/kf-g-always-workflow.mdc` に従う。
-- GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR 作成・レビューは `kf-g-github-pr-review-workflow` も使う。
+- GitHub 操作全般は `kf-g-github-operations-bot-workflow`、PR の共通運用は `.agents/rules/kf-g-always-workflow.mdc` に従う。
 
 ## Plan mode 中の GitHub 書き込み
 

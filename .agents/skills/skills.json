@@ -200,11 +200,6 @@
     "path": ".agents/skills/kf-g-github-operations-bot-workflow/SKILL.md"
   },
   {
-    "description": "Use this skill whenever creating, updating, reviewing, commenting on, or preparing a GitHub pull request. Always use it for issue-linked PRs, reviewer assignment, PR body conventions, PR comments, PR reviews, and deciding whether to use GitHub App bot review scripts.",
-    "name": "kf-g-github-pr-review-workflow",
-    "path": ".agents/skills/kf-g-github-pr-review-workflow/SKILL.md"
-  },
-  {
     "description": "Build a build-free, single-file interactive HTML document with text-selection comments, SVG connectors, and localStorage persistence for explanations, PR walkthroughs, business flows, and non-coding docs. Use this whenever the user wants a one-page HTML explanation, interactive documentation, annotated guide, or shareable static page—even if they do not say \"single-file HTML\". Does not provide backend sync, authentication, or Worker deployment.",
     "name": "kf-g-html-document-universal-single-file",
     "path": ".agents/skills/kf-g-html-document-universal-single-file/SKILL.md"

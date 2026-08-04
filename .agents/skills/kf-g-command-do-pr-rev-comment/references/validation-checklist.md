@@ -21,7 +21,7 @@
 - [ ] 必ず bot credential で投稿している
 - [ ] reply に commit リンクと変更概要を含めている
 
-参照: `kf-g-github-pr-review-workflow`
+参照: `kf-g-command-do-pr-rev-comment`
 
 ## 追跡可能性
 

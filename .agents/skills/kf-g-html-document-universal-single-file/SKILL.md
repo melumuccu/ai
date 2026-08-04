@@ -66,7 +66,7 @@ issue または PR 向けに HTML を生成し R2 へアップロードする場
 1. 詳細な計画・調査・検証結果・リスクなどは HTML 本文に記載する
 1. R2 へ **新規バージョン** としてアップロードする（[r2-static-delivery.md](references/r2-static-delivery.md) の版管理ルール）
 1. アップロード後、**実際の公開 URL** を確認する
-1. 確認済みの最新 URL を `kf-g-github-issue-worktree-management` または `kf-g-github-pr-review-workflow` へ渡し、description を更新する
+1. 確認済みの最新 URL を `.agents/rules/kf-g-always-workflow.mdc` のPR / issue運用へ渡し、description を更新する
 
 ### description の形（issue / PR で見出しを分ける）
 
