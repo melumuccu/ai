@@ -28,7 +28,7 @@ description: Enforce frequent atomic commits while doing coding work. Always use
 
 ## 実行指示
 
-- 小さな論理変更がレビュー可能になった時点で commit する。通常実装では agent が必要な変更を随時 stage・commit・push・PR 作成してよい。
+- 小さな論理変更がレビュー可能になった時点で commit する。
 - Never bundle multiple issues into a single massive commit. Commit messages like `Fix multiple issues` are strictly prohibited.
 - タスク全体の完了を待ってから一括で大きな commit を作ることは禁止。
 
