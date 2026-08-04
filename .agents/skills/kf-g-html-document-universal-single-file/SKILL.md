@@ -92,7 +92,7 @@ PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) 
 - **when:** UI・スタイル・レイアウト・表示挙動の変更を含む PR
 - **condition:** agent がブラウザで対象画面のスクリーンショットを撮影できる（認証なし、または認証突破可能）
 - **適用しない:** 撮影不能時は `img-comparison-slider` を読み込まず、説明テキスト・Mermaid・diff2html で補完する
-- **必須:** 撮影可能時は R2 同一バケットへ AVIF 配布し、確認済み公開 URL のみ `src` に指定する（data URL 埋め込みは選択肢に含めない）
+- **必須:** 撮影可能時は R2 同一バケットへ AVIF 配布し、確認済み公開 URL のみ `src` に指定する
 
 撮影・変換・R2 オブジェクト命名・容量ゲート・HTML 埋め込み手順は [frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) を参照。
 

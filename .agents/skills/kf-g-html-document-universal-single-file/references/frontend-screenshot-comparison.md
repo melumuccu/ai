@@ -13,7 +13,7 @@ PR レビュー用 HTML（[content-patterns.md](content-patterns.md) パター�
 
 ## 画像参照方式
 
-before/after 画像は **HTML 本体と同じ R2 バケット**（`ai-html`）へアップロードし、**確認済み公開 URL**（`https://ai-html.hacksaw.work/<object-key>`）のみ `src` に指定する。**data URL 埋め込みは選択肢に含めない。**
+before/after 画像は **HTML 本体と同じ R2 バケット**（`ai-html`）へアップロードし、**確認済み公開 URL**（`https://ai-html.hacksaw.work/<object-key>`）のみ `src` に指定する。
 
 **前提:** condition（スクリーンショット撮影可能）を満たす場合にのみ適用する。撮影不能時は本節を使わず、上記「適用しない」の代替手段に従う。
 
