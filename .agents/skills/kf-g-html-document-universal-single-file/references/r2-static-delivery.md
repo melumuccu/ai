@@ -129,12 +129,6 @@ after:  <html_basename>_<target>_after.avif
 - before: `2026-08-04_スクリーンショット比較デモ_v2_home_before.avif`
 - after: `2026-08-04_スクリーンショット比較デモ_v2_home_after.avif`
 
-### Content-Type
-
-| 拡張子 | `--content-type` |
-| --- | --- |
-| `.avif` | `image/avif`（**必須**） |
-
 ### PNG → AVIF 固定変換
 
 **実行前提:** `ffmpeg`（`libaom-av1` encoder）と `ffprobe` が PATH にあること。不在時はユーザーへ導入を依頼し停止する。
