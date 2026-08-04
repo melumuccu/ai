@@ -40,9 +40,11 @@ function decodeDataUrlBytes(dataUrl) {
 
 const HTML_OBJECT_KEY_PATTERN = /_v\d+\.html$/i;
 
+const SCREENSHOT_TARGET_PATTERN = /^[a-zA-Z0-9_-]+$/;
+
 function usage() {
   console.error(
-    'usage: node scripts/verify-review-delivery.mjs <html-file> [--frontend] [--r2-required] [--html-object-key KEY] [--public-url URL] [--pr-body-file FILE]'
+    'usage: node scripts/verify-review-delivery.mjs <html-file> [--frontend] [--r2-required] [--html-object-key KEY] [--screenshot-target TARGET] [--public-url URL] [--pr-body-file FILE]'
   );
 }
 
@@ -52,6 +54,7 @@ function parseArgs(argv) {
     frontend: false,
     r2Required: false,
     htmlObjectKey: null,
+    screenshotTarget: null,
     publicUrl: null,
     prBodyFile: null,
   };
@@ -65,6 +68,10 @@ function parseArgs(argv) {
     } else if (arg === '--html-object-key') {
       options.htmlObjectKey = argv[i + 1];
       if (!options.htmlObjectKey) throw new Error('--html-object-key requires an object key');
+      i += 1;
+    } else if (arg === '--screenshot-target') {
+      options.screenshotTarget = argv[i + 1];
+      if (!options.screenshotTarget) throw new Error('--screenshot-target requires a target slug');
       i += 1;
     } else if (arg === '--public-url') {
       options.publicUrl = argv[i + 1];
@@ -230,17 +237,39 @@ function isAvifR2Url(src) {
   return /\.avif$/i.test(objectKey);
 }
 
-function validateR2ImageObjectNaming(html, htmlObjectKey, run, { requireAvif = false } = {}) {
+function validateScreenshotTargetSlug(screenshotTarget, run) {
+  run.check(
+    'screenshot target: safe slug (letters, digits, hyphen, underscore)',
+    Boolean(screenshotTarget && SCREENSHOT_TARGET_PATTERN.test(screenshotTarget))
+  );
+}
+
+function expectedR2ImageObjectKey(basename, screenshotTarget, phase) {
+  return `${basename}_${screenshotTarget}_${phase}`;
+}
+
+function validateR2ImageObjectNaming(
+  html,
+  htmlObjectKey,
+  run,
+  { requireAvif = false, screenshotTarget = null } = {}
+) {
   const basename = htmlKeyBasename(htmlObjectKey);
-  const expectedBeforePrefix = `${basename}_before.`;
-  const expectedAfterPrefix = `${basename}_after.`;
 
   const slots = [
-    { slot: 'first', label: 'before', expectedPrefix: expectedBeforePrefix },
-    { slot: 'second', label: 'after', expectedPrefix: expectedAfterPrefix },
+    { slot: 'first', label: 'before', phase: 'before' },
+    { slot: 'second', label: 'after', phase: 'after' },
   ];
 
-  for (const { slot, label, expectedPrefix } of slots) {
+  const objectKeys = [];
+  const extensions = [];
+
+  for (const { slot, label, phase } of slots) {
+    const expectedKeyBase = screenshotTarget
+      ? expectedR2ImageObjectKey(basename, screenshotTarget, phase)
+      : `${basename}_${phase}`;
+    const expectedPrefix = `${expectedKeyBase}.`;
+
     const src = extractSlotImgSrc(html, slot);
     if (!src) {
       run.check(`R2 image naming: ${label} image src (slot="${slot}") present`, false);
@@ -253,18 +282,45 @@ function validateR2ImageObjectNaming(html, htmlObjectKey, run, { requireAvif = f
     }
 
     const objectKey = extractR2ObjectKey(src);
+    objectKeys.push(objectKey);
     const extMatch = objectKey.match(/\.([^.]+)$/);
+    const extension = extMatch?.[1] ?? null;
+    extensions.push(extension);
+
+    const namingPattern = screenshotTarget
+      ? `${basename}_{target}_${phase}.<ext>`
+      : `${basename}_${phase}.<ext>`;
     run.check(
-      `R2 image naming: ${label} object key matches ${basename}_${label}.<ext>`,
+      `R2 image naming: ${label} object key matches ${namingPattern}`,
       objectKey.startsWith(expectedPrefix) && objectKey.length > expectedPrefix.length
     );
-    run.check(`R2 image naming: ${label} extension present`, Boolean(extMatch?.[1]));
+    run.check(`R2 image naming: ${label} extension present`, Boolean(extension));
     if (requireAvif) {
       run.check(
         `R2 image naming: ${label} image src (slot="${slot}") uses .avif`,
         isAvifR2Url(src)
       );
     }
+  }
+
+  if (extensions.length === 2 && extensions[0] && extensions[1]) {
+    run.check(
+      'R2 image naming: before/after extensions match',
+      extensions[0].toLowerCase() === extensions[1].toLowerCase()
+    );
+  } else if (extensions.length === 2) {
+    run.check('R2 image naming: before/after extensions match', false);
+  }
+
+  if (screenshotTarget && objectKeys.length === 2) {
+    run.check(
+      `R2 image naming: before object key is ${expectedR2ImageObjectKey(basename, screenshotTarget, 'before')}.<ext>`,
+      objectKeys[0].startsWith(`${expectedR2ImageObjectKey(basename, screenshotTarget, 'before')}.`)
+    );
+    run.check(
+      `R2 image naming: after object key is ${expectedR2ImageObjectKey(basename, screenshotTarget, 'after')}.<ext>`,
+      objectKeys[1].startsWith(`${expectedR2ImageObjectKey(basename, screenshotTarget, 'after')}.`)
+    );
   }
 }
 
@@ -349,10 +405,21 @@ function main() {
     validateR2Required(html, run);
   }
 
+  if (args.r2Required && args.htmlObjectKey && !args.screenshotTarget) {
+    run.check('--r2-required with --html-object-key requires --screenshot-target', false);
+  }
+
+  if (args.screenshotTarget) {
+    validateScreenshotTargetSlug(args.screenshotTarget, run);
+  }
+
   if (args.htmlObjectKey) {
     validateHtmlObjectKey(args.htmlObjectKey, run);
-    if (args.r2Required) {
-      validateR2ImageObjectNaming(html, args.htmlObjectKey, run, { requireAvif: true });
+    if (args.screenshotTarget) {
+      validateR2ImageObjectNaming(html, args.htmlObjectKey, run, {
+        requireAvif: args.r2Required,
+        screenshotTarget: args.screenshotTarget,
+      });
     }
   }
 

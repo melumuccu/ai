@@ -110,23 +110,24 @@ PR レビュー HTML で **確認済み公開 URL** 方式を選んだ場合、b
 
 ### オブジェクトキー命名
 
-HTML 本体キーと **同じバケット・同じ版 prefix**（HTML キーから `.html` を除いた basename）に、画像種別 suffix を付ける。
+HTML 本体キーと **同じバケット・同じ版 prefix**（HTML キーから `.html` を除いた basename）に、**撮影対象 slug** と画像種別 suffix を付ける。
 
 ```
 HTML:   <日付>_<概要>_v{N}.html
-before: <html_basename>_before.avif
-after:  <html_basename>_after.avif
+before: <html_basename>_<target>_before.avif
+after:  <html_basename>_<target>_after.avif
 ```
 
 - `html_basename` = HTML オブジェクトキーから `.html` を除いた部分
-- 拡張子は **`.avif` 固定**。キー拡張子と `--content-type` は **`image/avif`** で一致させる
+- `<target>` = **撮影対象 slug**（validator では `--screenshot-target TARGET` で指定）。英数字・ハイフン・アンダースコアのみ（例: `home`, `settings-modal`）
+- 拡張子は **`.avif` 固定**。before / after は **同一拡張子** とする。キー拡張子と `--content-type` は **`image/avif`** で一致させる
 - 既存 key の上書き禁止（HTML・画像とも）
 
-例:
+例（`--screenshot-target home`）:
 
-- HTML: `2026-08-04_スクリーンショット比較デモ_v1.html`
-- before: `2026-08-04_スクリーンショット比較デモ_v1_before.avif`
-- after: `2026-08-04_スクリーンショット比較デモ_v1_after.avif`
+- HTML: `2026-08-04_スクリーンショット比較デモ_v2.html`
+- before: `2026-08-04_スクリーンショット比較デモ_v2_home_before.avif`
+- after: `2026-08-04_スクリーンショット比較デモ_v2_home_after.avif`
 
 ### Content-Type
 
@@ -154,12 +155,12 @@ scripts/convert-screenshot-to-avif.sh artifacts/after.png artifacts/after.avif
 **put / get は必ず `--remote` を付ける。** Wrangler の local default バケットと混同しない。
 
 ```bash
-npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.avif \
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v2_home_before.avif \
   --file=artifacts/before.avif \
   --content-type=image/avif \
   --remote
 
-npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_after.avif \
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v2_home_after.avif \
   --file=artifacts/after.avif \
   --content-type=image/avif \
   --remote
@@ -186,7 +187,7 @@ wc -c /tmp/check-image
 1. `https://ai-html.hacksaw.work/<html-object-key>` を Access 認証後に開く
 2. `img-comparison-slider` 内の before/after 画像が表示されることを確認
 3. DevTools → **Network** で画像リクエストが 200、Content-Type が **`image/avif`** であることを確認
-4. HTML `src` のオブジェクトキーが `{html_basename}_before.avif` / `{html_basename}_after.avif` と一致することを確認
+4. HTML `src` のオブジェクトキーが `{html_basename}_{target}_before.avif` / `{html_basename}_{target}_after.avif` と一致することを確認
 
 ## CLI 配布 runbook（本 repository）
 
@@ -283,7 +284,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`。R2 AVIF 必須なら `--r2-required --html-object-key <object-key>` も付ける）。legacy data URL 埋め込み時のみ 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
+1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`。R2 AVIF 必須なら `--r2-required --html-object-key <object-key> --screenshot-target <target>` も付ける）。legacy data URL 埋め込み時のみ 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
 
 ```bash
 node scripts/verify-review-delivery.mjs <html-file> [--frontend]

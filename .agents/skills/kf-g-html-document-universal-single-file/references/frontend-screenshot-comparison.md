@@ -66,29 +66,30 @@ scripts/convert-screenshot-to-avif.sh INPUT_PNG OUTPUT.avif
 
 ## R2 画像オブジェクト（確認済み公開 URL 方式）
 
-HTML 本体とは **別オブジェクト** として R2 に put する。HTML 本体と **同じバケット**（`ai-html`）・**同じ版 prefix**（HTML オブジェクトキーから `.html` を除いた basename）を使い、画像種別を suffix に付ける。
+HTML 本体とは **別オブジェクト** として R2 に put する。HTML 本体と **同じバケット**（`ai-html`）・**同じ版 prefix**（HTML オブジェクトキーから `.html` を除いた basename）を使い、**撮影対象 slug** と画像種別を suffix に付ける。
 
 | 項目 | ルール |
 | --- | --- |
 | バケット | `ai-html`（HTML 本体と **同一**） |
 | 公開 URL | `https://ai-html.hacksaw.work/<object-key>` |
-| HTML オブジェクトキー | `{日付}_{概要}_v{N}.html`（例: `2026-08-04_スクリーンショット比較デモ_v1.html`） |
-| 画像オブジェクトキー | `{html_basename}_before.{ext}` / `{html_basename}_after.{ext}`（`html_basename` = HTML キーから `.html` を除いた部分） |
+| HTML オブジェクトキー | `{日付}_{概要}_v{N}.html`（例: `2026-08-04_スクリーンショット比較デモ_v2.html`） |
+| 撮影対象 slug | 英数字・ハイフン・アンダースコアのみ（validator: `--screenshot-target TARGET`）。例: `home`, `settings-modal` |
+| 画像オブジェクトキー | `{html_basename}_{target}_before.{ext}` / `{html_basename}_{target}_after.{ext}`（`html_basename` = HTML キーから `.html` を除いた部分） |
 | 版管理 | HTML と同じ `v{N}`。既存 key **上書き禁止**、欠番・再利用禁止 |
-| 命名例 | `2026-08-04_スクリーンショット比較デモ_v1_before.avif`、`..._v1_after.avif` |
-| 拡張子 | **`.avif` 固定**（キー拡張子と `--content-type` を一致させる） |
+| 命名例 | `2026-08-04_スクリーンショット比較デモ_v2_home_before.avif`、`..._v2_home_after.avif` |
+| 拡張子 | **`.avif` 固定**。before / after は **同一拡張子**（キー拡張子と `--content-type` を一致させる） |
 | Content-Type | **`image/avif` 必須** |
 | HTML 側 | **確認済み R2 URL のみ** `src` に記載。put 後に `--remote` で get / 公開 URL で目視確認する |
 
 **upload 例（AVIF）:**
 
 ```bash
-npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.avif \
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v2_home_before.avif \
   --file=artifacts/before.avif \
   --content-type=image/avif \
   --remote
 
-npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_after.avif \
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v2_home_after.avif \
   --file=artifacts/after.avif \
   --content-type=image/avif \
   --remote
