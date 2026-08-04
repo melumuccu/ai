@@ -3,37 +3,31 @@ name: kf-g-git-commit-atomic-rules
 description: Enforce frequent atomic commits while doing coding work. Always use this skill at the start of any task that may edit code, configuration, tests, documentation, generated metadata, or other repository files; apply it before implementing features, fixing bugs, refactoring, formatting, or making multi-step changes.
 ---
 
-# Git Commit Rules / コミットのルール
+# コミットのルール
 
 この skill は、コーディングタスク開始時に必ず参照する commit 粒度の規約。
 変更はアトミックな単位に分け、必要な検証が通った論理単位で commit する。
 
 ## 基本方針
 
-You must make frequent, atomic commits for each logical change.
 変更は必ず「アトミック（最小単位）」に分割し、こまめにコミットする。
 
-## Commit Granularity / コミットの粒度基準
+## コミットの粒度基準
 
-1. **Single Responsibility / 1つの関心事**
-   - 1 commit = 1 logical change. Do not mix unrelated changes.
+1. **1つの関心事**
    - 1つのコミットには1つの修正・機能変更だけを含める。複数の無関係な変更をまとめない。
 
-1. **Keep it Green / 常にビルド可能な状態**
-   - Every commit must be in a working state. Code must compile and tests must pass.
+1. **常にビルド可能な状態**
    - 小さな単位でも、アプリが起動しない状態やテストが落ちる状態での commit は禁止。
 
-1. **Separate Refactoring from Functional Changes / リファクタリングの分離**
-   - Never mix refactoring, formatting, or typo fixes with functional changes or bug fixes.
+1. **リファクタリングの分離**
    - 機能追加・バグ修正と、リファクタリング・タイポ修正・フォーマット変更は必ず別 commit にする。
 
-1. **Reviewable Size / レビューしやすいサイズ**
-   - Keep commits small and concise so that reviewers can understand the diff at a glance.
+1. **レビューしやすいサイズ**
    - 差分を見ただけで何をしたかが一目瞭然な、数行から数十行の小さな単位を意識する。
 
-## Execution Instructions / 実行指示
+## 実行指示
 
-- Commit each small, self-contained logical change when it is ready for review.
 - 小さな論理変更がレビュー可能になった時点で commit する。通常実装では agent が必要な変更を随時 stage・commit・push・PR 作成してよい。
 - Never bundle multiple issues into a single massive commit. Commit messages like `Fix multiple issues` are strictly prohibited.
 - タスク全体の完了を待ってから一括で大きな commit を作ることは禁止。
