@@ -60,6 +60,12 @@
       "skillPath": "skills/genshijin-stats/SKILL.md",
       "computedHash": "33b9878352ea6a4003376cd44639fe0002e674d2eb12dcdc6ab0c90648fdb41f"
     },
+    "gh": {
+      "source": "cli/cli",
+      "sourceType": "github",
+      "skillPath": "skills/gh/SKILL.md",
+      "computedHash": "4161832d3b900386bfeb687167ea990e65bae91327c7fb1235c0db54ad15eb63"
+    },
     "prompt-builder": {
       "source": "github/awesome-copilot",
       "sourceType": "github",

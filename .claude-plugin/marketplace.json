@@ -81,6 +81,7 @@
         "./genshijin-help",
         "./genshijin-review",
         "./genshijin-stats",
+        "./gh",
         "./prompt-builder",
         "./skill-creator",
         "./svelte-code-writer",
