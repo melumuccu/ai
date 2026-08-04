@@ -38,15 +38,23 @@ function decodeDataUrlBytes(dataUrl) {
   return Buffer.from(decodeURIComponent(payload), 'utf8');
 }
 
+const HTML_OBJECT_KEY_PATTERN = /_v\d+\.html$/i;
+
 function usage() {
   console.error(
-    'usage: node scripts/verify-review-delivery.mjs <html-file> [--frontend] [--r2-required] [--public-url URL] [--pr-body-file FILE]'
+    'usage: node scripts/verify-review-delivery.mjs <html-file> [--frontend] [--r2-required] [--html-object-key KEY] [--public-url URL] [--pr-body-file FILE]'
   );
 }
 
 function parseArgs(argv) {
   const positional = [];
-  const options = { frontend: false, r2Required: false, publicUrl: null, prBodyFile: null };
+  const options = {
+    frontend: false,
+    r2Required: false,
+    htmlObjectKey: null,
+    publicUrl: null,
+    prBodyFile: null,
+  };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -54,6 +62,10 @@ function parseArgs(argv) {
       options.frontend = true;
     } else if (arg === '--r2-required') {
       options.r2Required = true;
+    } else if (arg === '--html-object-key') {
+      options.htmlObjectKey = argv[i + 1];
+      if (!options.htmlObjectKey) throw new Error('--html-object-key requires an object key');
+      i += 1;
     } else if (arg === '--public-url') {
       options.publicUrl = argv[i + 1];
       if (!options.publicUrl) throw new Error('--public-url requires a URL');
@@ -199,6 +211,51 @@ function validateFrontend(html, run) {
   run.check('capture URL', urlMention);
 }
 
+function extractR2ObjectKey(src) {
+  return src.slice(R2_BASE.length).split(/[?#]/)[0];
+}
+
+function htmlKeyBasename(htmlObjectKey) {
+  return htmlObjectKey.replace(/\.html$/i, '');
+}
+
+function validateHtmlObjectKey(htmlObjectKey, run) {
+  run.check('html object key: no path separators', !/[\\/]/.test(htmlObjectKey));
+  run.check('html object key: ends with _vN.html', HTML_OBJECT_KEY_PATTERN.test(htmlObjectKey));
+}
+
+function validateR2ImageObjectNaming(html, htmlObjectKey, run) {
+  const basename = htmlKeyBasename(htmlObjectKey);
+  const expectedBeforePrefix = `${basename}_before.`;
+  const expectedAfterPrefix = `${basename}_after.`;
+
+  const slots = [
+    { slot: 'first', label: 'before', expectedPrefix: expectedBeforePrefix },
+    { slot: 'second', label: 'after', expectedPrefix: expectedAfterPrefix },
+  ];
+
+  for (const { slot, label, expectedPrefix } of slots) {
+    const src = extractSlotImgSrc(html, slot);
+    if (!src) {
+      run.check(`R2 image naming: ${label} image src (slot="${slot}") present`, false);
+      continue;
+    }
+
+    if (!isR2PublicUrl(src)) {
+      run.check(`R2 image naming: ${label} image src (slot="${slot}") is R2 URL`, false);
+      continue;
+    }
+
+    const objectKey = extractR2ObjectKey(src);
+    const extMatch = objectKey.match(/\.([^.]+)$/);
+    run.check(
+      `R2 image naming: ${label} object key matches ${basename}_${label}.<ext>`,
+      objectKey.startsWith(expectedPrefix) && objectKey.length > expectedPrefix.length
+    );
+    run.check(`R2 image naming: ${label} extension present`, Boolean(extMatch?.[1]));
+  }
+}
+
 function validateR2Required(html, run) {
   const firstSrc = extractSlotImgSrc(html, 'first');
   const secondSrc = extractSlotImgSrc(html, 'second');
@@ -270,6 +327,13 @@ function main() {
 
   if (args.r2Required) {
     validateR2Required(html, run);
+  }
+
+  if (args.htmlObjectKey) {
+    validateHtmlObjectKey(args.htmlObjectKey, run);
+    if (args.r2Required) {
+      validateR2ImageObjectNaming(html, args.htmlObjectKey, run);
+    }
   }
 
   if (args.publicUrl) {

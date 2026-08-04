@@ -120,28 +120,31 @@ before/after 画像は **HTML 本体と同じ R2 バケット**（`ai-html`）�
 
 ### R2 画像オブジェクト（確認済み公開 URL 方式）
 
-HTML 本体とは **別オブジェクト** として R2 に put する。HTML 本体と **同じ版 prefix** を使い、画像種別を suffix に付ける。
+HTML 本体とは **別オブジェクト** として R2 に put する。HTML 本体と **同じバケット**（`ai-html`）・**同じ版 prefix**（HTML オブジェクトキーから `.html` を除いた basename）を使い、画像種別を suffix に付ける。
 
 | 項目 | ルール |
 | --- | --- |
-| バケット | `ai-html` |
+| バケット | `ai-html`（HTML 本体と **同一**） |
 | 公開 URL | `https://ai-html.hacksaw.work/<object-key>` |
+| HTML オブジェクトキー | `{日付}_{概要}_v{N}.html`（例: `2026-08-04_スクリーンショット比較デモ_v1.html`） |
+| 画像オブジェクトキー | `{html_basename}_before.{ext}` / `{html_basename}_after.{ext}`（`html_basename` = HTML キーから `.html` を除いた部分） |
 | 版管理 | HTML と同じ `v{N}`。既存 key **上書き禁止**、欠番・再利用禁止 |
-| 命名例 | `2026-08-04_スクリーンショット比較デモ_v1_before.webp`、`..._v1_after.webp` |
-| Content-Type | 画像形式に合わせて明示（`image/webp`、`image/png`、`image/jpeg`） |
-| HTML 側 | **確認済み R2 URL のみ** `src` に記載。Access 認証後に目視で画像表示を確認する |
+| 命名例 | `2026-08-04_スクリーンショット比較デモ_v1_before.avif`、`..._v1_after.avif` |
+| 拡張子 | 画像形式に合わせて任意（G5 以降は AVIF 必須化予定）。キー拡張子と `--content-type` を一致させる |
+| Content-Type | 拡張子に合わせて明示（`image/avif`、`image/webp`、`image/png`、`image/jpeg`） |
+| HTML 側 | **確認済み R2 URL のみ** `src` に記載。put 後に get / 公開 URL で目視確認する |
 
-**upload 例（WebP）:**
+**upload 例（AVIF）:**
 
 ```bash
-npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.webp \
-  --file=artifacts/before.webp \
-  --content-type=image/webp \
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.avif \
+  --file=artifacts/before.avif \
+  --content-type=image/avif \
   --remote
 
-npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_after.webp \
-  --file=artifacts/after.webp \
-  --content-type=image/webp \
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_after.avif \
+  --file=artifacts/after.avif \
+  --content-type=image/avif \
   --remote
 ```
 
@@ -223,6 +226,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 | （常時） | doctype、`data-theme`、daisyUI / Tailwind CDN、コメントコア DOM・`data-action`・localStorage key |
 | `--frontend` | `img-comparison-slider` CDN、`slot="first"` / `"second"`、width 100%、画像 src（data URL または確認済み R2 URL）、data URL 容量（1 画像 2 MiB / 合計 5 MiB）、撮影条件（viewport・branch・URL）。R2 URL はネットワーク取得せず CLI 確認手順を出力 |
 | `--r2-required` | `data:image/` 禁止。`slot="first"` / `"second"` の src が `https://ai-html.hacksaw.work/` の確認済み R2 URL であること（G5 移行完了後の厳格ゲート） |
+| `--html-object-key` | HTML オブジェクトキーが `_vN.html` 形式であること。`--r2-required` と併用時は、画像 src の R2 オブジェクトキーが `{html_basename}_before.<ext>` / `{html_basename}_after.<ext>` と一致すること（拡張子は任意） |
 | `--public-url` | URL が `https://ai-html.hacksaw.work/` で、オブジェクトキーに `_vN.html` を含む |
 | `--pr-body-file` | body に `## レビュー用資料` と、確認済み URL に一致する `[vN](URL)` がある |
 

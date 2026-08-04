@@ -108,23 +108,29 @@ PR レビュー HTML で **確認済み公開 URL** 方式を選んだ場合、b
 
 ### オブジェクトキー命名
 
-HTML 本体キーと **同じ版 prefix** に、画像種別 suffix を付ける。
+HTML 本体キーと **同じバケット・同じ版 prefix**（HTML キーから `.html` を除いた basename）に、画像種別 suffix を付ける。
 
 ```
-<日付>_<概要>_v{N}_before.<ext>
-<日付>_<概要>_v{N}_after.<ext>
+HTML:   <日付>_<概要>_v{N}.html
+before: <html_basename>_before.<ext>
+after:  <html_basename>_after.<ext>
 ```
+
+- `html_basename` = HTML オブジェクトキーから `.html` を除いた部分
+- before / after の拡張子は一致させなくてよいが、各キーの拡張子と `--content-type` は一致させる
+- 既存 key の上書き禁止（HTML・画像とも）
 
 例:
 
 - HTML: `2026-08-04_スクリーンショット比較デモ_v1.html`
-- before: `2026-08-04_スクリーンショット比較デモ_v1_before.webp`
-- after: `2026-08-04_スクリーンショット比較デモ_v1_after.webp`
+- before: `2026-08-04_スクリーンショット比較デモ_v1_before.avif`
+- after: `2026-08-04_スクリーンショット比較デモ_v1_after.avif`
 
 ### Content-Type
 
 | 拡張子 | `--content-type` |
 | --- | --- |
+| `.avif` | `image/avif` |
 | `.webp` | `image/webp` |
 | `.png` | `image/png` |
 | `.jpg` / `.jpeg` | `image/jpeg` |
@@ -132,22 +138,24 @@ HTML 本体キーと **同じ版 prefix** に、画像種別 suffix を付ける
 ### CLI upload（画像）
 
 ```bash
-npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.webp \
-  --file=artifacts/before.webp \
-  --content-type=image/webp \
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.avif \
+  --file=artifacts/before.avif \
+  --content-type=image/avif \
   --remote
 
-npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_after.webp \
-  --file=artifacts/after.webp \
-  --content-type=image/webp \
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_after.avif \
+  --file=artifacts/after.avif \
+  --content-type=image/avif \
   --remote
 ```
 
 **期待結果:** コマンド成功。Dashboard オブジェクト一覧に新 key が表示される（既存 key は変更されない）
 
-### size / Content-Type 確認
+### size / Content-Type / 公開 URL 確認
 
 validator は R2 画像 URL を **ネットワーク取得しない**。以下でローカル確認する。
+
+**get + MIME + サイズ:**
 
 ```bash
 npx wrangler@latest r2 object get ai-html/<object-key> --file=/tmp/check-image --remote
@@ -155,13 +163,14 @@ file --mime-type /tmp/check-image
 wc -c /tmp/check-image
 ```
 
-**期待結果:** MIME が画像形式と一致。サイズが repository 推奨（1 画像 2 MiB 以下）に収まる
+**期待結果:** MIME がキー拡張子と一致（例: `.avif` → `image/avif`）。サイズが repository 推奨（1 画像 2 MiB 以下）に収まる
 
-### 公開 URL 目視確認
+**公開 URL 確認:**
 
-1. HTML を Access 認証後に開く
-1. `img-comparison-slider` 内の before/after 画像が表示されることを確認
-1. DevTools → **Network** で画像リクエストが 200、Content-Type が画像形式であることを確認
+1. `https://ai-html.hacksaw.work/<html-object-key>` を Access 認証後に開く
+2. `img-comparison-slider` 内の before/after 画像が表示されることを確認
+3. DevTools → **Network** で画像リクエストが 200、Content-Type が画像形式であることを確認
+4. HTML `src` のオブジェクトキーが `{html_basename}_before.<ext>` / `{html_basename}_after.<ext>` と一致することを確認
 
 ## CLI 配布 runbook（本 repository）
 
@@ -258,7 +267,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`）。data URL 埋め込み時は 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
+1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`。R2 移行後は `--r2-required --html-object-key <object-key>` も付ける）。data URL 埋め込み時は 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
 
 ```bash
 node scripts/verify-review-delivery.mjs <html-file> [--frontend]
