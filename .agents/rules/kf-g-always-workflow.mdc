@@ -1,5 +1,5 @@
 ---
-description: 作業の issue・worktree・PR・コミット運用を定義する。コミュ用HTMLを使う作業ではR2配布とURL掲載を必須にする
+description: 作業の issue・worktree・PR・コミット運用を定義する。ユーザとのコミュニケーションに用いるHTMLではR2配布とURL掲載を必須にする
 alwaysApply: true
 ---
 
@@ -17,3 +17,11 @@ alwaysApply: true
 ## GitHub上の記録
 
 issueを起点にする場合は、作業ログ、判断、進捗、PR URLを issue に記録する。GitHubへの書き込みは GitHub App bot の preflight 成功後に、指定された bot helper のみで行う。
+
+## ユーザとのコミュニケーションに用いるHTML
+
+コミュ用HTMLを作成したら、次の手順で R2 に配布する。
+
+- プランニングはすべてコミュ用HTMLにし、issue description には確認済みの R2 URL をリンクする。したがって、プランニング時は先に issue を作成する。
+- PRを作成する場合は、PRレビュー用のコミュ用HTMLをPR作成前に作成し、確認済みの R2 URL を PR description にリンクする。
+- HTMLを配布するだけでファイル変更差分がない場合は、R2公開を完了条件とし、PRを作成しない。
