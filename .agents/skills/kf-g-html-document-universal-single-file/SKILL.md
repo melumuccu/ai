@@ -12,13 +12,29 @@ description: Build a build-free, single-file interactive HTML document with text
 | ファイル | 読むタイミング |
 | --- | --- |
 | [references/core-contract.md](references/core-contract.md) | コメントコアの DOM・データ・レイアウト・永続化を実装するとき |
-| [references/content-patterns.md](references/content-patterns.md) | PR 説明・業務フロー・非コーディング向けの構成と CDN 選定 |
+| [references/content-patterns.md](references/content-patterns.md) | PR 説明・業務フロー・非コーディング向けの構成、CDN 選定、視覚構造・可読性（§ 論理セクション分離・図表化・情報エンコード・アクセシビリティ） |
 | [references/r2-static-delivery.md](references/r2-static-delivery.md) | R2 公開前提・Wrangler OAuth・版管理の確認 |
 | [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較 |
 | [references/pr-review-delivery.md](references/pr-review-delivery.md) | issue / PR 向け R2 配布の完了ゲート・validator・非コミット規則 |
 | [scripts/verify-review-delivery.mjs](scripts/verify-review-delivery.mjs) | HTML / R2 URL / PR description の機械検証 |
 | [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh) | スクリーンショット PNG → AVIF 固定変換 |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html) | 実装の起点テンプレート |
+
+## 視覚構造・可読性（生成時必須）
+
+[content-patterns.md](references/content-patterns.md) の「視覚構造・可読性・情報エンコード」を満たす。要点のみ:
+
+| 原則 | 内容 |
+| --- | --- |
+| 積み順 | 要約カード → 表/図/steps → 短段落（1論点） → collapse（詳細） |
+| 論理分離 | 概要・リスク群・意図グループ等を親 `section`、見出し、余白、背景または divider で分離 |
+| 視覚エンコード | 状態・リスク・カテゴリは badge + 薄背景 + 枠線 + テキストラベル（色だけに依存しない） |
+| 二重記載禁止 | 表・図・steps に載せた事実を長文段落で繰り返さない |
+| コメント対象 | 説明本文は `[data-content-root]` 内に置き、テキスト選択可能に保つ |
+
+**図表化の判断:** 2軸以上の比較は `table`、3ステップ超の順序・分岐は `steps` または Mermaid、並列 3〜7 項目は短い箇条書き、段落 5 文超は分割または視覚要素へ。
+
+**a11y / レスポンシブ:** 高/中/低等は badge テキスト + 背景 + 枠線の冗長表現。見出し階層 h1→h2→h3 を飛ばさない。モバイルは縦積み、表は横スクロールまたは行分割、文字拡大で切れない。
 
 ## 生成ワークフロー
 
@@ -29,6 +45,9 @@ description: Build a build-free, single-file interactive HTML document with text
    - 既存 R2 オブジェクトは上書きしない。新しい `v{N}` オブジェクトキーでアップロードする
    - アップロード前にコピー元版とアップロード先版を確認する。完成 HTML の版ラベルとファイル名がアップロード先 `v{N}` と一致することを確認する
 1. 初版または例外時はテンプレート HTML をコピーし、改訂時は直前版をコピーする。タイトルと `[data-content-root]` 内本文を差し替える
+1. 論理セクション（概要・リスク・意図グループ等）を親 `section` で分離し、積み順（要約 → 表/図/steps → 短段落 → collapse）に従って構成する
+1. 状態・リスク・カテゴリ・進捗等は badge、alert、card 背景、steps、table 等で冗長表現する。色だけに頼らずテキストラベル・見出し・枠線を併用する
+1. 表・図と同じ情報の段落重複がないか確認する（二重記載禁止）
 1. 必要な CDN のみ追加する（daisyUI v5 + `@tailwindcss/browser@4` は常時。Mermaid / Markmap / diff2html / Alpine.js は内容に応じて。PR レビュー用 HTML でフロントエンド変更かつ [before/after 比較](references/frontend-screenshot-comparison.md) の条件を満たす場合は `img-comparison-slider` を追加）
 1. `<html>` に `data-theme` を設定し、ページ chrome と操作 UI は daisyUI コンポーネントクラス（`btn`, `card`, `alert`, `badge`, `collapse`, `steps` など）を使う。コメントコアは vanilla JS のまま維持する
 1. コメントコア契約を満たす DOM ID・属性を維持する（[core-contract.md](references/core-contract.md)）
@@ -124,6 +143,12 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] 本文テキスト選択可能、コメント操作がキーボード可能
 - [ ] デスクトップ右余白 + モバイルでも閲覧可能
 - [ ] daisyUI v5 + `@tailwindcss/browser@4` CDN を読み込み、`<html data-theme="...">` と daisyUI コンポーネントクラスで UI を構成している
+- [ ] 論理セクション（概要・リスク群等）が親 `section`、見出し、余白、背景または divider で視覚分離されている
+- [ ] 積み順: 要約カード → 表/図/steps → 短段落（1論点） → collapse（詳細）
+- [ ] 2軸以上の比較は `table`、3ステップ超の順序・分岐は `steps` または Mermaid、並列 3〜7 項目は短い箇条書き
+- [ ] 表・図・steps と同内容の長文段落がない（二重記載禁止）
+- [ ] 状態・リスク・カテゴリ等は badge + 薄背景 + 枠線 + テキストラベルで表現し、色だけに依存していない
+- [ ] 見出し階層 h1→h2→h3 を飛ばしていない。モバイル縦積み、表は横スクロールまたは行分割、文字拡大で切れない
 - [ ] バックエンド同期・認証を謳っていない
 - [ ] 手動インフラ操作を含む依頼: 操作範囲、前提、Mermaid 等の構成図、**手動インフラ構築手順**（GCP / Zero Trust / R2 等）、**目視確認手順**（ブラウザ・DevTools・コメント操作）、CLI コマンド、失敗復旧、セキュリティ注意、操作ステータスと版情報を本文に記載した
 - [ ] 次版作成: **通常**は直前版をコピーして変更を加えた。**例外**（全文書き直し、構造再設計、直前版が不適切）の場合はテンプレートまたは独立作成とし、理由を本文または操作記録に記載した

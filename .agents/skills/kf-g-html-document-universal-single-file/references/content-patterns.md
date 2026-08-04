@@ -26,26 +26,140 @@
 
 不要な CDN は読み込まない。ビルド・npm・ローカル import は禁止。
 
+## 視覚構造・可読性・情報エンコード
+
+パターン横断の共通規約。コメント対象本文は `[data-content-root]` 内に置く。
+
+### 積み順と論理分離
+
+| 順序 | 要素 | 用途 |
+| --- | --- | --- |
+| 1 | 要約カード | 結論・目的（3行以内） |
+| 2 | 表 / 図 / steps | 比較・手順・状態の索引 |
+| 3 | 短段落 | 1論点の補足（表・図の繰り返し禁止） |
+| 4 | collapse | 詳細・根拠・全文 |
+
+概要、リスク群、意図グループ等の論理単位は、親 `section` + `h2` + `mb-6` 以上の余白 + `divider` または背景付き `card` で視覚分離する。
+
+### 図表化の判断
+
+| 情報 | 推奨 | 条件 |
+| --- | --- | --- |
+| 2軸以上の比較 | `table` | 列見出しで軸を明示。3列以上の同一軸も table |
+| 3ステップ超の順序・分岐 | `steps` または Mermaid | 並列分岐は Mermaid flowchart |
+| 階層・ツリー | Markmap | 深いネストは collapse と併用 |
+| 並列 3〜7 項目 | 短い箇条書き | 1項目1文 |
+| 状態・リスク・進捗 | badge + alert/card 背景 | テキストラベル必須 |
+| 長文詳細 | `collapse` | 上段に要約または表で要点を先出し |
+
+### 文字量ゲート
+
+| ブロック | 上限 | 超過時 |
+| --- | --- | --- |
+| 結論カード | 3行 | 表または steps へ分割 |
+| 段落 | 3〜4文 | リストまたは表へ |
+| リスト項目 | 1文 | 子リストまたは collapse |
+
+### 二重記載禁止
+
+- 表・Mermaid・steps に載せた事実を、直下の段落で言い換えて繰り返さない
+- collapse は詳細専用。上段の表/図は索引・対応表に限定
+- チェック: 同じ数値・固有名・手順が段落と表の両方にある → 片方を削除
+
+### 情報エンコード（色非依存）
+
+| 意味 | badge | 背景・枠線 |
+| --- | --- | --- |
+| 高リスク | `badge-error` + 「高リスク」 | `border-error/40 bg-error/10` |
+| 中リスク | `badge-warning` + 「中リスク」 | `border-warning/40 bg-warning/10` |
+| 低リスク | `badge-success` + 「低リスク」 | `border-success/40 bg-success/10` |
+| 注意 | `badge-warning` + ラベル | `alert alert-warning` |
+| 完了 | `badge-success` + ラベル | `badge` テキストで状態を明示 |
+
+色だけに頼らない。badge テキスト、見出し、枠線、必要に応じてアイコンまたは太字を併用する。
+
+### a11y / レスポンシブ
+
+- キーボード: collapse・dialog・コメント操作が Tab/Enter で操作可能
+- 選択: `[data-content-root]` 内テキスト選択可能。Mermaid SVG に user-select CSS
+- レイアウト: デスクトップ右コメントレール / モバイル下スタック（1024px 未満）
+- 表: `overflow-x-auto` で横スクロール、または行分割。文字拡大で切れない
+
 ## パターン A: PR / 変更説明（リスク順・意図グループ）
 
 **向いている依頼:** プルリクエスト、リファクタ、設定変更の説明ページ
 
 **構成（上から）:**
 
-1. 概要（何を・なぜ）
-1. リスク順セクション — 影響大 → 小
+1. 要約カード — 何を・なぜ（3行以内）
+1. リスク順セクション — 影響大 → 小（親 `section` + リスク badge カード）
    - 各項目: 変更点 / 理由 / 確認方法
-1. 意図グループ — 関連ファイル・機能単位でまとめる
+1. 意図グループ — 関連ファイル・機能単位（`divider` または背景 card で分離）
 1. diff 抜粋が必要なら diff2html（任意）
 1. フローが複雑なら Mermaid（任意）
+1. 詳細は collapse（上段の表/図と重複させない）
 
-**例セクション見出し:**
+**HTML 構造例（`[data-content-root]` 内）:**
 
-- 高リスク: 認証・課金・データ移行
-- 中リスク: API 契約変更
-- 低リスク: 文言・スタイル
+```html
+<!-- 要約 -->
+<section class="card mb-6 border border-primary/30 bg-primary/5 shadow-sm">
+  <div class="card-body py-4">
+    <div class="flex items-center gap-2">
+      <span class="badge badge-primary badge-outline">概要</span>
+      <h2 class="card-title text-lg">変更の目的</h2>
+    </div>
+    <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+      <li>要点1</li>
+      <li>要点2</li>
+    </ul>
+  </div>
+</section>
 
-**避ける:** Worker 連携、レビュー API、自動アップロードコードの埋め込み
+<div class="divider my-6">リスク</div>
+
+<!-- リスク群（高→中→低） -->
+<section class="mb-6">
+  <h2 class="mb-3 text-xl font-semibold">リスク順レビュー</h2>
+  <div class="grid gap-3 sm:grid-cols-3">
+    <div class="card border border-error/40 bg-error/10 shadow-sm">
+      <div class="card-body gap-2 py-3">
+        <span class="badge badge-error w-fit">高リスク</span>
+        <h3 class="font-semibold">認証・課金</h3>
+        <p class="text-sm">変更点と確認方法</p>
+      </div>
+    </div>
+    <div class="card border border-warning/40 bg-warning/10 shadow-sm">
+      <div class="card-body gap-2 py-3">
+        <span class="badge badge-warning w-fit">中リスク</span>
+        <h3 class="font-semibold">API 契約</h3>
+        <p class="text-sm">変更点と確認方法</p>
+      </div>
+    </div>
+    <div class="card border border-success/40 bg-success/10 shadow-sm">
+      <div class="card-body gap-2 py-3">
+        <span class="badge badge-success w-fit">低リスク</span>
+        <h3 class="font-semibold">文言・スタイル</h3>
+        <p class="text-sm">変更点と確認方法</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 意図グループ + 詳細 collapse -->
+<section class="mb-6">
+  <h2 class="mb-3 text-xl font-semibold">意図グループ</h2>
+  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+    <input type="checkbox" />
+    <div class="collapse-title font-medium">グループ名（要約1行）</div>
+    <div class="collapse-content text-sm">
+      <p>詳細・根拠。上段の表/図と重複しない。</p>
+    </div>
+  </div>
+</section>
+```
+
+**避ける:** Worker 連携、レビュー API、自動アップロードコードの埋め込み、表/図と同内容の長文段落
 
 ## パターン B: 業務フロー（マインドマップ / シミュレータ）
 
@@ -120,3 +234,5 @@
 1. Mermaid 使用時はテキスト選択 CSS を入れたか
 1. インフラ操作を含む依頼で「手動インフラ操作記録」パターンを満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離したか）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
+1. 積み順・論理分離・二重記載禁止・色非依存エンコードを満たしたか
+1. 表・図・steps と同内容の段落がないか
