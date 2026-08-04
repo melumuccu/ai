@@ -187,8 +187,23 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
+1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`）
+
+```bash
+node scripts/verify-review-delivery.mjs <html-file> [--frontend]
+```
+
+1. validator 合格後、**新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
 1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で Access 認証後に目視確認手順を実施
+1. PR description を更新したら、確認済み URL と body ファイルで validator を再実行する
+
+```bash
+node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
+  --public-url https://ai-html.hacksaw.work/<object-key> \
+  --pr-body-file <pr-body.md>
+```
+
+1. 再検証合格後に description を確定する
 
 ## Cloudflare 操作（Wrangler OAuth）
 

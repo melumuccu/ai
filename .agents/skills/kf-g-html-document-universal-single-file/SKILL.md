@@ -14,6 +14,7 @@ description: Build a build-free, single-file interactive HTML document with text
 | [references/core-contract.md](references/core-contract.md) | コメントコアの DOM・データ・レイアウト・永続化を実装するとき |
 | [references/content-patterns.md](references/content-patterns.md) | PR 説明・業務フロー・非コーディング向けの構成と CDN 選定 |
 | [references/r2-static-delivery.md](references/r2-static-delivery.md) | R2 公開前提・Wrangler OAuth・版管理の確認 |
+| [scripts/verify-review-delivery.mjs](scripts/verify-review-delivery.mjs) | HTML / R2 URL / PR description の機械検証 |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html) | 実装の起点テンプレート |
 
 ## 生成ワークフロー
@@ -114,6 +115,43 @@ PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) 
 
 1. キャプションに撮影 URL・ビューポート・branch 名を記載し、レビュアーが再現できるようにする
 
+## 完了ゲート（issue / PR 向け HTML 配布）
+
+issue または PR 向けに HTML を R2 配布するとき、次の順序と機械検証を **必須** とする。手順を飛ばしたり、validator 失敗のまま upload / description 更新を確定してはならない。
+
+### 手順
+
+1. HTML を生成し、ローカルでコメントコアを目視確認する
+1. **R2 upload 前** に validator を実行する（フロントエンド変更 + スクリーンショット比較ありなら `--frontend` を付ける）
+
+```bash
+node scripts/verify-review-delivery.mjs <html-file> [--frontend]
+```
+
+1. 合格後、新規 `v{N}` として R2 へアップロードする（[r2-static-delivery.md](references/r2-static-delivery.md)）
+1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
+1. PR description を更新する（`## レビュー用資料` 配下に `[v{N}](確認済みURL)` のみ）
+1. **PR body 更新後** に validator を再実行する
+
+```bash
+node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
+  --public-url https://ai-html.hacksaw.work/<object-key> \
+  --pr-body-file <pr-body.md>
+```
+
+1. 再検証も合格して初めて description を確定する
+
+### validator の検証範囲
+
+| オプション | 検証内容 |
+| --- | --- |
+| （常時） | doctype、`data-theme`、daisyUI / Tailwind CDN、コメントコア DOM・`data-action`・localStorage key |
+| `--frontend` | `img-comparison-slider` CDN、`slot="first"` / `"second"`、width 100%、data URL 画像、撮影条件（viewport・branch・URL） |
+| `--public-url` | URL が `https://ai-html.hacksaw.work/` で、オブジェクトキーに `_vN.html` を含む |
+| `--pr-body-file` | body に `## レビュー用資料` と、確認済み URL に一致する `[vN](URL)` がある |
+
+失敗時は列挙された項目を修正し、該当ステップからやり直す。
+
 ## 出力チェックリスト
 
 - [ ] 単一 `.html` のみ（npm・ビルド・Worker なし）
@@ -136,6 +174,7 @@ PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) 
 - [ ] R2 配布時: issue / PR description に用途別見出し（issue: `## プランニング用資料`、PR: `## レビュー用資料`）と、版付き R2 オブジェクト名から確認した `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載した（HTML 配布ありの場合）
 - [ ] PR レビュー用 HTML + フロントエンド変更: **when** と **condition（スクリーンショット撮影可能）** を確認した。撮影不能なら `img-comparison-slider` を読み込まない
 - [ ] PR レビュー用 HTML + フロントエンド変更 + スクリーンショット撮影可能: `img-comparison-slider` を CDN で読み込み、修正前（`slot="first"`）・修正後（`slot="second"`）の before/after 比較を提示した
+- [ ] issue / PR 向け R2 配布: [完了ゲート](#完了ゲートissue--pr-向け-html-配布) の upload 前・PR body 更新後 validator が合格した
 
 ## スコープ外
 
