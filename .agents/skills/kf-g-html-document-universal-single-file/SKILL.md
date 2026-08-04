@@ -81,6 +81,18 @@ PR:
 - 最新 URL または `v{N}` が未確定の間は description を確定しない。アップロードと URL 確認後に更新する
 - HTML を改訂したら **新しい `v{N}` オブジェクト** をアップロードし、description のリンクとラベルを新しい版へ差し替える（旧版は上書きしない）
 
+### コミュ用ファイルの非コミット
+
+issue / PR 向けに生成する **レビュー用 HTML** と **before/after スクリーンショット**（PNG・AVIF 等）は、コミュニケーション・レビュー配布用の成果物であり **Git へ commit しない**。正本は R2 のみとする。
+
+| 区分 | 扱い |
+| --- | --- |
+| **commit 禁止** | 生成済み PR レビュー HTML、before/after スクリーンショット、R2 upload 前の作業用コピー |
+| **保管場所** | 一時ディレクトリまたは `.gitignore` 済み workspace 内（例: `tmp/`、`artifacts/`）。repository root への直置きは避ける |
+| **配布** | upload 前に validator で検証し、新規 `v{N}` オブジェクトキーで R2 へ put する |
+| **PR description** | 確認済み R2 HTML の公開 URL のみ `[v{N}](URL)` でリンクする。生成ファイル本体は載せない |
+| **commit 可** | 本 skill の SKILL.md、`references/`、`scripts/`、`assets/` テンプレート、validator、runbook 等の **ソース・支援ファイル** |
+
 ## フロントエンド変更時の before/after スクリーンショット比較
 
 PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) パターン A）を生成するときのみ適用する。
