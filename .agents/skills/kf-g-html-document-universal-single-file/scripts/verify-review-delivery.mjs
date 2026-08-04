@@ -224,7 +224,13 @@ function validateHtmlObjectKey(htmlObjectKey, run) {
   run.check('html object key: ends with _vN.html', HTML_OBJECT_KEY_PATTERN.test(htmlObjectKey));
 }
 
-function validateR2ImageObjectNaming(html, htmlObjectKey, run) {
+function isAvifR2Url(src) {
+  if (!isR2PublicUrl(src)) return false;
+  const objectKey = extractR2ObjectKey(src);
+  return /\.avif$/i.test(objectKey);
+}
+
+function validateR2ImageObjectNaming(html, htmlObjectKey, run, { requireAvif = false } = {}) {
   const basename = htmlKeyBasename(htmlObjectKey);
   const expectedBeforePrefix = `${basename}_before.`;
   const expectedAfterPrefix = `${basename}_after.`;
@@ -253,6 +259,12 @@ function validateR2ImageObjectNaming(html, htmlObjectKey, run) {
       objectKey.startsWith(expectedPrefix) && objectKey.length > expectedPrefix.length
     );
     run.check(`R2 image naming: ${label} extension present`, Boolean(extMatch?.[1]));
+    if (requireAvif) {
+      run.check(
+        `R2 image naming: ${label} image src (slot="${slot}") uses .avif`,
+        isAvifR2Url(src)
+      );
+    }
   }
 }
 
@@ -275,6 +287,14 @@ function validateR2Required(html, run) {
   run.check(
     'R2 required: after image src (slot="second") is verified R2 URL',
     Boolean(secondSrc && isR2PublicUrl(secondSrc))
+  );
+  run.check(
+    'R2 required: before image src (slot="first") uses .avif',
+    Boolean(firstSrc && isAvifR2Url(firstSrc))
+  );
+  run.check(
+    'R2 required: after image src (slot="second") uses .avif',
+    Boolean(secondSrc && isAvifR2Url(secondSrc))
   );
 }
 
@@ -332,7 +352,7 @@ function main() {
   if (args.htmlObjectKey) {
     validateHtmlObjectKey(args.htmlObjectKey, run);
     if (args.r2Required) {
-      validateR2ImageObjectNaming(html, args.htmlObjectKey, run);
+      validateR2ImageObjectNaming(html, args.htmlObjectKey, run, { requireAvif: true });
     }
   }
 
