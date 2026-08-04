@@ -109,6 +109,68 @@ before/after 画像を HTML から参照するとき、次の 2 方式から選�
 - **R2 要否**: R2 は必須ではない。data URL で単一 HTML 原則を満たせるなら R2 画像アップロードは不要。HTML 本体を R2 配布する場合でも、小さい画像は data URL 埋め込みを優先してよい
 - **R2 公開条件**: R2 等を使う場合は HTML 本体と同様、**確認済み公開 URL**（例: `https://ai-html.hacksaw.work/<object-key>`）のみ使う（[r2-static-delivery.md](references/r2-static-delivery.md) の公開前提に従う）。画像用オブジェクトキーは HTML と別でもよいが、アップロード後に HTTP で取得できることを確認する
 
+### img-comparison-slider と画像形式
+
+`img-comparison-slider` は `<img slot="first">` / `<img slot="second">` を表示する **custom element** である。画像形式を独自に制限しない。対応形式は **ブラウザの `<img>` 要素がデコードできる形式** に従う（例: PNG、JPEG、WebP、AVIF など。利用ブラウザの対応状況に依存する）。
+
+### 撮影・変換・形式選定
+
+| 段階 | 扱い |
+| --- | --- |
+| **撮影** | Playwright 等のブラウザ自動化では **PNG が一般的**（lossless、UI キャプチャ向け）。ツールや設定により JPEG 等になる場合もある |
+| **変換** | 配布前に容量・可読性を見て WebP / JPEG 等へ変換してよい。変換コマンドや品質設定は環境依存のため、**変換後に目視比較** し、元 PNG は削除しない |
+| **第一候補** | **WebP**（UI スクリーンショットの容量と可読性のバランス） |
+| **フォールバック** | WebP で文字・細線が劣化する場合は **PNG** |
+| **JPEG** | 文字・細線の劣化が許容できる写真寄り画面のみ。UI 文字の可読性を優先する |
+
+### R2 画像オブジェクト（確認済み公開 URL 方式）
+
+HTML 本体とは **別オブジェクト** として R2 に put する。HTML 本体と **同じ版 prefix** を使い、画像種別を suffix に付ける。
+
+| 項目 | ルール |
+| --- | --- |
+| バケット | `ai-html` |
+| 公開 URL | `https://ai-html.hacksaw.work/<object-key>` |
+| 版管理 | HTML と同じ `v{N}`。既存 key **上書き禁止**、欠番・再利用禁止 |
+| 命名例 | `2026-08-04_スクリーンショット比較デモ_v1_before.webp`、`..._v1_after.webp` |
+| Content-Type | 画像形式に合わせて明示（`image/webp`、`image/png`、`image/jpeg`） |
+| HTML 側 | **確認済み R2 URL のみ** `src` に記載。Access 認証後に目視で画像表示を確認する |
+
+**upload 例（WebP）:**
+
+```bash
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.webp \
+  --file=artifacts/before.webp \
+  --content-type=image/webp \
+  --remote
+
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_after.webp \
+  --file=artifacts/after.webp \
+  --content-type=image/webp \
+  --remote
+```
+
+**size / Content-Type 確認（validator は R2 URL をネットワーク取得しない。CLI で確認）:**
+
+```bash
+npx wrangler@latest r2 object get ai-html/<object-key> --file=/tmp/check-image --remote
+file --mime-type /tmp/check-image
+wc -c /tmp/check-image
+```
+
+詳細 runbook は [r2-static-delivery.md](references/r2-static-delivery.md) の「R2 画像オブジェクト」を参照。
+
+### 容量ゲート（repository 推奨上限）
+
+Cloudflare R2 の object 上限（例: 5 TB）とは **別物**。本 repository の **推奨上限** として次を採用する（超過時は validator が fail）。
+
+| 対象 | 推奨上限 |
+| --- | --- |
+| data URL 埋め込み **1 画像** | decoded bytes **2 MiB 以下** |
+| data URL 埋め込み **合計**（before + after） | decoded bytes **5 MiB 以下** |
+
+超過時は WebP 変換、解像度調整、または **確認済み公開 URL（R2 画像オブジェクト）** 方式へ切り替える。R2 画像のサイズ確認は上記 `wrangler r2 object get` + `wc -c` で行う。
+
 ### 手順
 
 1. 変更前（base branch）と変更後（PR branch）の **同一 URL・同一ビューポート** でスクリーンショットを撮影する
@@ -162,7 +224,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 | オプション | 検証内容 |
 | --- | --- |
 | （常時） | doctype、`data-theme`、daisyUI / Tailwind CDN、コメントコア DOM・`data-action`・localStorage key |
-| `--frontend` | `img-comparison-slider` CDN、`slot="first"` / `"second"`、width 100%、data URL 画像、撮影条件（viewport・branch・URL） |
+| `--frontend` | `img-comparison-slider` CDN、`slot="first"` / `"second"`、width 100%、画像 src（data URL または確認済み R2 URL）、data URL 容量（1 画像 2 MiB / 合計 5 MiB）、撮影条件（viewport・branch・URL）。R2 URL はネットワーク取得せず CLI 確認手順を出力 |
 | `--public-url` | URL が `https://ai-html.hacksaw.work/` で、オブジェクトキーに `_vN.html` を含む |
 | `--pr-body-file` | body に `## レビュー用資料` と、確認済み URL に一致する `[vN](URL)` がある |
 
@@ -190,6 +252,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] R2 配布時: issue / PR description に用途別見出し（issue: `## プランニング用資料`、PR: `## レビュー用資料`）と、版付き R2 オブジェクト名から確認した `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載した（HTML 配布ありの場合）
 - [ ] PR レビュー用 HTML + フロントエンド変更: **when** と **condition（スクリーンショット撮影可能）** を確認した。撮影不能なら `img-comparison-slider` を読み込まない
 - [ ] PR レビュー用 HTML + フロントエンド変更 + スクリーンショット撮影可能: `img-comparison-slider` を CDN で読み込み、修正前（`slot="first"`）・修正後（`slot="second"`）の before/after 比較を提示した
+- [ ] before/after 画像: 形式選定（WebP 第一候補・PNG フォールバック）と容量ゲート（data URL 1 画像 2 MiB / 合計 5 MiB）を満たした。R2 方式なら画像 object を別 key（同一 `v{N}` prefix）で put し Content-Type・公開 URL を確認した
 - [ ] issue / PR 向け R2 配布: [完了ゲート](#完了ゲートissue--pr-向け-html-配布) の upload 前・PR body 更新後 validator が合格した
 
 ## スコープ外

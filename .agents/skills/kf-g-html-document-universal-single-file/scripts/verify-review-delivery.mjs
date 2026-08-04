@@ -4,6 +4,39 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const R2_BASE = 'https://ai-html.hacksaw.work/';
+const MAX_INLINE_IMAGE_BYTES = 2 * 1024 * 1024;
+const MAX_INLINE_TOTAL_BYTES = 5 * 1024 * 1024;
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KiB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MiB`;
+}
+
+function extractSlotImgSrc(html, slot) {
+  const re = new RegExp(`slot=["']${slot}["'][^>]*src=["']([^"']+)["']`, 'i');
+  const match = html.match(re);
+  return match ? match[1] : null;
+}
+
+function isDataUrl(src) {
+  return /^data:image\//i.test(src);
+}
+
+function isR2PublicUrl(src) {
+  return src.startsWith(R2_BASE);
+}
+
+function decodeDataUrlBytes(dataUrl) {
+  const comma = dataUrl.indexOf(',');
+  if (comma === -1) return null;
+  const meta = dataUrl.slice(0, comma);
+  const payload = dataUrl.slice(comma + 1);
+  if (/;base64/i.test(meta)) {
+    return Buffer.from(payload, 'base64');
+  }
+  return Buffer.from(decodeURIComponent(payload), 'utf8');
+}
 
 function usage() {
   console.error(
@@ -88,6 +121,47 @@ function validateCore(html, run) {
   run.check('localStorage key: comments_${location.pathname}', storageOk);
 }
 
+function validateInlineImageCapacity(html, run) {
+  const slots = ['first', 'second'];
+  let inlineTotalBytes = 0;
+
+  for (const slot of slots) {
+    const src = extractSlotImgSrc(html, slot);
+    if (!src) continue;
+
+    if (isR2PublicUrl(src)) {
+      const objectKey = src.slice(R2_BASE.length).split(/[?#]/)[0];
+      console.log(`R2 image (slot="${slot}"): verify offline (no network fetch):`);
+      console.log(
+        `  npx wrangler@latest r2 object get ai-html/${objectKey} --file=/tmp/${objectKey.replace(/\//g, '_')} --remote`
+      );
+      console.log('  file --mime-type /tmp/<saved-file>');
+      console.log('  wc -c /tmp/<saved-file>  # repository recommended max: 2 MiB per image');
+      continue;
+    }
+
+    if (!isDataUrl(src)) continue;
+
+    const bytes = decodeDataUrlBytes(src);
+    if (!bytes) {
+      run.check(`inline image (slot="${slot}"): decodable data URL`, false);
+      continue;
+    }
+
+    const size = bytes.length;
+    inlineTotalBytes += size;
+    run.check(
+      `inline image (slot="${slot}"): <= 2 MiB (${formatBytes(size)})`,
+      size <= MAX_INLINE_IMAGE_BYTES
+    );
+  }
+
+  run.check(
+    `inline images total: <= 5 MiB (${formatBytes(inlineTotalBytes)})`,
+    inlineTotalBytes <= MAX_INLINE_TOTAL_BYTES
+  );
+}
+
 function validateFrontend(html, run) {
   run.check('img-comparison-slider CSS CDN', /img-comparison-slider@8\/dist\/styles\.css/i.test(html));
   run.check('img-comparison-slider JS CDN', /img-comparison-slider@8\/dist\/index\.js/i.test(html));
@@ -95,14 +169,19 @@ function validateFrontend(html, run) {
   run.check('img slot="second"', /slot=["']second["']/i.test(html));
   run.check('first image width="100%"', /slot=["']first["'][^>]*width=["']100%["']/i.test(html));
   run.check('second image width="100%"', /slot=["']second["'][^>]*width=["']100%["']/i.test(html));
+
+  const firstSrc = extractSlotImgSrc(html, 'first');
+  const secondSrc = extractSlotImgSrc(html, 'second');
   run.check(
-    'before image data URL (slot="first")',
-    /slot=["']first["'][^>]*src=["']data:image\//i.test(html)
+    'before image src (slot="first"): data URL or R2 public URL',
+    Boolean(firstSrc && (isDataUrl(firstSrc) || isR2PublicUrl(firstSrc)))
   );
   run.check(
-    'after image data URL (slot="second")',
-    /slot=["']second["'][^>]*src=["']data:image\//i.test(html)
+    'after image src (slot="second"): data URL or R2 public URL',
+    Boolean(secondSrc && (isDataUrl(secondSrc) || isR2PublicUrl(secondSrc)))
   );
+
+  validateInlineImageCapacity(html, run);
 
   const viewportOk =
     /1280\s*[×x]\s*800/i.test(html) ||

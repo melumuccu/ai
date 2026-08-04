@@ -92,6 +92,77 @@ Dashboard のラベルは Cloudflare UI 更新で変わることがある。破�
 
 Dashboard Upload / Upload objects は **公開経路に含めない**。
 
+## R2 画像オブジェクト（before/after スクリーンショット）
+
+PR レビュー HTML で **確認済み公開 URL** 方式を選んだ場合、before/after 画像を HTML 本体とは **別オブジェクト** としてアップロードする。
+
+### 前提
+
+| 項目 | 値 |
+| --- | --- |
+| バケット | `ai-html` |
+| 公開 URL | `https://ai-html.hacksaw.work/<object-key>` |
+| 公開経路 | Wrangler CLI のみ |
+| 版管理 | HTML 本体と同じ `v{N}` prefix。既存 key **上書き禁止** |
+| Access | HTML と同様、Access 認証後に取得・目視確認 |
+
+### オブジェクトキー命名
+
+HTML 本体キーと **同じ版 prefix** に、画像種別 suffix を付ける。
+
+```
+<日付>_<概要>_v{N}_before.<ext>
+<日付>_<概要>_v{N}_after.<ext>
+```
+
+例:
+
+- HTML: `2026-08-04_スクリーンショット比較デモ_v1.html`
+- before: `2026-08-04_スクリーンショット比較デモ_v1_before.webp`
+- after: `2026-08-04_スクリーンショット比較デモ_v1_after.webp`
+
+### Content-Type
+
+| 拡張子 | `--content-type` |
+| --- | --- |
+| `.webp` | `image/webp` |
+| `.png` | `image/png` |
+| `.jpg` / `.jpeg` | `image/jpeg` |
+
+### CLI upload（画像）
+
+```bash
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_before.webp \
+  --file=artifacts/before.webp \
+  --content-type=image/webp \
+  --remote
+
+npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット比較デモ_v1_after.webp \
+  --file=artifacts/after.webp \
+  --content-type=image/webp \
+  --remote
+```
+
+**期待結果:** コマンド成功。Dashboard オブジェクト一覧に新 key が表示される（既存 key は変更されない）
+
+### size / Content-Type 確認
+
+validator は R2 画像 URL を **ネットワーク取得しない**。以下でローカル確認する。
+
+```bash
+npx wrangler@latest r2 object get ai-html/<object-key> --file=/tmp/check-image --remote
+file --mime-type /tmp/check-image
+wc -c /tmp/check-image
+```
+
+**期待結果:** MIME が画像形式と一致。サイズが repository 推奨（1 画像 2 MiB 以下）に収まる
+
+### 公開 URL 目視確認
+
+1. HTML を Access 認証後に開く
+1. `img-comparison-slider` 内の before/after 画像が表示されることを確認
+1. DevTools → **Network** で画像リクエストが 200、Content-Type が画像形式であることを確認
+
 ## CLI 配布 runbook（本 repository）
 
 HTML 公開は **Wrangler CLI のみ**。
@@ -187,7 +258,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`）
+1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`）。data URL 埋め込み時は 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
 
 ```bash
 node scripts/verify-review-delivery.mjs <html-file> [--frontend]
