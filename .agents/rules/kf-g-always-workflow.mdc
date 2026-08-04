@@ -14,6 +14,19 @@ alwaysApply: true
 5. **通常実装の git 操作**: 通常実装では、必要な変更を stage・commit・push し、PRを作成してよい。ユーザーが明示的に commit を依頼した場合は、依頼時点で staged 済みの変更だけを commit 対象にする。
 6. **安全確認**: commit または push 前に gitleaks などの hook が失敗した場合は、`--no-verify` で回避せず停止する。
 
+## worktree の作成
+
+issue 着手時は repository 外の sibling directory に worktree を作る。
+
+- branch: `issue-<issue-number>-<slug>`
+- path: `../<repo-name>-issue-<issue-number>-<slug>`
+
+作成時は、リポジトリに `worktree:add` 系 mise task があれば使い、なければ `git worktree add` で上記命名規約どおり作成する。
+
+`.worktreeinclude` には、worktree 側へ継承すると有益な gitignored ファイルをユーザーの承認後に記載する。bootstrap があるリポジトリでは `pnpm install` と `hooks-install`（gitleaks）まで含める。
+
+main worktree は同期、確認、緊急操作用に残す。既存 worktree は `git worktree list` で確認し、network share や外部 volume に置く場合は `git worktree lock --reason <reason>` を検討する。`--force` は原則使わず、clean にしてから remove / recreate する。
+
 ## GitHub上の記録
 
 issueを起点にする場合は、作業ログ、判断、進捗、PR URLを issue に記録する。GitHubへの書き込みは GitHub App bot の preflight 成功後に、指定された bot helper のみで行う。
