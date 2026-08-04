@@ -31,6 +31,61 @@ main worktree は同期、確認、緊急操作用に残す。既存 worktree �
 
 issueを起点にする場合は、作業ログ、判断、進捗、PR URLを issue に記録する。GitHubへの書き込みは GitHub App bot の preflight 成功後に、指定された bot helper のみで行う。
 
+## issue の進行とプランニング
+
+issue と local 設計資料は用途を分ける。
+
+- remote の GitHub Issues / GitHub Projects は、作業進行を管理する場所。
+- local repository の設計資料は、後から見返す設計判断を残す場所。
+- issue の作業メモを、そのまま設計資料へコピーしない。
+- 設計資料には、完了後も参照する決定事項、背景、議論の要点だけを整理して残す。
+
+remote issue では、メンバーや AI agent 間のタスク状況共有と進捗管理を行う。GitHub Projects がある場合は、repository の既定に従い `Backlog`、`Ready`、`In Progress`、`In review`、`Done` などの status を更新する。
+
+### プランニング前処理
+
+既存 issue からプランニングする場合、プランニング着手前に既存 issue の description と既存 comment を読み、プランニングの参考として扱う。プランニング完了後は、次の workflow に従い description を更新する。HTML 配布ありの場合は R2 アップロードと URL 確認後に更新し、既存 description は参考にして最小サマリとプランニング用資料リンクへ統合・上書きする。
+
+### プランニング内容の description 更新
+
+Cursor チャットや Plan モードなどで作成した実装計画を基に作業を始める場合、workflow に応じて description を更新する。
+
+- comment は作業ログ、判断、進捗、PR URLを残す場所とする。
+- Cursor や Codex など AI 側でプランニングファイルを作成する場合、ファイル本文には該当 issue へのリンクのみを記載する。計画本文は HTML または issue description に置く。
+
+#### HTML 配布あり（R2 アップロード済み）
+
+`kf-g-html-document-universal-single-file` で HTML を生成し R2 へアップロードする場合:
+
+1. 詳細な計画・調査・検証・リスクは HTML 本文に記載する。
+1. 新規 `v{N}` として R2 へアップロードし、`https://ai-html.hacksaw.work/<object-key>` を確認する。
+1. URL 確認後に issue description を確定する。R2 アップロードと URL 確認前に description を確定しない。
+1. HTML を改訂するたびに新しい `v{N}` をアップロードし、確認済み最新 URL と `v{N}`（版番号）ラベルで description のリンクを差し替える。旧版オブジェクトは上書きしない。
+1. 既存 description がある場合は参考として読み、最小サマリと `## プランニング用資料` リンク形式へ統合・上書きする。追記のみにはしない。
+
+issue description には最小サマリと `## プランニング用資料` 配下の HTML リンクのみを置く。計画全文・テスト計画・リスク一覧・実装経緯は description に書かない。リンクラベルは版付きオブジェクト名から抽出した `v{N}`（版番号）のみとし、URL または `v{N}` が未確定の間はリンクを置かない。
+
+```markdown
+## 概要
+- <issue の最小サマリ>
+
+## プランニング用資料
+[v{N}](https://ai-html.hacksaw.work/<object-key>)
+```
+
+#### HTML 配布なし
+
+HTML 配布がない通常の issue プランニングでは、実装着手前に issue description を更新する。description にはプランニングで作成した Markdown をそのまま記載し、GitHub 投稿前のフットノート記法変換は `kf-g-agent-planning-structured-plan-output` に従う。既存 description がある場合は参考として読み、プランニングで作成した Markdown へ統合・上書きする。
+
+### description と進捗の更新
+
+- ユーザからの comment に応じて description を随時更新する。
+- HTML 配布ありの場合は、HTML を改訂して新しい `v{N}` をアップロードし、URL 確認後に description のリンクとラベルを最新版へ差し替える。
+- description を更新した場合は、更新内容を issue 上で bot comment script により告知する。
+- issue 上でユーザから comment があった場合は、必要に応じて bot comment script で返答する。
+
+作業中は issue に、着手開始、方針、調査結果、判断理由、blocked / waiting / review などの状態変化、description 更新、status 更新、議論、保留、未決事項、PR URL、完了時の要約を随時記録する。AI agent がコメント・description・status を更新する場合は `kf-g-github-operations-bot-workflow` の preflight / write gate に従う。
+
 ## ユーザとのコミュニケーションに用いるHTML
 
 コミュ用HTMLを作成したら、次の手順で R2 に配布する。
