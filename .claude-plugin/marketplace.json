@@ -31,6 +31,7 @@
         "./kf-g-git-commit-staged-only-rules",
         "./kf-g-git-hooks-fix-verify-layering",
         "./kf-g-github-actions-self-hosted-ci-cache",
+        "./kf-g-github-actions-self-hosted-runner-label",
         "./kf-g-github-issue-worktree-management",
         "./kf-g-github-operations-bot-workflow",
         "./kf-g-github-pr-review-workflow",

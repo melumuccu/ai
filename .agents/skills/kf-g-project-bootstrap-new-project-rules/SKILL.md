@@ -40,6 +40,7 @@ description: Use this skill when starting a new project and defining baseline re
 | frontend FW     | SvelteKit / React / なし など                             |
 | devcontainer    | 利用するか（**デフォルト: なし**）                        |
 | 開発環境        | CI 先（GitHub Actions 等）、ローカル runtime 管理方針   |
+| CI runner       | `ubuntu-latest` / Mac Studio self-hosted / 混在           |
 | 特記事項        | monorepo 構成、既存 toolchain 継続、Vite+ 非採用理由 など |
 
 ### フェーズ 2: ルール適用表の作成
@@ -107,6 +108,7 @@ description: Use this skill when starting a new project and defining baseline re
 | user settings 確認     | devcontainer 適用時         | [devcontainer-mise.md](references/devcontainer-mise.md)     | `dev.containers.*`, `dotfiles.*` を確認し重複設定を避ける            |
 | サンプルファイル起点   | 汎用                        | [devcontainer-mise.md](references/devcontainer-mise.md)     | `references/sample-files/` を初期ファイルの起点にする                |
 | gitleaks               | 汎用                        | [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md) | secret scan を GitHub Action と pre-commit の両方で導入              |
+| self-hosted runner CI  | CI = Mac Studio self-hosted を **適用** | [kf-g-github-actions-self-hosted-runner-label](../kf-g-github-actions-self-hosted-runner-label/SKILL.md) | workflow の `runs-on` を `[self-hosted, <repo-slug>]` に固定。host runner 未登録時は merge 不可 |
 | pre-commit / pre-push  | 汎用                        | [gitleaks-pre-commit.md](references/gitleaks-pre-commit.md) | `pre-commit`, `gitleaks` を mise 管理。local hook を有効化           |
 | pre-push 全テスト       | コード編集あり              | [pre-push-test.md](references/pre-push-test.md)             | push 前に `mise run test` で全テスト実行。1 件でも失敗したら push 拒否 |
 | pnpm 固定              | frontend あり               | [frontend-pnpm.md](references/frontend-pnpm.md)             | package manager を pnpm に固定                                       |
@@ -132,6 +134,7 @@ description: Use this skill when starting a new project and defining baseline re
 | frontend + Svelte 採用      | frontend があり、Svelte / SvelteKit を採用する                          |
 | コード編集あり              | ソースコードをリポジトリで管理・編集する                                |
 | コード編集あり + ツール対応 | 編集後 lint/fmt hooks を適用し、かつ Cursor 等が Tab 補完後 hook を提供 |
+| CI = Mac Studio self-hosted 適用時 | フェーズ 1 で CI runner = Mac Studio self-hosted を選んだ場合のみ **self-hosted runner CI** ルールを適用 |
 
 frontend なし PJ では pnpm / Vite+ / kiso.css / Oxlint・Oxfmt 等 frontend 向けルールは**不適用**。lint / format コマンド・編集後 hooks は backend 言語に合わせて選定して適用する。
 

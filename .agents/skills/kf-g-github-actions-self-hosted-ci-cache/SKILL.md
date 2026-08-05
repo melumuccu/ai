@@ -22,6 +22,7 @@ description: Use when optimizing GitHub Actions workflows on self-hosted runners
 - **Apple Silicon Mac** self-hosted runner（darwin/arm64）を想定（他アーキでも bootstrap 方針は同じ）
 - `mise` + `pnpm` + `node`
 - runner は常時起動推奨（queue 待ち回避）
+- workflow は `runs-on: [self-hosted, <repo-slug>]` を前提とする（label 詳細は sibling skill [`kf-g-github-actions-self-hosted-runner-label`](../kf-g-github-actions-self-hosted-runner-label/SKILL.md) 参照）。本 skill は cache / mise / pnpm に専念し、runner 登録手順は書かない
 
 ## 採用パターン要約
 
@@ -77,3 +78,4 @@ warm run 基準: `mise-action` ~1s（ログ `all tools are installed`）、`pnpm
 - `actions/cache@v4` を pnpm/mise に足していないか
 - CI 用 mise config に dev 専用 tool（hooks 等）が入っていないか
 - cleanup job が build + full `pnpm install` 不要なのにやっていないか
+- `runs-on` に repo-slug label が含まれるか（[`kf-g-github-actions-self-hosted-runner-label`](../kf-g-github-actions-self-hosted-runner-label/SKILL.md) 参照）

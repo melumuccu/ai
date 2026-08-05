@@ -7,6 +7,14 @@
 - `GITLEAKS_LICENSE` は個人アカウント利用を前提に不要とし、既定では設定しない。Organization 向け要件が明確な場合だけ別途検討する。
 - local の macOS でも `mise install` を前提にし、devcontainer 環境でも同じ `mise` の導線で入るように整える。
 
+## GitHub Action（self-hosted 適用時）
+
+CI runner = Mac Studio self-hosted を **適用** とした場合、`.github/workflows/gitleaks.yml` 等の self-hosted job は `runs-on: [self-hosted, <repo-slug>]` に固定する。`<repo-slug>` は GitHub リポジトリ名と同一。
+
+- 規約詳細: [kf-g-github-actions-self-hosted-runner-label](../../kf-g-github-actions-self-hosted-runner-label/SKILL.md) の [workflow-runs-on-label.md](../../kf-g-github-actions-self-hosted-runner-label/references/workflow-runs-on-label.md)
+- 参照実装: [gitdoc-v2 PR #64](https://github.com/melumuccu/gitdoc-v2/pull/64)
+- host runner 未登録のまま workflow を merge しない（merge 前確認は上記 skill の [runner-prerequisites.md](../../kf-g-github-actions-self-hosted-runner-label/references/runner-prerequisites.md)）
+
 ## pre-commit framework の運用
 
 - commit 前の検査と push 前の検査は分ける。

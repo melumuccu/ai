@@ -14,6 +14,10 @@
 - pre-push 全テストを **適用** とした場合、`.pre-commit-config.yaml` に `test-pre-push` hook（`entry: mise run test`, `stages: [pre-push]`）を追加したか。
 - pre-push 全テストを **適用** とした場合、`mise run test` が PJ 内の全テストを実行し、`pre-commit run test-pre-push --hook-stage pre-push` で動作確認したか。
 - GitHub Action に `GITHUB_TOKEN` を渡し、`GITLEAKS_LICENSE` を不要な既定値として扱っているか。
+- self-hosted runner CI を **適用** とした場合
+  - `.github/workflows/*.yml` の self-hosted job が `runs-on: [self-hosted, <repo-slug>]` になっているか。
+  - host 側 runner に同名 label があるか（Settings → Actions → Runners）。
+  - `kf-g-github-actions-self-hosted-ci-cache` の bootstrap step があるか。
 - frontend なら package manager が pnpm に固定されているか。
 - `pnpm-workspace.yaml` に `minimumReleaseAge: 10080` を入れたか。
 - Vite+ のコマンド群に寄せた構成になっているか。
