@@ -9,28 +9,28 @@ description: Build a build-free, single-file interactive HTML document with text
 
 ## 参照ファイル
 
-| ファイル | 読むタイミング |
-| --- | --- |
-| [references/core-contract.md](references/core-contract.md) | コメントコアの DOM・データ・レイアウト・永続化を実装するとき |
-| [references/content-patterns.md](references/content-patterns.md) | PR 説明・業務フロー・非コーディング向けの構成、CDN 選定、視覚構造・可読性（§ 論理セクション分離・図表化・情報エンコード・アクセシビリティ） |
-| [references/r2-static-delivery.md](references/r2-static-delivery.md) | R2 公開前提・Wrangler OAuth・版管理の確認 |
-| [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較 |
-| [references/pr-review-delivery.md](references/pr-review-delivery.md) | issue / PR 向け R2 配布の完了ゲート・validator・非コミット規則 |
-| [scripts/verify-review-delivery.mjs](scripts/verify-review-delivery.mjs) | HTML / R2 URL / PR description の機械検証 |
-| [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh) | スクリーンショット PNG → AVIF 固定変換 |
-| [assets/universal-single-file-template.html](assets/universal-single-file-template.html) | 実装の起点テンプレート |
+| ファイル                                                                                     | 読むタイミング                                                                                                                              |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [references/core-contract.md](references/core-contract.md)                                   | コメントコアの DOM・データ・レイアウト・永続化を実装するとき                                                                                |
+| [references/content-patterns.md](references/content-patterns.md)                             | PR 説明・業務フロー・非コーディング向けの構成、CDN 選定、視覚構造・可読性（§ 論理セクション分離・図表化・情報エンコード・アクセシビリティ） |
+| [references/r2-static-delivery.md](references/r2-static-delivery.md)                         | R2 公開前提・Wrangler OAuth・版管理の確認                                                                                                   |
+| [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較                                                                                      |
+| [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の完了ゲート・validator・非コミット規則                                                                              |
+| [scripts/verify-review-delivery.mjs](scripts/verify-review-delivery.mjs)                     | HTML / R2 URL / PR description の機械検証                                                                                                   |
+| [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh)               | スクリーンショット PNG → AVIF 固定変換                                                                                                      |
+| [assets/universal-single-file-template.html](assets/universal-single-file-template.html)     | 実装の起点テンプレート                                                                                                                      |
 
 ## 視覚構造・可読性（生成時必須）
 
 [content-patterns.md](references/content-patterns.md) の「視覚構造・可読性・情報エンコード」を満たす。要点のみ:
 
-| 原則 | 内容 |
-| --- | --- |
-| 積み順 | 要約カード → 表/図/steps → 短段落（1論点） → collapse（詳細） |
-| 論理分離 | 概要・リスク群・意図グループ等を親 `section`、見出し、余白、背景または divider で分離 |
+| 原則           | 内容                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------- |
+| 積み順         | 要約カード → 表/図/steps → 短段落（1論点） → collapse（詳細）                         |
+| 論理分離       | 概要・リスク群・意図グループ等を親 `section`、見出し、余白、背景または divider で分離 |
 | 視覚エンコード | 状態・リスク・カテゴリは badge + 薄背景 + 枠線 + テキストラベル（色だけに依存しない） |
-| 二重記載禁止 | 表・図・steps に載せた事実を長文段落で繰り返さない |
-| コメント対象 | 説明本文は `[data-content-root]` 内に置き、テキスト選択可能に保つ |
+| 二重記載禁止   | 表・図・steps に載せた事実を長文段落で繰り返さない                                    |
+| コメント対象   | 説明本文は `[data-content-root]` 内に置き、テキスト選択可能に保つ                     |
 
 **図表化の判断:** 2軸以上の比較は `table`、3ステップ超の順序・分岐は `steps` または Mermaid、並列 3〜7 項目は短い箇条書き、段落 5 文超は分割または視覚要素へ。
 
@@ -66,43 +66,11 @@ issue または PR 向けに HTML を生成し R2 へアップロードする場
 1. 詳細な計画・調査・検証結果・リスクなどは HTML 本文に記載する
 1. R2 へ **新規バージョン** としてアップロードする（[r2-static-delivery.md](references/r2-static-delivery.md) の版管理ルール）
 1. アップロード後、**実際の公開 URL** を確認する
-1. 確認済みの最新 URL を `kf-g-github-issue-worktree-management` または `kf-g-github-pr-review-workflow` へ渡し、description を更新する
+1. 確認済みの最新 R2 URL を PR / issue workflow へ渡し、description を更新する
 
-### description の形（issue / PR で見出しを分ける）
-
-GitHub の description には詳細を載せず、最小サマリと用途別 HTML リンクのみを置く。
-
-issue:
-
-```markdown
-## 概要
-- <issue の最小サマリ>
-
-## プランニング用資料
-[v{N}](https://ai-html.hacksaw.work/<object-key>)
-```
-
-PR:
-
-```markdown
-## 概要
-- <PR の最小サマリ>
-
-## レビュー用資料
-[v{N}](https://ai-html.hacksaw.work/<object-key>)
-```
-
-- リンクラベルは版付き HTML オブジェクト名から抽出した **`v{N}`（版番号）のみ**（例: `..._v2.html` → `[v2](...)`）。`最新版HTML` やファイル名全体は使わない
-- テスト計画、リスク一覧、実装経緯、計画全文は description に書かない。HTML に置く
 - 既存 workflow で PR comment が必要な項目（Summary、検証結果など）は comment に残す
 
-### URL とラベルの扱い
-
-- **確認済み URL**（`https://ai-html.hacksaw.work/<object-key>`）**と `v{N}`（版番号）のみ** description に載せる。プレースホルダ、推測 URL、未確認の版番号は禁止
-- 最新 URL または `v{N}` が未確定の間は description を確定しない。アップロードと URL 確認後に更新する
-- HTML を改訂したら **新しい `v{N}` オブジェクト** をアップロードし、description のリンクとラベルを新しい版へ差し替える（旧版は上書きしない）
-
-生成成果物の Git 非コミット規則は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
+- 生成成果物の Git 非コミット規則は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
 
 ## フロントエンド変更時の before/after スクリーンショット比較
 

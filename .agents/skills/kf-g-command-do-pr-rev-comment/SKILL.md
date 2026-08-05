@@ -1,6 +1,6 @@
 ---
 name: kf-g-command-do-pr-rev-comment
-description: PR の未解決 review comment に対応するコマンド。指摘を論理変更グループへ分類し、グループごとに atomic commit・push・個別 reply を行う。
+description: PR の未解決 review comment に対応する専用skill。指摘を論理変更グループへ分類し、グループごとに atomic commit・push・個別 reply を行う。
 disable-model-invocation: true
 ---
 
@@ -16,7 +16,6 @@ bot 資格情報が未設定または preflight が失敗した場合は、`kf-g
 参照:
 
 - `kf-g-github-operations-bot-workflow` — preflight / write gate
-- `kf-g-github-pr-review-workflow` — reply / resolve 手順
 
 reply:
 
@@ -28,7 +27,7 @@ node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_N
 
 1. 対応 PR の branch と worktree を特定する
 1. `kf-g-git-commit-atomic-rules` を読み、commit 粒度の基準を確認する
-1. `kf-g-github-pr-review-workflow` を読み、reply 運用を確認する
+1. このskillを読み、review commentのreply / resolve運用を確認する
 1. 未解決 thread、requested changes、CI failure を一覧化する
 
 ## 未解決 thread の収集
@@ -92,5 +91,4 @@ node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_N
 
 - `kf-g-git-commit-atomic-rules` — commit 粒度（1 commit = 1 logical change）
 - `kf-g-git-commit-japanese-commit-message` — commit message 形式
-- `kf-g-github-pr-review-workflow` — PR review 対応・個別 reply
 - `kf-g-github-operations-bot-workflow` — bot comment / review 投稿
