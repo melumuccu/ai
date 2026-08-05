@@ -35,8 +35,7 @@ runner バイナリ install / launchd / token 取得は host 運用 README が�
 
 1. `runs-on` 記述と reusable workflow → [workflow-runs-on-label.md](references/workflow-runs-on-label.md)
 2. merge 前確認と troubleshooting → [runner-prerequisites.md](references/runner-prerequisites.md)
-3. bootstrap 連携（CI runner 選択・ルール適用表）→ [`kf-g-project-bootstrap-new-project-rules`](../kf-g-project-bootstrap-new-project-rules/SKILL.md)
-4. cache bootstrap / mise 分割 → `kf-g-github-actions-self-hosted-ci-cache`
+3. cache bootstrap / mise 分割 → `kf-g-github-actions-self-hosted-ci-cache`
 
 ## 共通チェック
 
