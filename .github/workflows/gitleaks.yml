@@ -1,7 +1,6 @@
 name: gitleaks
 
 on:
-  push:
   pull_request:
   workflow_dispatch:
 
@@ -11,11 +10,13 @@ permissions:
 
 jobs:
   scan:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ai]
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: Remove stale gitleaks download temp
+        run: rm -f "$TMPDIR/gitleaks.tmp"
       - uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
