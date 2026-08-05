@@ -26,16 +26,6 @@ node ~/.agents/credentials/github/scripts/verify-write-gate.mjs
 
 1. セッション内で最初の GitHub 書き込み前に完全 preflight を成功させ、GitHub 書き込みは bot helper script のみ使う。各書き込みでは installation token が再発行される。
 
-## 既存 workflow skill の移行
-
-次の skill は bot 書き込み必須ルールを参照する。
-
-- `kf-g-github-operations-bot-workflow`（正本）
-- `.agents/rules/kf-g-always-workflow.mdc`
-- `kf-g-github-issue-worktree-management`
-- `kf-g-command-do-pr-rev-comment`
-- `kf-g-command-do-issue-planning`
-
 移行時の禁止事項:
 
 - `gh pr create` / `gh pr edit` / `gh issue comment` 等の human write
@@ -67,9 +57,9 @@ private key と `.env` は上書きしない。
 
 ## トラブルシュート
 
-| 症状 | 対応 |
-| --- | --- |
-| preflight が missing credentials で失敗 | `.env` と private key を確認 |
-| repository access failed | App installation の repository 選択を確認 |
-| write helper が 403 | App permissions（Issues、Pull requests 等）を確認 |
-| Projects status 更新不可 | App 権限外。必要権限を報告して停止（human fallback 禁止） |
+| 症状                                    | 対応                                                      |
+| --------------------------------------- | --------------------------------------------------------- |
+| preflight が missing credentials で失敗 | `.env` と private key を確認                              |
+| repository access failed                | App installation の repository 選択を確認                 |
+| write helper が 403                     | App permissions（Issues、Pull requests 等）を確認         |
+| Projects status 更新不可                | App 権限外。必要権限を報告して停止（human fallback 禁止） |

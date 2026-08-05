@@ -28,4 +28,3 @@ Issue を参照し、ルールに則って planning を開始してください�
 
 - `kf-g-github-issue-worktree-management` — issue / worktree / 進捗管理
 - `kf-g-agent-planning-structured-plan-output` — plan 出力形式
-- `.agents/rules/kf-g-always-workflow.mdc` — PR 作成

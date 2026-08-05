@@ -8,8 +8,6 @@ description: Use this skill whenever working with GitHub issues, pull requests, 
 この SKILL.md は入口として扱い、詳細は `references` 配下の該当ファイルを読む。
 この skill は GitHub 操作全般の基本ルールを扱う。
 
-issue 管理の進め方は `kf-g-github-issue-worktree-management`、PR 共通運用は `.agents/rules/kf-g-always-workflow.mdc` も使う。
-
 ## 使う場面
 
 - GitHub issue / PR / comment / review を扱う。
