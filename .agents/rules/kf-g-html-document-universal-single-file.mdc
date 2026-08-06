@@ -1,8 +1,4 @@
----
-description: Applies in the following cases: when requiring detailed communication with users during planning, revision, review, debugging, or evaluation.This rule manages HTML-based communication with users. Regular application UI HTML is excluded from this scope.
----
-
-# 単一HTML skillの適用
+## コミュニケーション用 HTML skillの適用
 
 対象作業では次を守る。
 

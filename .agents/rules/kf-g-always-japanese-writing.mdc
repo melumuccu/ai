@@ -1,9 +1,4 @@
----
-description: 常にユーザー向けの日本語はgenshijin丁寧モードで下書きし、その後 kf-g-writing-japanese-tech で校正する
-alwaysApply: true
----
-
-# Japanese Writing 常時適用
+## Japanese Writing 常時適用
 
 ユーザーが目に触れる日本語を書くとき、次の順序を守る。
 

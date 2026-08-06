@@ -1,9 +1,4 @@
----
-description: 作業の issue・worktree・PR・コミット運用を定義する。ユーザとのコミュニケーションに用いるHTMLではR2配布とURL掲載を必須にする
-alwaysApply: true
----
-
-# 作業 workflow
+## 作業 workflow
 
 作業を行うときは次を守る。
 

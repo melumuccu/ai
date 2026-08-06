@@ -1,8 +1,4 @@
----
-description: Before work that shapes direction rather than executing it, switch to Plan mode via SwitchMode and wait for user approval. Apply when the user asks for or the task implies: implementation planning; architecture or tech selection; comparing approaches with trade-offs; migration, rollout, or phased delivery design; policy or strategy formulation; exploratory investigation before coding; or ambiguous requirements where multiple valid paths exist and clarifying questions would block progress. Skip for direct implementation, simple bug fixes, factual Q&A, minor clarifications, or work already in progress with a settled approach.
----
-
-# Plan mode 切替
+## Plan mode 切替
 
 プランニング、方針策定、比較分析、設計検討、調査開始時は次を守る。
 

@@ -1,9 +1,4 @@
----
-description: 常に kf-g-agent-orchestrator スキルに従ってオーケストレーターとして動作する
-alwaysApply: true
----
-
-# Orchestrator 常時適用
+## Orchestrator 常時適用
 
 すべてのチャットで次を守る。
 
