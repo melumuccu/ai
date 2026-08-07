@@ -93,7 +93,7 @@
 | 要素 | 役割 |
 | --- | --- |
 | 右レール | ユーザーコメント（既存。`[data-comment-panel]`） |
-| 左レール | 著者定義の専門用語解説（`mark[data-term-id]` + カード + SVG。mark 左→card 右） |
+| 左レール | 著者定義の専門用語解説（`mark[data-term-id]` ホバー／タップでカード 1 枚。SVG コネクタなし） |
 | 用語マーク | `mark[data-term-id]` |
 | 注釈パネル | `[data-annotation-panel]` |
 | 注釈データ | `#term-annotations` 内 JSON（静的。localStorage しない） |
@@ -102,7 +102,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 #### 執筆ルール
 
-1. 専門用語の初出を `mark[data-term-id]` でマークし、左注釈パネルに定義を置く
+1. 専門用語の初出を `mark[data-term-id]` でマークし、ホバー／タップ時に左注釈パネルへ定義カード 1 枚を表示する
 1. 本文の長い括弧説明と左注釈の二重記載を禁止する（括弧は短い補足のみ可）
 1. 用語マークは badge またはラベル等で色以外の手がかりも併用し、色だけに依存しない
 1. 左注釈カードは用語名、定義、必要なら関連語へのリンクまたは短い例を載せる
@@ -119,8 +119,8 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 #### 生成時の用語網羅チェック
 
 1. 本文を走査し、専門用語の初出がすべて `mark[data-term-id]` でマークされているか
-1. 各 `data-term-id` に対応する左注釈カードが `[data-annotation-panel]` に存在するか
-1. `#term-annotations` JSON に全用語の定義が含まれ、ID が本文マークと一致するか
+1. 各 `data-term-id` に対応する定義が `#term-annotations` JSON に含まれ、ID が本文マークと一致するか
+1. ホバー／タップで左注釈カード 1 枚が表示されるか（常時全件表示ではない）
 1. 括弧内の長い説明が左注釈と重複していないか（二重記載禁止）
 1. 用語マークに badge またはテキストラベル等、色以外の識別手段があるか
 
