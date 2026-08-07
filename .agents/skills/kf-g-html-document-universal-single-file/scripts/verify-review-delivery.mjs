@@ -140,6 +140,25 @@ function validateCore(html, run) {
       /location\.pathname/.test(html) &&
       /storageKey\s*\(\s*\)/.test(html));
   run.check('localStorage key: comments_${location.pathname}', storageOk);
+
+  validateOptionalAnnotations(html, run);
+}
+
+function validateOptionalAnnotations(html, run) {
+  const hasAnnotations =
+    /id=["']term-annotations["']/i.test(html) ||
+    /id=["']annotation-rail["']/i.test(html) ||
+    /data-annotation-panel/i.test(html);
+
+  if (!hasAnnotations) return;
+
+  run.check('annotation (optional): #term-annotations', /id=["']term-annotations["']/i.test(html));
+  run.check('annotation (optional): data-annotation-panel', /data-annotation-panel/i.test(html));
+  run.check('annotation (optional): mark data-term-id', /data-term-id/i.test(html));
+  run.check(
+    'annotation (optional): data-term-id distinct from data-comment-id selector',
+    /data-term-id/i.test(html) && /data-comment-id/i.test(html)
+  );
 }
 
 function validateInlineImageCapacity(html, run) {
