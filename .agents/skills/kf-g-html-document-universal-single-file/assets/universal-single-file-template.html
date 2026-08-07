@@ -477,7 +477,29 @@
       }
 
       function sortedTermEntries() {
-        return Array.from(termState.values()).sort((a, b) => a.targetY - b.targetY);
+        return Array.from(termState.values()).sort((a, b) => a.targetY - b.targetY || a.id.localeCompare(b.id));
+      }
+
+      function focusTermCard(id) {
+        const panel = isDesktopLayout() ? primaryAnnotationPanel : document.getElementById('annotation-panel-mobile');
+        const card = panel?.querySelector('[data-term-id="' + id + '"]');
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          card.focus({ preventScroll: true });
+        }
+      }
+
+      function bindTermMark(mark, id) {
+        mark.setAttribute('tabindex', '0');
+        mark.setAttribute('role', 'button');
+        mark.setAttribute('aria-label', '専門用語: 解説を表示');
+        mark.addEventListener('click', () => focusTermCard(id));
+        mark.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            focusTermCard(id);
+          }
+        });
       }
 
       function focusCard(id) {
@@ -615,6 +637,7 @@
             card: null,
             targetY: rect.top + window.scrollY
           };
+          bindTermMark(mark, item.id);
           termState.set(item.id, entry);
           mountTermCard(entry);
         }
