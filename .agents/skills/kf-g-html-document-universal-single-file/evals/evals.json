@@ -37,7 +37,7 @@
         "Includes [data-annotation-panel] for author-defined term definitions",
         "Marks first occurrence of specialized terms with mark[data-term-id]",
         "Stores term definitions as static HTML data (e.g. #term-annotations JSON), not localStorage",
-        "Left annotation SVG connectors point from mark left to card right",
+        "Shows one left annotation card on hover or tap over mark[data-term-id] (not always-visible cards)",
         "Does not duplicate long inline parenthetical definitions when left annotations are present"
       ]
     },
@@ -62,7 +62,7 @@
     {
       "id": 4,
       "prompt": "新機能の実装方針をプランニング用HTMLにまとめて。CQRSやイベントソーシングなど専門用語が出てくるので、読者が用語を左側で確認できるようにして。テキスト選択コメントも付けられる形式で。",
-      "expected_output": "非コーディング/プランニングパターンの単一HTML。専門用語の初出をmark[data-term-id]でマークし、左[data-annotation-panel]に静的定義を配置。右コメントコアも維持。括弧内の長い説明と左注釈の二重記載は禁止。",
+      "expected_output": "非コーディング/プランニングパターンの単一HTML。専門用語の初出をmark[data-term-id]でマークし、ホバー／タップ時に左[data-annotation-panel]へ解説カード1枚を表示。右コメントコアも維持。括弧内の長い説明と左注釈の二重記載は禁止。",
       "files": [],
       "expectations": [
         "Output is a complete single-file HTML document with DOCTYPE and html root",
@@ -75,7 +75,7 @@
         "Includes [data-annotation-panel] for author-defined term definitions",
         "Marks first occurrence of specialized terms (e.g. CQRS, event sourcing) with mark[data-term-id]",
         "Stores term definitions as static HTML data (e.g. #term-annotations JSON), not localStorage",
-        "Left annotation SVG connectors point from mark left to card right",
+        "Shows one left annotation card on hover or tap over mark[data-term-id] (not always-visible cards)",
         "Does not duplicate long inline parenthetical definitions when left annotations are present",
         "Preserves right-side user comment functionality alongside left term annotations"
       ]
