@@ -11,7 +11,7 @@
 | 右 | `#comment-rail` / `[data-comment-panel]` | 閲覧者のユーザーコメントカード |
 
 - ルートコンテナ: `#layout-root`（3 列 flex、幅は `max-w-screen-2xl` 等）
-- モバイル（lg 未満）: 本文 → 左注釈（`#annotation-panel-mobile`）→ 右コメント（`#comment-panel-mobile`）の縦積み
+- モバイル（lg 未満）: 左注釈（`#annotation-panel-mobile`）→ 本文 → 右コメント（`#comment-panel-mobile`）の縦積み
 - コネクタ SVG（`#connector-svg` / `#connector-lines`）は左右共通で 1 枚
 
 テンプレート: [assets/universal-single-file-template.html](../assets/universal-single-file-template.html)
@@ -231,7 +231,7 @@ comment2
 
 - 本文は `select-text` を維持し、すべてのテキストが選択可能
 - デスクトップ（lg 以上）: 左・右レール `sticky` で 3 列余白を確保
-- 狭い画面: 左注釈・右コメントを本文下に縦積み。コネクタ線はデスクトップ配置時のみ
+- 狭い画面: 左注釈（本文直上）→ 本文 → 右コメント（本文下）の縦積み。コネクタ線はデスクトップ配置時のみ
 - 右コメントハイライト: `tabindex="0"`, `role="button"`, Enter/Space で対応カードへフォーカス
 - 左注釈ハイライト: 同様に対応左カードへフォーカス可能
 - カード操作ボタン: キーボードフォーカス可能、`focus:ring` を付与

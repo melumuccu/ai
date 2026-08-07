@@ -662,7 +662,7 @@
         panel.style.minHeight = prevBottom > 0 ? (prevBottom + MIN_CARD_GAP) + 'px' : '';
       }
 
-      function drawLine(entry, side, lineClass) {
+      function drawLine(entry, side, connectorType) {
         if (!entry.mark || !entry.card) return;
         const from = entry.mark.getBoundingClientRect();
         const to = entry.card.getBoundingClientRect();
@@ -682,7 +682,8 @@
         line.setAttribute('y1', y1);
         line.setAttribute('x2', x2);
         line.setAttribute('y2', y2);
-        line.setAttribute('class', lineClass);
+        line.setAttribute('class', 'connector-line-' + connectorType);
+        line.setAttribute('data-connector', connectorType);
         connectorLines.appendChild(line);
       }
 
@@ -696,10 +697,10 @@
         connectorLines.innerHTML = '';
         if (!isDesktopLayout()) return;
         for (const entry of sortedEntries()) {
-          drawLine(entry, 'right', 'connector-line-comment');
+          drawLine(entry, 'right', 'comment');
         }
         for (const entry of sortedTermEntries()) {
-          drawLine(entry, 'left', 'connector-line-term');
+          drawLine(entry, 'left', 'term');
         }
       }
 
