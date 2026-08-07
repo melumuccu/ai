@@ -134,7 +134,7 @@
 
       <p class="mb-6 text-base-content/70">
         本文を選択すると、右側（狭い画面では下）にコメントカードが追加されます。再読み込み後も同じ URL 上で復元されます。
-        左側には著者定義の専門用語解説があります。用語（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）にカーソルを当てると左に解説カードが表示されます。
+        左側には著者定義の専門用語解説があります。用語（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）にカーソルを当てると、表示中の左レーン最上に解説カードが表示されます（下の方の同一用語でも同じ位置）。
       </p>
 
       <!-- 要約 -->
@@ -493,16 +493,14 @@
 
       function positionActiveTermCard() {
         const entry = activeTermId ? termState.get(activeTermId) : null;
-        if (!entry || !entry.mark || !entry.card || !isDesktopLayout() || !primaryAnnotationPanel) return;
+        if (!entry || !entry.card || !isDesktopLayout() || !primaryAnnotationPanel) return;
 
-        const markRect = entry.mark.getBoundingClientRect();
-        const panelRect = primaryAnnotationPanel.getBoundingClientRect();
-        const top = Math.max(0, markRect.top - panelRect.top);
         entry.card.style.position = 'absolute';
         entry.card.style.left = '0';
         entry.card.style.right = '0';
-        entry.card.style.top = top + 'px';
+        entry.card.style.top = '0px';
 
+        const panelRect = primaryAnnotationPanel.getBoundingClientRect();
         const cardRect = entry.card.getBoundingClientRect();
         primaryAnnotationPanel.style.minHeight = (cardRect.bottom - panelRect.top + MIN_CARD_GAP) + 'px';
       }
@@ -707,17 +705,19 @@
 
         for (const item of items) {
           if (!item || !item.id) continue;
-          const mark = contentRoot.querySelector('[data-term-id="' + item.id + '"]');
-          if (!mark) continue;
+          const marks = contentRoot.querySelectorAll('[data-term-id="' + item.id + '"]');
+          if (!marks.length) continue;
           const entry = {
             id: item.id,
             term: item.term || item.id,
             definition: item.definition || '',
-            mark,
+            mark: marks[0],
             card: null
           };
           termState.set(item.id, entry);
-          bindTermMark(mark, entry);
+          for (const mark of marks) {
+            bindTermMark(mark, entry);
+          }
         }
       }
 
