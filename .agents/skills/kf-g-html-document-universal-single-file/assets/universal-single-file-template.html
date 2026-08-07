@@ -46,10 +46,24 @@
       stroke-dasharray: 4 3;
     }
 
-    #connector-svg line.connector-line-term {
-      stroke: rgb(59, 130, 246);
-      stroke-width: 1.5;
-      stroke-dasharray: 4 3;
+    [data-annotation-panel] {
+      position: relative;
+    }
+
+    .annotation-card--active {
+      z-index: 25;
+    }
+
+    @media (max-width: 1023px) {
+      .annotation-card--mobile-fixed {
+        position: fixed;
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 40;
+        max-height: 40vh;
+        overflow-y: auto;
+      }
     }
 
     .comment-card:focus-within,
@@ -120,7 +134,7 @@
 
       <p class="mb-6 text-base-content/70">
         本文を選択すると、右側（狭い画面では下）にコメントカードが追加されます。再読み込み後も同じ URL 上で復元されます。
-        左側（狭い画面では上）には著者定義の専門用語解説が表示されます（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）。
+        左側には著者定義の専門用語解説があります。用語（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）にカーソルを当てると左に解説カードが表示されます。
       </p>
 
       <!-- 要約 -->
@@ -134,7 +148,7 @@
             <li>ビルド不要の単一 HTML で説明ページを作る。</li>
             <li>daisyUI v5 + Tailwind browser CDN でスタイルする。</li>
             <li>コメントコアは vanilla JS のみで動作する。</li>
-            <li>左レールに <mark data-term-id="icp">ICP</mark> などの専門用語解説を静的に表示する。</li>
+            <li>左レールに <mark data-term-id="icp">ICP</mark> などの専門用語解説をホバー／タップで表示する。</li>
           </ul>
         </div>
       </section>
@@ -259,6 +273,7 @@
       const STORAGE_PREFIX = 'comments_';
       const MIN_CARD_GAP = 12;
       const COPY_FEEDBACK_MS = 1500;
+      const TERM_HIDE_DELAY = 200;
 
       const contentRoot = document.querySelector('[data-content-root]');
       const panels = Array.from(document.querySelectorAll('[data-comment-panel]'));
@@ -278,8 +293,11 @@
 
       /** @type {Map<string, { id: string, quote: string, comment: string, anchor: object, createdAt: string, card: HTMLElement|null, mark: HTMLElement|null, targetY: number }>} */
       const state = new Map();
-      /** @type {Map<string, { id: string, term: string, definition: string, mark: HTMLElement, card: HTMLElement|null, targetY: number }>} */
+      /** @type {Map<string, { id: string, term: string, definition: string, mark: HTMLElement, card: HTMLElement|null }>} */
       const termState = new Map();
+      let activeTermId = null;
+      let termHideTimer = null;
+      let mobileTermOpen = false;
       let pendingRange = null;
       let editModeId = null;
 
@@ -418,7 +436,7 @@
 
       function createTermCard(entry) {
         const card = document.createElement('article');
-        card.className = 'annotation-card card bg-base-100 p-3 shadow-sm border border-info/30';
+        card.className = 'annotation-card annotation-card--active card bg-base-100 p-3 shadow-sm border border-info/30';
         card.dataset.termId = entry.id;
         card.innerHTML =
           '<h3 class="mb-2 text-sm font-semibold"></h3>' +
@@ -441,16 +459,86 @@
         return card;
       }
 
-      function mountTermCard(entry) {
-        if (!primaryAnnotationPanel) return null;
+      function clearTermHideTimer() {
+        if (termHideTimer) {
+          clearTimeout(termHideTimer);
+          termHideTimer = null;
+        }
+      }
+
+      function hideTermCard(delay = TERM_HIDE_DELAY) {
+        clearTermHideTimer();
+        termHideTimer = setTimeout(hideTermCardImmediate, delay);
+      }
+
+      function hideTermCardImmediate() {
+        clearTermHideTimer();
+        if (activeTermId) {
+          const activeEntry = termState.get(activeTermId);
+          if (activeEntry?.card) {
+            activeEntry.card.remove();
+            activeEntry.card = null;
+          }
+        }
+        activeTermId = null;
+        mobileTermOpen = false;
+        if (primaryAnnotationPanel) {
+          primaryAnnotationPanel.innerHTML = '';
+          primaryAnnotationPanel.style.minHeight = '';
+        }
+        const mobile = document.getElementById('annotation-panel-mobile');
+        if (mobile) mobile.innerHTML = '';
+        if (annotationRail) annotationRail.classList.add('hidden');
+      }
+
+      function positionActiveTermCard() {
+        const entry = activeTermId ? termState.get(activeTermId) : null;
+        if (!entry || !entry.mark || !entry.card || !isDesktopLayout() || !primaryAnnotationPanel) return;
+
+        const markRect = entry.mark.getBoundingClientRect();
+        const panelRect = primaryAnnotationPanel.getBoundingClientRect();
+        const top = Math.max(0, markRect.top - panelRect.top);
+        entry.card.style.position = 'absolute';
+        entry.card.style.left = '0';
+        entry.card.style.right = '0';
+        entry.card.style.top = top + 'px';
+
+        const cardRect = entry.card.getBoundingClientRect();
+        primaryAnnotationPanel.style.minHeight = (cardRect.bottom - panelRect.top + MIN_CARD_GAP) + 'px';
+      }
+
+      function bindTermCardHover(card) {
+        card.addEventListener('mouseenter', clearTermHideTimer);
+        card.addEventListener('mouseleave', () => hideTermCard());
+      }
+
+      function showTermCard(entry) {
+        if (!primaryAnnotationPanel) return;
+        clearTermHideTimer();
+        hideTermCardImmediate();
+        activeTermId = entry.id;
+
         const card = createTermCard(entry);
         entry.card = card;
-        primaryAnnotationPanel.appendChild(card);
-        syncMobileAnnotationPanel();
-        if (window.matchMedia('(min-width: 1024px)').matches && annotationRail) {
-          annotationRail.classList.remove('hidden');
+        bindTermCardHover(card);
+
+        if (isDesktopLayout()) {
+          primaryAnnotationPanel.appendChild(card);
+          if (annotationRail) annotationRail.classList.remove('hidden');
+          positionActiveTermCard();
+        } else {
+          mobileTermOpen = true;
+          card.classList.add('annotation-card--mobile-fixed');
+          document.body.appendChild(card);
         }
-        return card;
+      }
+
+      function toggleTermCardMobile(entry) {
+        if (activeTermId === entry.id && mobileTermOpen) {
+          hideTermCardImmediate();
+        } else {
+          showTermCard(entry);
+        }
       }
 
       function syncMobilePanel() {
@@ -463,41 +551,34 @@
         }
       }
 
-      function syncMobileAnnotationPanel() {
-        const mobile = document.getElementById('annotation-panel-mobile');
-        if (!mobile) return;
-        mobile.innerHTML = '';
-        for (const entry of sortedTermEntries()) {
-          mobile.appendChild(createTermCard(entry));
-        }
-      }
-
       function sortedEntries() {
         return Array.from(state.values()).sort((a, b) => a.targetY - b.targetY || a.createdAt.localeCompare(b.createdAt));
       }
 
-      function sortedTermEntries() {
-        return Array.from(termState.values()).sort((a, b) => a.targetY - b.targetY || a.id.localeCompare(b.id));
-      }
-
-      function focusTermCard(id) {
-        const panel = isDesktopLayout() ? primaryAnnotationPanel : document.getElementById('annotation-panel-mobile');
-        const card = panel?.querySelector('[data-term-id="' + id + '"]');
-        if (card) {
-          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          card.focus({ preventScroll: true });
-        }
-      }
-
-      function bindTermMark(mark, id) {
+      function bindTermMark(mark, entry) {
         mark.setAttribute('tabindex', '0');
         mark.setAttribute('role', 'button');
-        mark.setAttribute('aria-label', '専門用語: 解説を表示');
-        mark.addEventListener('click', () => focusTermCard(id));
+        mark.setAttribute('aria-label', '専門用語: ' + entry.term);
+        mark.addEventListener('mouseenter', () => {
+          if (isDesktopLayout()) showTermCard(entry);
+        });
+        mark.addEventListener('mouseleave', () => {
+          if (isDesktopLayout()) hideTermCard();
+        });
+        mark.addEventListener('click', (e) => {
+          if (!isDesktopLayout()) {
+            e.preventDefault();
+            toggleTermCardMobile(entry);
+          }
+        });
         mark.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            focusTermCard(id);
+            if (isDesktopLayout()) {
+              showTermCard(entry);
+            } else {
+              toggleTermCardMobile(entry);
+            }
           }
         });
       }
@@ -628,20 +709,16 @@
           if (!item || !item.id) continue;
           const mark = contentRoot.querySelector('[data-term-id="' + item.id + '"]');
           if (!mark) continue;
-          const rect = mark.getBoundingClientRect();
           const entry = {
             id: item.id,
             term: item.term || item.id,
             definition: item.definition || '',
             mark,
-            card: null,
-            targetY: rect.top + window.scrollY
+            card: null
           };
-          bindTermMark(mark, item.id);
           termState.set(item.id, entry);
-          mountTermCard(entry);
+          bindTermMark(mark, entry);
         }
-        layoutAll();
       }
 
       function isDesktopLayout() {
@@ -685,19 +762,12 @@
         panel.style.minHeight = prevBottom > 0 ? (prevBottom + MIN_CARD_GAP) + 'px' : '';
       }
 
-      function drawLine(entry, side, connectorType) {
+      function drawLine(entry) {
         if (!entry.mark || !entry.card) return;
         const from = entry.mark.getBoundingClientRect();
         const to = entry.card.getBoundingClientRect();
-        let x1;
-        let x2;
-        if (side === 'left') {
-          x1 = from.left;
-          x2 = to.right;
-        } else {
-          x1 = from.right;
-          x2 = to.left;
-        }
+        const x1 = from.right;
+        const x2 = to.left;
         const y1 = from.top + from.height / 2;
         const y2 = to.top + to.height / 2;
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -705,14 +775,14 @@
         line.setAttribute('y1', y1);
         line.setAttribute('x2', x2);
         line.setAttribute('y2', y2);
-        line.setAttribute('class', 'connector-line-' + connectorType);
-        line.setAttribute('data-connector', connectorType);
+        line.setAttribute('class', 'connector-line-comment');
+        line.setAttribute('data-connector', 'comment');
         connectorLines.appendChild(line);
       }
 
       function layoutAll() {
         layoutPanel(sortedEntries(), primaryPanel);
-        layoutPanel(sortedTermEntries(), primaryAnnotationPanel);
+        positionActiveTermCard();
         drawAllLines();
       }
 
@@ -720,10 +790,7 @@
         connectorLines.innerHTML = '';
         if (!isDesktopLayout()) return;
         for (const entry of sortedEntries()) {
-          drawLine(entry, 'right', 'comment');
-        }
-        for (const entry of sortedTermEntries()) {
-          drawLine(entry, 'left', 'term');
+          drawLine(entry);
         }
       }
 
@@ -847,17 +914,22 @@
 
       copyAllBtn.addEventListener('click', copyAll);
 
+      document.addEventListener('click', (e) => {
+        if (!mobileTermOpen || isDesktopLayout()) return;
+        const target = e.target;
+        if (target instanceof Element && (target.closest('[data-term-id]') || target.closest('.annotation-card'))) return;
+        hideTermCardImmediate();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && activeTermId) hideTermCardImmediate();
+      });
+
       let raf = null;
       function scheduleLayout() {
         if (raf) cancelAnimationFrame(raf);
         raf = requestAnimationFrame(() => {
           for (const entry of state.values()) {
-            if (entry.mark) {
-              const rect = entry.mark.getBoundingClientRect();
-              entry.targetY = rect.top + window.scrollY;
-            }
-          }
-          for (const entry of termState.values()) {
             if (entry.mark) {
               const rect = entry.mark.getBoundingClientRect();
               entry.targetY = rect.top + window.scrollY;
