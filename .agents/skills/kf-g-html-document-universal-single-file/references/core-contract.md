@@ -12,7 +12,7 @@
 
 - ルートコンテナ: `#layout-root`（3 列 flex、幅は `max-w-screen-2xl` 等）
 - モバイル（lg 未満）: 左注釈（`#annotation-panel-mobile`）→ 本文 → 右コメント（`#comment-panel-mobile`）の縦積み
-- コネクタ SVG（`#connector-svg` / `#connector-lines`）は左右共通で 1 枚
+- コネクタ SVG（`#connector-svg` / `#connector-lines`）は **右コメント専用**（左注釈には描画しない）
 
 テンプレート: [assets/universal-single-file-template.html](../assets/universal-single-file-template.html)
 
@@ -28,7 +28,7 @@
 | 永続化 | **なし**（localStorage しない） | `comments_${location.pathname}` |
 | 閲覧者操作 | 閲覧・コピーのみ（任意） | 追加・編集・削除・コピー |
 | マーク属性 | `data-term-id` | `data-comment-id` |
-| コネクタ方向 | mark 左端 → カード右端 | mark 右端 → カード左端 |
+| SVG コネクタ | **なし**（ホバー／タップ時にカードのみ） | mark 右端 → カード左端 |
 
 ### 必須 DOM 識別子
 
@@ -62,19 +62,35 @@
 
 1. ページ load 時に `#term-annotations` を `JSON.parse` する
 1. 各 `id` に対応する `[data-term-id="{id}"]` を本文から取得する
-1. 左パネルに daisyUI `card`（用語名 + 定義）を生成する
-1. 衝突回避レイアウトと SVG コネクタを描画する
-1. スクロール・リサイズで再レイアウトする
+1. 用語マークにインタラクションを付与する（下記「表示トリガー」）
+1. トリガー時に左パネルへ daisyUI `card`（用語名 + 定義）を **1 枚だけ** 生成する
+1. トリガー解除時にカードを除去する
+1. デスクトップで表示中は、スクロール・リサイズに合わせてカードの縦位置を用語マークに追従させる
 
 - マーク未発見・JSON パース失敗は静かにスキップする
 - 左カードにコピーボタンを置く場合は `definition` をコピーする
+- **左注釈用 SVG コネクタは描画しない**（`data-connector="term"` / `connector-line-term` は使わない）
 
-### コネクタ座標（左）
+### 表示トリガー
 
-- 線種: `line[data-connector="term"]`（右コメントと色を区別）
-- 始点: 用語 `mark` の **左端中央**（ビューポート座標）
-- 終点: 左カード **右端中央**（ビューポート座標）
-- モバイル縦積み時はコネクタ線を描画しない（カードのみ表示）
+**デスクトップ（lg 以上）:**
+
+1. `mark[data-term-id]` へ `mouseenter`（または `pointerenter`）で対応カードを表示する
+1. `mouseleave`（または `pointerleave`）で非表示にする（**200ms 程度**の hide delay を許容）
+1. ポインタがマークから左カードへ移っても消えない（カード側でも hide タイマーをキャンセルする）
+1. 同時に表示する左カードは **常に 1 枚**（別用語へ移ったら差し替え）
+
+**モバイル（lg 未満）:**
+
+1. `click` または `focus` で対応カードをトグル表示する
+1. パネル外タップ、または `Escape` で閉じる
+1. 必要に応じて `position: fixed` のカードを使ってよい
+
+### 左カード配置（デスクトップ）
+
+- 左 `[data-annotation-panel]` 内に **1 枚** のカードを置く
+- カードの縦位置は、対応 `mark` のビューポート上端に追従する（`position: absolute` 等）
+- 衝突回避レイアウトは不要（常に 1 枚のため）
 
 ---
 
@@ -144,26 +160,26 @@
 1. `localStorage` から当該 ID を除外して保存する
 1. 残りカードのレイアウトと線を再計算する
 
-## 衝突回避アルゴリズム（左右共通）
+## 衝突回避アルゴリズム（右コメント）
 
-左右パネルは同一ヘルパで独立に配置する。
+右コメントパネルのみに適用する。左注釈は常に 1 枚のホバー／タップカードのため衝突回避しない。
 
-1. 各エントリの `targetY` を、対応ハイライトのビューポート上端 + `scrollY` とする
-1. `targetY` 昇順（コメント同値は `createdAt`、注釈同値は `id`）でソートする
+1. 各コメントエントリの `targetY` を、対応ハイライトのビューポート上端 + `scrollY` とする
+1. `targetY` 昇順（同値は `createdAt`）でソートする
 1. 先頭カードから順に配置する
    - 希望位置 = ハイライトの `getBoundingClientRect().top` をパネル基準に変換した値
    - 実際の top = `max(希望位置, 前カードの bottom + 12px)`（いずれもパネル相対座標）
 1. 最小ギャップ **12px** を維持する
 1. SVG 線は **実際に配置されたカード位置** の中心へ向ける
 
-スクロール・リサイズ時は `requestAnimationFrame` で左右とも再計算する。
+スクロール・リサイズ時は `requestAnimationFrame` で右コメントと表示中の左カード位置を再計算する。
 
-## コネクタ座標系（左右）
+## コネクタ座標系（右コメント専用）
 
 - `#connector-svg` は `position: fixed; inset: 0` でビューポート全体を覆う
 - `pointer-events: none` で本文選択を妨げない
-- **右コメント**（`data-connector="comment"`）: ハイライト右端中央 → カード左端中央
-- **左注釈**（`data-connector="term"`）: ハイライト左端中央 → カード右端中央
+- **右コメント**（`data-connector="comment"` / `connector-line-comment`）: ハイライト右端中央 → カード左端中央
+- 左注釈には SVG 線を描かない
 - スクロール後も `getBoundingClientRect()` ベースで再描画する
 
 ## 永続化・復元（右コメントのみ）
@@ -231,9 +247,9 @@ comment2
 
 - 本文は `select-text` を維持し、すべてのテキストが選択可能
 - デスクトップ（lg 以上）: 左・右レール `sticky` で 3 列余白を確保
-- 狭い画面: 左注釈（本文直上）→ 本文 → 右コメント（本文下）の縦積み。コネクタ線はデスクトップ配置時のみ
+- 狭い画面: 本文 → 右コメント（本文下）の縦積み。左注釈カードは用語タップ時に表示（fixed 可）
 - 右コメントハイライト: `tabindex="0"`, `role="button"`, Enter/Space で対応カードへフォーカス
-- 左注釈ハイライト: 同様に対応左カードへフォーカス可能
+- 左注釈ハイライト: デスクトップはホバー、モバイルは click/focus トグルで解説カードを表示
 - カード操作ボタン: キーボードフォーカス可能、`focus:ring` を付与
 - コピー成功: `aria-live="polite"` で通知
 
