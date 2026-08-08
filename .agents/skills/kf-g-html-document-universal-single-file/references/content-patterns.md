@@ -78,6 +78,48 @@
 
 色だけに頼らない。badge テキスト、見出し、枠線、必要に応じてアイコンまたは太字を併用する。
 
+### タイポグラフィ
+
+`[data-content-root]` 内の本文・補足・強調は、次の 3 値スケールのみ使う。
+
+| 用途 | サイズ | Tailwind クラス |
+| --- | --- | --- |
+| 本文（基本） | `1rem` | `text-base`（省略可。親に `leading-relaxed` 等を付けてよい） |
+| 補足説明 | `0.875rem` | `text-sm` |
+| 強調本文 | `1.125rem` | `text-lg` |
+
+- 本文・補足・強調用途で上記以外の `font-size` を使わない
+- `text-[0.85rem]` / `text-[1.15rem]` 等の任意値 rem は本文用途で使わない
+- 見出し（`h1`→`h2`→`h3`）は階層を飛ばさない。**本文用途に見出しサイズを流用しない**
+- ページ chrome（navbar・レール見出し・dialog ラベル・コメントカード UI）や `badge` 内ラベルは UI 用途として例外可
+
+#### 見出し（Notion → Tailwind）
+
+`[data-content-root]` 内の文書見出しに適用する。ページ chrome（navbar タイトル等）は対象外。
+
+| 要素 | 元 px | サイズクラス | margin（上下のみ、左右 0） | 装飾クラス |
+| --- | ---: | --- | --- | --- |
+| h1 | 36 | `text-4xl` | `margin: 4rem 0 1.5rem 0` → `mt-16 mb-6` | `bg-[rgb(20,58,78)]` + **明色文字必須** `text-white` + 適度な `px`/`py` |
+| h2 | 24 | `text-2xl` | `margin: 3rem 0 1rem 0` → `mt-12 mb-4` | `pb-1` + `border-b-4` + `border-[rgb(20,58,78)]` |
+| h3 | 18 | `text-lg` | `margin: 1rem 0 0.5rem 0` → `mt-4 mb-2` | `text-[rgb(34,135,189)]` + `pb-[10px]` |
+
+- h1 は暗背景に暗文字を禁止する（可読性のため `text-white` 等の明色を必須とする）
+- h3 と本文強調はどちらも `text-lg` だが、見出しは上記色・余白で区別する
+
+### 色彩・コントラスト
+
+白または薄い背景（`bg-base-100` / `bg-base-200` / 薄色 card 背景等）上では、可読性が落ちる文字色・表現を禁止する。
+
+| 禁止例 | 理由 |
+| --- | --- |
+| 黄色・薄黄・ライム系の**文字色** | 背景とのコントラスト不足 |
+| 薄いグレー文字（例: `text-base-content/60` 以下の opacity 単独、`text-gray-300` 等） | 本文・補足の可読性低下 |
+| 色だけで状態・リスクを伝える | [情報エンコード（色非依存）](#情報エンコード色非依存) と両立不可 |
+
+- 状態表現は badge + 薄背景 + 枠線 + テキストラベル（既存ルールと両立）
+- **例外**: コメント選択ハイライトの黄色**背景**（`mark[data-comment-id]`）は禁止対象外。文字色は暗色（`text-base-content` 等）を維持する
+- daisyUI `alert-warning` / `bg-warning/10` 等（暗文字 + 警告背景）は可
+
 ### 専門用語・左注釈
 
 #### 専門用語の定義
@@ -166,9 +208,9 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
   <div class="card-body py-4">
     <div class="flex items-center gap-2">
       <span class="badge badge-primary badge-outline">概要</span>
-      <h2 class="card-title text-lg">変更の目的</h2>
+      <h2 class="card-title text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">変更の目的</h2>
     </div>
-    <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+    <ul class="mt-2 list-disc space-y-1 pl-5">
       <li>要点1</li>
       <li>要点2</li>
     </ul>
@@ -179,27 +221,27 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 <!-- リスク群（高→中→低） -->
 <section class="mb-6">
-  <h2 class="mb-3 text-xl font-semibold">リスク順レビュー</h2>
+  <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">リスク順レビュー</h2>
   <div class="grid gap-3 sm:grid-cols-3">
     <div class="card border border-error/40 bg-error/10 shadow-sm">
       <div class="card-body gap-2 py-3">
         <span class="badge badge-error w-fit">高リスク</span>
-        <h3 class="font-semibold">認証・課金</h3>
-        <p class="text-sm">変更点と確認方法</p>
+        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">認証・課金</h3>
+        <p>変更点と確認方法</p>
       </div>
     </div>
     <div class="card border border-warning/40 bg-warning/10 shadow-sm">
       <div class="card-body gap-2 py-3">
         <span class="badge badge-warning w-fit">中リスク</span>
-        <h3 class="font-semibold">API 契約</h3>
-        <p class="text-sm">変更点と確認方法</p>
+        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">API 契約</h3>
+        <p>変更点と確認方法</p>
       </div>
     </div>
     <div class="card border border-success/40 bg-success/10 shadow-sm">
       <div class="card-body gap-2 py-3">
         <span class="badge badge-success w-fit">低リスク</span>
-        <h3 class="font-semibold">文言・スタイル</h3>
-        <p class="text-sm">変更点と確認方法</p>
+        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">文言・スタイル</h3>
+        <p>変更点と確認方法</p>
       </div>
     </div>
   </div>
@@ -207,11 +249,11 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 <!-- 意図グループ + 詳細 collapse -->
 <section class="mb-6">
-  <h2 class="mb-3 text-xl font-semibold">意図グループ</h2>
+  <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">意図グループ</h2>
   <div class="collapse collapse-arrow bg-base-100 border border-base-300">
     <input type="checkbox" />
     <div class="collapse-title font-medium">グループ名（要約1行）</div>
-    <div class="collapse-content text-sm">
+    <div class="collapse-content">
       <p>詳細・根拠。上段の表/図と重複しない。</p>
     </div>
   </div>
@@ -294,6 +336,9 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. インフラ操作を含む依頼で「手動インフラ操作記録」パターンを満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離したか）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
 1. 積み順・論理分離・二重記載禁止・色非依存エンコードを満たしたか
+1. 本文・補足・強調が 3 値タイポグラフィスケール（`text-base` / `text-sm` / `text-lg`）に従い、任意値 rem（`text-[0.85rem]` / `text-[1.15rem]` 等）を本文用途に使っていないか
+1. `[data-content-root]` 内の h1/h2/h3 が Notion 準拠のサイズ・装飾（h1 明色文字必須）に従っているか
+1. 薄背景上で薄いグレー文字・黄色文字等、低コントラスト表現を使っていないか（`mark[data-comment-id]` の黄色背景は例外）
 1. 表・図・steps と同内容の段落がないか
 1. 専門用語の初出が `mark[data-term-id]` でマークされ、左注釈（`[data-annotation-panel]` / `#term-annotations`）と対応しているか（パターン別必須度を満たすこと）
 1. 括弧内の長い説明と左注釈が重複していないか
