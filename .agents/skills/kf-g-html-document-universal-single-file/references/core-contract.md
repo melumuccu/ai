@@ -12,7 +12,7 @@
 
 - ルートコンテナ: `#layout-root`（3 列 flex、幅は `max-w-screen-2xl` 等）
 - モバイル（lg 未満）: 左注釈（`#annotation-panel-mobile`）→ 本文 → 右コメント（`#comment-panel-mobile`）の縦積み
-- コネクタ SVG（`#connector-svg` / `#connector-lines`）は **右コメント専用**（左注釈には描画しない）
+- コネクタ SVG（`#connector-svg` / `#connector-lines`）は **右コメント専用**（**左注釈 UI:** panel カード表示）
 
 テンプレート: [assets/universal-single-file-template.html](../assets/universal-single-file-template.html)
 
@@ -25,7 +25,7 @@
 | 項目 | 左注釈 | 右コメント |
 | --- | --- | --- |
 | 定義者 | 著者（HTML 生成時に静的埋め込み） | 閲覧者（テキスト選択で追加） |
-| 永続化 | **なし**（localStorage しない） | `comments_${location.pathname}` |
+| 永続化 | **なし**（**左注釈データ:** `#term-annotations` を HTML に静的埋め込み） | `comments_${location.pathname}` |
 | 閲覧者操作 | 閲覧・コピーのみ（任意） | 追加・編集・削除・コピー |
 | マーク属性 | `data-term-id` | `data-comment-id` |
 | SVG コネクタ | **なし**（viewport 内可視用語のカードのみ） | mark 右端 → カード左端 |
@@ -37,7 +37,7 @@
 | 左レール | `#annotation-rail` | デスクトップ用 sticky 左余白 |
 | 注釈パネル | `[data-annotation-panel]` | 用語カード配置先（`#annotation-panel` / `#annotation-panel-mobile`） |
 | 用語データ | `#term-annotations` | `type="application/json"` の著者定義用語配列 |
-| 用語マーク | `mark[data-term-id="{id}"]` | 本文内の専門用語ハイライト（背景色等のみ。badge・「用語」ラベル等の余計な視覚装飾は禁止。a11y 属性は可） |
+| 用語マーク | `mark[data-term-id="{id}"]` | 本文内の専門用語ハイライト（背景色等のみ。badge・「用語」ラベル等は付けない。a11y 属性は可） |
 
 ### データモデル
 
@@ -69,7 +69,7 @@
 
 - マーク未発見・JSON パース失敗は静かにスキップする
 - 左カードにコピーボタンを置く場合は `definition` をコピーする
-- **左注釈用 SVG コネクタは描画しない**（`data-connector="term"` / `connector-line-term` は使わない）
+- **左注釈 UI:** panel カード表示（`#connector-svg` は右コメント専用。左注釈用 SVG コネクタは描かない）
 
 ### 可視判定と表示
 
@@ -134,8 +134,8 @@
 1. ダイアログまたはインライン入力でコメントを受け取る
 1. 選択範囲を `<mark data-comment-id="{id}">` でラップする
    - **1 コメント = 複数 `<mark>` 可**（同一 `data-comment-id`）。table / list 等でセル跨ぎ選択時はテキストノード単位に分割 wrap する
-   - `surroundContents` のみ使用する。**`extractContents` fallback は禁止**（構造親直下テキストの wrap や DOM 破壊を防ぐ）
-   - 構造親（`tr` / `table` / `tbody` / `thead` / `tfoot` / `ul` / `ol`）の**直接の子**テキストは wrap 禁止。`td` / `th` / `li` 内およびその子孫 inline 内は許可
+   - **`surroundContents` のみ**使用する。`extractContents` は使わない（構造親直下テキストの wrap や DOM 破壊を防ぐ）
+   - 構造親（`tr` / `table` / `tbody` / `thead` / `tfoot` / `ul` / `ol`）の**直接の子**テキストは wrap 対象外。`td` / `th` / `li` 内およびその子孫 inline 内は許可
    - 同一テキストノード内の部分選択: `splitText` で start 分割後、`endOffset` を相対値へ補正してから end 分割する
    - 下線付きの視認可能ハイライト（背景色 + underline）。左注釈 `data-term-id` と色を区別する
    - wrap 結果が 0 mark のときはサイレント失敗せず、ユーザ向けエラーを表示する
@@ -188,7 +188,7 @@
 - 復元: ページ load 時に配列を読み、各 `anchor` から Range を復元してハイライトとカードを再構築する
 - オフセット不一致時は `quote` + `prefix`/`suffix` で fuzzy 再検索する
 - `JSON.parse` 失敗・非配列・項目欠落は静かに無視する（既存表示を壊さない）
-- **左注釈は永続化しない**（著者が HTML に静的埋め込み）
+- 左注釈は永続化しない（著者が HTML に静的埋め込み）
 
 ## コピー形式（右コメント）
 

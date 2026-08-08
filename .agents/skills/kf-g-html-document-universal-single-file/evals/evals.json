@@ -64,7 +64,7 @@
     {
       "id": 4,
       "prompt": "新機能の実装方針をプランニング用HTMLにまとめて。CQRSやイベントソーシングなど専門用語が出てくるので、読者が用語を左側で確認できるようにして。テキスト選択コメントも付けられる形式で。",
-      "expected_output": "非コーディング/プランニングパターンの単一HTML。専門用語の初出をmark[data-term-id]でマークし、viewport内可視用語の解説カードを左[data-annotation-panel]へ文書順に積み上げ。右コメントコアも維持。括弧内の長い説明と左注釈の二重記載は禁止。",
+      "expected_output": "非コーディング/プランニングパターンの単一HTML。専門用語の初出をmark[data-term-id]でマークし、viewport内可視用語の解説カードを左[data-annotation-panel]へ文書順に積み上げ。右コメントコアも維持。単一情報源: 括弧内の長い説明と左注釈を重複させない。",
       "files": [],
       "expectations": [
         "Output is a complete single-file HTML document with DOCTYPE and html root",
