@@ -65,7 +65,8 @@
       "description": "Repository-local skills whose names start with kf-pj-",
       "name": "kf-pj-skills",
       "skills": [
-        "./kf-pj-kf-lint-version-upgrade"
+        "./kf-pj-kf-lint-version-upgrade",
+        "./kf-pj-skill-agent-handling-rules"
       ],
       "source": "./.agents/skills",
       "strict": false
