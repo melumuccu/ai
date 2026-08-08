@@ -128,7 +128,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 ### 出典・外部参照
 
-外部資料を根拠に `[data-content-root]` 本文を書くときは、[source-citations.md](source-citations.md) の手順に従う（リンク化・fragment 優先・到達性検証に加え、**リンクの視覚** で目視識別可能な装飾を維持する）。
+外部資料を根拠に `[data-content-root]` 本文を書くときは、[source-citations.md](source-citations.md) の手順に従う（リンク化・fragment 優先に加え、**リンクの視覚** で目視識別可能な装飾を維持する）。
 
 | 要素 | 役割 |
 | --- | --- |
@@ -297,6 +297,6 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. 表・図・steps と同内容の段落がないか
 1. 専門用語の初出が `mark[data-term-id]` でマークされ、左注釈（`[data-annotation-panel]` / `#term-annotations`）と対応しているか（パターン別必須度を満たすこと）
 1. 括弧内の長い説明と左注釈が重複していないか
-1. 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL と到達性検証を満たしているか（[source-citations.md](source-citations.md)、パターン別必須度を確認）
+1. 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL を使っているか（[source-citations.md](source-citations.md)、パターン別必須度を確認）
 1. 出典リンクと左注釈（`mark[data-term-id]`）を混同していないか
 1. リンク化した出典文言を長文で繰り返していないか（二重記載禁止）

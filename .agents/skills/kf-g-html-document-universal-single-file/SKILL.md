@@ -13,7 +13,7 @@ description: Use this skill when creating or revising build-free, single-file in
 | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [references/core-contract.md](references/core-contract.md)                                   | コメントコアと左注釈の DOM・データ・レイアウト・永続化を実装するとき                                                                        |
 | [references/content-patterns.md](references/content-patterns.md)                             | PR 説明・業務フロー・非コーディング向けの構成、CDN 選定、視覚構造・可読性（§ 論理セクション分離・図表化・専門用語・左注釈・出典リンク・情報エンコード・アクセシビリティ） |
-| [references/source-citations.md](references/source-citations.md)                             | 外部資料を根拠に `[data-content-root]` 本文を書く／出典リンクの到達性を確認するとき |
+| [references/source-citations.md](references/source-citations.md)                             | 外部資料を根拠に `[data-content-root]` 本文を書く／出典リンクをリンク化するとき |
 | [references/r2-static-delivery.md](references/r2-static-delivery.md)                         | R2 公開前提・Wrangler OAuth・版管理の確認                                                                                                   |
 | [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較                                                                                      |
 | [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の非コミット規則・完了手順・PR description 形式                                                                      |
@@ -31,7 +31,7 @@ description: Use this skill when creating or revising build-free, single-file in
 | 視覚エンコード | 状態・リスク・カテゴリは badge + 薄背景 + 枠線 + テキストラベル（色だけに依存しない） |
 | 二重記載禁止   | 表・図・steps に載せた事実を長文段落で繰り返さない                                    |
 | 専門用語       | 初出を `mark[data-term-id]` で**ハイライトのみ**装飾し、viewport 内可視用語の解説カードを左 `[data-annotation-panel]` に文書順で積み上げる。badge・「用語」ラベル等の余計な装飾は禁止（詳細は [content-patterns.md](references/content-patterns.md) § 専門用語・左注釈） |
-| 出典リンク     | 外部資料を根拠にした主張を `<a href="...">` でリンク化する。fragment 優先、到達性検証必須（詳細は [source-citations.md](references/source-citations.md)） |
+| 出典リンク     | 外部資料を根拠にした主張を `<a href="...">` でリンク化する。fragment 優先（詳細は [source-citations.md](references/source-citations.md)） |
 | コメント対象   | 説明本文は `[data-content-root]` 内に置き、テキスト選択可能に保つ                     |
 
 **図表化の判断:** 2軸以上の比較は `table`、3ステップ超の順序・分岐は `steps` または Mermaid、並列 3〜7 項目は短い箇条書き、段落 5 文超は分割または視覚要素へ。
@@ -50,7 +50,7 @@ description: Use this skill when creating or revising build-free, single-file in
 1. 論理セクション（概要・リスク・意図グループ等）を親 `section` で分離し、積み順（要約 → 表/図/steps → 短段落 → collapse）に従って構成する
 1. 状態・リスク・カテゴリ・進捗等は badge、alert、card 背景、steps、table 等で冗長表現する。色だけに頼らずテキストラベル・見出し・枠線を併用する
 1. 表・図と同じ情報の段落重複がないか確認する（二重記載禁止）
-1. 外部資料を根拠にした主張を洗い出し、[source-citations.md](references/source-citations.md) に従って fragment 優先 URL を選定し、到達性検証後に `<a href="...">` でリンク化する
+1. 外部資料を根拠にした主張を洗い出し、[source-citations.md](references/source-citations.md) に従って fragment 優先 URL を選定し、`<a href="...">` でリンク化する
 1. 専門用語（頭文字略語、経済/ビジネス用語、標準エンジニアが知らない可能性が高いエンジニアリング用語）を洗い出し、初出を `mark[data-term-id]` でマークする
 1. 用語定義を HTML 内静的データ（`#term-annotations` JSON 等）に埋め込み、viewport 内に見えている用語の解説カードを左 `[data-annotation-panel]` に文書順で積み上げ表示する（localStorage は使わない。左注釈用 SVG コネクタは描かない）
 1. 本文の長い括弧説明と左注釈の二重記載がないか確認する
@@ -97,7 +97,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 | 項目 | 確認方法 |
 | --- | --- |
 | HTML コア契約・daisyUI・コメント機能等 | 出力チェックリスト（目視 / ローカル操作） |
-| 出典 URL 到達性 | 執筆時は [source-citations.md](references/source-citations.md) の手順（`curl` / `WebFetch` 等）。turn 完了時は Cursor stop hook + kf-lint `content/url-reachable`（warn）が変更 `.md` / `.html` 全文の `http(s)://` を検査。警告時は修正またはユーザ目視フォールバック |
+| 出典 URL 到達性 | Cursor stop hook + kf-lint `content/url-reachable`（warn）が変更 `.md` / `.html` 全文の `http(s)://` を検査（[source-citations.md](references/source-citations.md)）。警告時は修正またはユーザ目視フォールバック |
 | R2 URL・PR description | アップロード後の公開 URL 確認と description 目視 |
 
 詳細は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
@@ -121,7 +121,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 - [ ] 積み順: 要約カード → 表/図/steps → 短段落（1論点） → collapse（詳細）
 - [ ] 2軸以上の比較は `table`、3ステップ超の順序・分岐は `steps` または Mermaid、並列 3〜7 項目は短い箇条書き
 - [ ] 表・図・steps と同内容の長文段落がない（二重記載禁止）
-- [ ] 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL と到達性検証を満たした（[source-citations.md](references/source-citations.md)、パターン別必須度を確認）
+- [ ] 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL を使った（[source-citations.md](references/source-citations.md)、パターン別必須度を確認）
 - [ ] `[data-content-root]` 内の出典 `<a href>` に下線と本文と異なるリンク色があり、`:visited` も区別できる（識別手段を消す指定を付けていない。テンプレート復元 CSS を維持）
 - [ ] 出典 `<a>` と左注釈（`mark[data-term-id]`）を混同していない
 - [ ] 専門用語の初出を `mark[data-term-id]` でマークした（パターン別必須度を満たす場合）
