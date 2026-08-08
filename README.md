@@ -13,12 +13,6 @@ mise run hooks-install
 
 ## Tasks
 
-[.agents/skills/skills.json](.agents/skills/skills.json) を生成する:
-
-```sh
-mise run skills-json
-```
-
 フック設定を確認する:
 
 ```sh

@@ -1,40 +1,7 @@
 # .agents/skills
 
-このディレクトリには、各 skill の `SKILL.md` と、その一覧をまとめた `.agents/skills/skills.json` を配置します。
+このディレクトリには、各 skill の `SKILL.md` を配置します。
 
 ## ディレクトリ構成
 
-(skills 実態ファイル群は省略)
-
-```
-$ tree .agents/skills
-.agents/skills
-├── prompt-for-agent-meta.md // リモート環境の AI Agent 向けコピペ用メタプロンプト。このプロンプトをコピペして指示を書けば当リポジトリの skill を利用してくれるようにプロンプトを組んである。
-├── prompt-for-agent.md // リモート環境の AI Agent に向けた指示プロンプト実態。上記のメタプロンプトはこれを参照している。
-└── skills.json // skill 一覧をまとめた JSON ファイル。AI Agent はこれを参照して、利用可能な skill を認識する。
-```
-
-```
-$ tree .githooks
-.githooks
-└── pre-commit // コミット前に .agents/skills/skills.json を自動生成するフックスクリプト。これを有効化しておくと、SKILL.md を追加・編集した際に skills.json の更新を忘れずに済む。
-```
-
-## skills.json を生成する目的
-
-クラウドで動作する AI Agent は、global skills を直接指定できないことが多く、ローカル環境の skill をそのまま認識できない場合があります。
-
-この問題に対応するために、`.agents/skills/skills.json` を AI Agent に参照させ、ローカルの skill 一覧を擬似的なグローバルスキルとして扱わせることを目的とします。
-
-`skills.json` に含まれる `name` と `description` は、一般的な `SKILL.md` のフロントマターと同義の情報として扱います。AI Agent はこの情報を使って、現在のユーザー要求に対してどの skill を発火させるべきかを判断します。
-
-発火させる skill が定まったら、AI Agent は `path` を使って対応する `SKILL.md` を参照し、必要に応じてその skill に付随する補足ファイルも読み込みます。
-
-## 期待する利用フロー
-
-1. AI Agent が `.agents/skills/skills.json` を読む
-2. `name` と `description` を見て、どの skill を使うべきか判断する
-3. 対象 skill の `path` をもとに `SKILL.md` を開く
-4. 必要なら同じディレクトリ配下の補足ファイルも参照する
-
-この仕組みにより、global skills を直接扱えない実行環境でも、ローカルに置いた skill 群を一覧化して AI Agent に認識させられます。
+各 skill は `<skill-name>/SKILL.md` の形で置きます。必要に応じて、同じディレクトリ配下に補足ファイルを追加できます。

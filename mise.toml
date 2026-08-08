@@ -3,12 +3,6 @@ node = "v24"
 pnpm = "latest"
 pre-commit = "latest"
 gitleaks = "latest"
-[tasks.skills-json]
-description = "SKILL.md のフロントマターから .agents/skills/skills.json を生成する"
-run = '''
-find .agents/skills -name 'SKILL.md' -print0 | sort -z | xargs -0 ruby -rjson -ryaml -e 'puts JSON.pretty_generate(ARGV.map { |path| text = File.read(path); fm = text[/\A---\s*\n(.*?)\n---\s*\n/m, 1] or next; data = YAML.safe_load(fm) || {}; { description: data["description"], name: data["name"], path: path.sub(%r{\A\./}, "") } }.compact)' > .agents/skills/skills.json
-'''
-
 [tasks.hooks-install]
 description = "pre-commit と pre-push の hook をまとめて導入する"
 run = '''
