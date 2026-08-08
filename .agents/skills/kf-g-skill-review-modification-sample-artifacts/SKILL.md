@@ -1,6 +1,6 @@
 ---
 name: kf-g-skill-review-modification-sample-artifacts
-description: Use this skill whenever revising a self-made skill and preparing user review of before/after sample artifacts produced under that revision.
+description: Use this skill whenever revising a self-made skill and preparing user review of before/after sample artifacts. Apply it when you must produce sample outputs with two independent subagents—one using only the pre-change skill snapshot and one using only the post-change skill—under identical prompts and inputs so reviewers can visually inspect only the skill-change delta.
 ---
 
 # skill 改修 before/after サンプルレビュー
