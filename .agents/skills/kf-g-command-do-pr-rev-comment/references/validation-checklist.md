@@ -19,7 +19,9 @@
 - [ ] push 後に reply している（push 前 reply なし）
 - [ ] エージェントは thread を resolve していない
 - [ ] 必ず bot credential で投稿している
-- [ ] reply に commit リンクと変更概要を含めている
+- [ ] reply 本文は変更概要から始まり、続けて commit リンクを含めている
+- [ ] reply に受領クッション前置き（`ご指摘ありがとうございます`、`ご質問ありがとうございます` など）を書いていない
+- [ ] reply に挨拶・お礼・謝罪などの前置きを書いていない
 
 参照: `kf-g-command-do-pr-rev-comment`
 

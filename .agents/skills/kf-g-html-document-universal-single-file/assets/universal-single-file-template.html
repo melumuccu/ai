@@ -25,6 +25,12 @@
       cursor: pointer;
     }
 
+    mark[data-term-id] {
+      background: rgba(96, 165, 250, 0.2);
+      border-bottom: 1px dashed rgb(59, 130, 246);
+      cursor: help;
+    }
+
     #connector-svg {
       position: fixed;
       inset: 0;
@@ -34,23 +40,45 @@
       z-index: 20;
     }
 
-    #connector-svg line {
+    #connector-svg line.connector-line-comment {
       stroke: rgb(234, 179, 8);
       stroke-width: 1.5;
       stroke-dasharray: 4 3;
     }
 
-    .comment-card:focus-within {
+    [data-annotation-panel] {
+      position: relative;
+    }
+
+    .annotation-card--active {
+      z-index: 25;
+    }
+
+    @media (max-width: 1023px) {
+      .annotation-card--mobile-fixed {
+        position: fixed;
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 40;
+        max-height: 40vh;
+        overflow-y: auto;
+      }
+    }
+
+    .comment-card:focus-within,
+    .annotation-card:focus-within {
       outline: 2px solid rgb(59, 130, 246);
       outline-offset: 2px;
     }
 
     @media (max-width: 1023px) {
-      #comment-rail {
+      #comment-rail,
+      #annotation-rail {
         position: static;
         width: 100%;
         max-height: none;
-        margin-top: 1.5rem;
+        margin-top: 0;
       }
       #layout-root {
         flex-direction: column;
@@ -60,7 +88,7 @@
 </head>
 <body class="bg-base-200 text-base-content antialiased">
   <header class="navbar sticky top-0 z-30 border-b border-base-300 bg-base-100/95 backdrop-blur">
-    <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4">
+    <div class="mx-auto flex w-full max-w-screen-2xl items-center justify-between gap-4 px-4">
       <h1 class="text-lg font-semibold">ドキュメントタイトル</h1>
       <div class="flex items-center gap-2">
         <button
@@ -76,10 +104,37 @@
     </div>
   </header>
 
-  <div id="layout-root" class="mx-auto flex max-w-7xl gap-6 px-4 py-6">
+  <script type="application/json" id="term-annotations">[
+    {
+      "id": "icp",
+      "term": "ICP",
+      "definition": "Ideal Customer Profile。理想顧客像。"
+    },
+    {
+      "id": "tam",
+      "term": "TAM",
+      "definition": "Total Addressable Market。到達可能な最大市場規模。"
+    }
+  ]</script>
+
+  <div id="layout-root" class="mx-auto flex max-w-screen-2xl gap-6 px-4 py-6">
+    <aside
+      id="annotation-rail"
+      class="sticky top-16 hidden w-72 shrink-0 self-start lg:block"
+      aria-label="用語解説"
+    >
+      <div id="annotation-panel" class="space-y-3" data-annotation-panel></div>
+    </aside>
+
     <main id="doc-content" data-content-root class="min-w-0 flex-1 select-text leading-relaxed">
+      <div class="mb-6 lg:hidden">
+        <h2 class="mb-2 text-sm font-semibold text-base-content/60">用語解説</h2>
+        <div id="annotation-panel-mobile" class="space-y-3" data-annotation-panel></div>
+      </div>
+
       <p class="mb-6 text-base-content/70">
         本文を選択すると、右側（狭い画面では下）にコメントカードが追加されます。再読み込み後も同じ URL 上で復元されます。
+        左側には著者定義の専門用語解説があります。用語（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）にカーソルを当てると、表示中の左レーン最上に解説カードが表示されます（下の方の同一用語でも同じ位置）。
       </p>
 
       <!-- 要約 -->
@@ -93,6 +148,7 @@
             <li>ビルド不要の単一 HTML で説明ページを作る。</li>
             <li>daisyUI v5 + Tailwind browser CDN でスタイルする。</li>
             <li>コメントコアは vanilla JS のみで動作する。</li>
+            <li>左レールに <mark data-term-id="icp">ICP</mark> などの専門用語解説をホバー／タップで表示する。</li>
           </ul>
         </div>
       </section>
@@ -180,7 +236,7 @@
   </div>
 
   <!-- モバイル用コメントレール（lg 未満で表示） -->
-  <div class="mx-auto max-w-7xl px-4 pb-8 lg:hidden">
+  <div class="mx-auto max-w-screen-2xl px-4 pb-8 lg:hidden">
     <h2 class="mb-2 text-sm font-semibold text-base-content/60">コメント</h2>
     <div id="comment-panel-mobile" class="space-y-3" data-comment-panel></div>
   </div>
@@ -217,10 +273,13 @@
       const STORAGE_PREFIX = 'comments_';
       const MIN_CARD_GAP = 12;
       const COPY_FEEDBACK_MS = 1500;
+      const TERM_HIDE_DELAY = 200;
 
       const contentRoot = document.querySelector('[data-content-root]');
       const panels = Array.from(document.querySelectorAll('[data-comment-panel]'));
       const primaryPanel = panels[0];
+      const annotationPanels = Array.from(document.querySelectorAll('[data-annotation-panel]'));
+      const primaryAnnotationPanel = annotationPanels[0];
       const connectorLines = document.getElementById('connector-lines');
       const dialog = document.getElementById('comment-dialog');
       const commentForm = document.getElementById('comment-form');
@@ -230,9 +289,15 @@
       const copyAllBtn = document.getElementById('copy-all-btn');
       const copyFeedback = document.getElementById('copy-feedback');
       const commentRail = document.getElementById('comment-rail');
+      const annotationRail = document.getElementById('annotation-rail');
 
       /** @type {Map<string, { id: string, quote: string, comment: string, anchor: object, createdAt: string, card: HTMLElement|null, mark: HTMLElement|null, targetY: number }>} */
       const state = new Map();
+      /** @type {Map<string, { id: string, term: string, definition: string, mark: HTMLElement, card: HTMLElement|null }>} */
+      const termState = new Map();
+      let activeTermId = null;
+      let termHideTimer = null;
+      let mobileTermOpen = false;
       let pendingRange = null;
       let editModeId = null;
 
@@ -369,6 +434,20 @@
         return card;
       }
 
+      function createTermCard(entry) {
+        const card = document.createElement('article');
+        card.className = 'annotation-card annotation-card--active card bg-base-100 p-3 shadow-sm border border-info/30';
+        card.dataset.termId = entry.id;
+        card.innerHTML =
+          '<h3 class="mb-2 text-sm font-semibold"></h3>' +
+          '<p class="mb-2 whitespace-pre-wrap text-sm text-base-content/80"></p>' +
+          '<button type="button" data-action="copy" class="btn btn-xs btn-outline">コピー</button>';
+        card.querySelector('h3').textContent = entry.term;
+        card.querySelector('p').textContent = entry.definition;
+        card.querySelector('[data-action="copy"]').addEventListener('click', () => copyTerm(entry));
+        return card;
+      }
+
       function mountCard(entry) {
         const card = createCard(entry);
         entry.card = card;
@@ -378,6 +457,86 @@
           commentRail.classList.remove('hidden');
         }
         return card;
+      }
+
+      function clearTermHideTimer() {
+        if (termHideTimer) {
+          clearTimeout(termHideTimer);
+          termHideTimer = null;
+        }
+      }
+
+      function hideTermCard(delay = TERM_HIDE_DELAY) {
+        clearTermHideTimer();
+        termHideTimer = setTimeout(hideTermCardImmediate, delay);
+      }
+
+      function hideTermCardImmediate() {
+        clearTermHideTimer();
+        if (activeTermId) {
+          const activeEntry = termState.get(activeTermId);
+          if (activeEntry?.card) {
+            activeEntry.card.remove();
+            activeEntry.card = null;
+          }
+        }
+        activeTermId = null;
+        mobileTermOpen = false;
+        if (primaryAnnotationPanel) {
+          primaryAnnotationPanel.innerHTML = '';
+          primaryAnnotationPanel.style.minHeight = '';
+        }
+        const mobile = document.getElementById('annotation-panel-mobile');
+        if (mobile) mobile.innerHTML = '';
+        if (annotationRail) annotationRail.classList.add('hidden');
+      }
+
+      function positionActiveTermCard() {
+        const entry = activeTermId ? termState.get(activeTermId) : null;
+        if (!entry || !entry.card || !isDesktopLayout() || !primaryAnnotationPanel) return;
+
+        entry.card.style.position = 'absolute';
+        entry.card.style.left = '0';
+        entry.card.style.right = '0';
+        entry.card.style.top = '0px';
+
+        const panelRect = primaryAnnotationPanel.getBoundingClientRect();
+        const cardRect = entry.card.getBoundingClientRect();
+        primaryAnnotationPanel.style.minHeight = (cardRect.bottom - panelRect.top + MIN_CARD_GAP) + 'px';
+      }
+
+      function bindTermCardHover(card) {
+        card.addEventListener('mouseenter', clearTermHideTimer);
+        card.addEventListener('mouseleave', () => hideTermCard());
+      }
+
+      function showTermCard(entry) {
+        if (!primaryAnnotationPanel) return;
+        clearTermHideTimer();
+        hideTermCardImmediate();
+        activeTermId = entry.id;
+
+        const card = createTermCard(entry);
+        entry.card = card;
+        bindTermCardHover(card);
+
+        if (isDesktopLayout()) {
+          primaryAnnotationPanel.appendChild(card);
+          if (annotationRail) annotationRail.classList.remove('hidden');
+          positionActiveTermCard();
+        } else {
+          mobileTermOpen = true;
+          card.classList.add('annotation-card--mobile-fixed');
+          document.body.appendChild(card);
+        }
+      }
+
+      function toggleTermCardMobile(entry) {
+        if (activeTermId === entry.id && mobileTermOpen) {
+          hideTermCardImmediate();
+        } else {
+          showTermCard(entry);
+        }
       }
 
       function syncMobilePanel() {
@@ -392,6 +551,34 @@
 
       function sortedEntries() {
         return Array.from(state.values()).sort((a, b) => a.targetY - b.targetY || a.createdAt.localeCompare(b.createdAt));
+      }
+
+      function bindTermMark(mark, entry) {
+        mark.setAttribute('tabindex', '0');
+        mark.setAttribute('role', 'button');
+        mark.setAttribute('aria-label', '専門用語: ' + entry.term);
+        mark.addEventListener('mouseenter', () => {
+          if (isDesktopLayout()) showTermCard(entry);
+        });
+        mark.addEventListener('mouseleave', () => {
+          if (isDesktopLayout()) hideTermCard();
+        });
+        mark.addEventListener('click', (e) => {
+          if (!isDesktopLayout()) {
+            e.preventDefault();
+            toggleTermCardMobile(entry);
+          }
+        });
+        mark.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (isDesktopLayout()) {
+              showTermCard(entry);
+            } else {
+              toggleTermCardMobile(entry);
+            }
+          }
+        });
       }
 
       function focusCard(id) {
@@ -422,7 +609,7 @@
         state.set(id, entry);
         mountCard(entry);
         persist();
-        layoutCardsAndLines();
+        layoutAll();
       }
 
       function updateComment(id, comment) {
@@ -434,7 +621,7 @@
         }
         persist();
         syncMobilePanel();
-        layoutCardsAndLines();
+        layoutAll();
       }
 
       function removeComment(id) {
@@ -451,7 +638,7 @@
         state.delete(id);
         persist();
         syncMobilePanel();
-        layoutCardsAndLines();
+        layoutAll();
       }
 
       function persist() {
@@ -501,12 +688,58 @@
           state.set(item.id, entry);
           mountCard(entry);
         }
-        layoutCardsAndLines();
+        layoutAll();
       }
 
-      function layoutCardsAndLines() {
-        const entries = sortedEntries();
-        const panelRect = primaryPanel.getBoundingClientRect();
+      function loadTermAnnotations() {
+        const scriptEl = document.getElementById('term-annotations');
+        if (!scriptEl || !primaryAnnotationPanel) return;
+
+        let items;
+        try {
+          items = JSON.parse(scriptEl.textContent);
+          if (!Array.isArray(items)) return;
+        } catch {
+          return;
+        }
+
+        for (const item of items) {
+          if (!item || !item.id) continue;
+          const marks = contentRoot.querySelectorAll('[data-term-id="' + item.id + '"]');
+          if (!marks.length) continue;
+          const entry = {
+            id: item.id,
+            term: item.term || item.id,
+            definition: item.definition || '',
+            mark: marks[0],
+            card: null
+          };
+          termState.set(item.id, entry);
+          for (const mark of marks) {
+            bindTermMark(mark, entry);
+          }
+        }
+      }
+
+      function isDesktopLayout() {
+        return window.matchMedia('(min-width: 1024px)').matches;
+      }
+
+      function layoutPanel(entries, panel) {
+        if (!panel) return;
+        if (!isDesktopLayout()) {
+          panel.style.minHeight = '';
+          for (const entry of entries) {
+            if (entry.card) {
+              entry.card.style.position = '';
+              entry.card.style.top = '';
+              entry.card.style.left = '';
+              entry.card.style.right = '';
+            }
+          }
+          return;
+        }
+        const panelRect = panel.getBoundingClientRect();
         let prevBottom = -Infinity;
 
         for (const entry of entries) {
@@ -525,28 +758,39 @@
           prevBottom = cardRect.bottom - panelRect.top;
         }
 
-        primaryPanel.style.position = 'relative';
-        primaryPanel.style.minHeight = prevBottom > 0 ? (prevBottom + MIN_CARD_GAP) + 'px' : '';
-
-        drawLines(entries);
+        panel.style.position = 'relative';
+        panel.style.minHeight = prevBottom > 0 ? (prevBottom + MIN_CARD_GAP) + 'px' : '';
       }
 
-      function drawLines(entries) {
+      function drawLine(entry) {
+        if (!entry.mark || !entry.card) return;
+        const from = entry.mark.getBoundingClientRect();
+        const to = entry.card.getBoundingClientRect();
+        const x1 = from.right;
+        const x2 = to.left;
+        const y1 = from.top + from.height / 2;
+        const y2 = to.top + to.height / 2;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('class', 'connector-line-comment');
+        line.setAttribute('data-connector', 'comment');
+        connectorLines.appendChild(line);
+      }
+
+      function layoutAll() {
+        layoutPanel(sortedEntries(), primaryPanel);
+        positionActiveTermCard();
+        drawAllLines();
+      }
+
+      function drawAllLines() {
         connectorLines.innerHTML = '';
-        for (const entry of entries) {
-          if (!entry.mark || !entry.card) continue;
-          const from = entry.mark.getBoundingClientRect();
-          const to = entry.card.getBoundingClientRect();
-          const x1 = from.right;
-          const y1 = from.top + from.height / 2;
-          const x2 = to.left;
-          const y2 = to.top + to.height / 2;
-          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          line.setAttribute('x1', x1);
-          line.setAttribute('y1', y1);
-          line.setAttribute('x2', x2);
-          line.setAttribute('y2', y2);
-          connectorLines.appendChild(line);
+        if (!isDesktopLayout()) return;
+        for (const entry of sortedEntries()) {
+          drawLine(entry);
         }
       }
 
@@ -586,6 +830,10 @@
 
       function copyOne(entry) {
         copyText(formatCopy(entry));
+      }
+
+      function copyTerm(entry) {
+        copyText(entry.term + ': ' + entry.definition);
       }
 
       function copyAll() {
@@ -666,6 +914,17 @@
 
       copyAllBtn.addEventListener('click', copyAll);
 
+      document.addEventListener('click', (e) => {
+        if (!mobileTermOpen || isDesktopLayout()) return;
+        const target = e.target;
+        if (target instanceof Element && (target.closest('[data-term-id]') || target.closest('.annotation-card'))) return;
+        hideTermCardImmediate();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && activeTermId) hideTermCardImmediate();
+      });
+
       let raf = null;
       function scheduleLayout() {
         if (raf) cancelAnimationFrame(raf);
@@ -676,13 +935,14 @@
               entry.targetY = rect.top + window.scrollY;
             }
           }
-          layoutCardsAndLines();
+          layoutAll();
         });
       }
 
       window.addEventListener('scroll', scheduleLayout, { passive: true });
       window.addEventListener('resize', scheduleLayout);
 
+      loadTermAnnotations();
       loadPersisted();
     })();
   </script>

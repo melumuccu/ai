@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "PR #482 の変更内容を、レビュアー向けに1ファイルHTMLで説明して。認証まわりの変更が一番リスクが高いので先に書いて、あとでUI文言変更をまとめて。テキスト選択してコメントを付けられる形式にして、R2にそのまま置けるやつで。",
-      "expected_output": "ビルド不要の単一HTMLが出力される。PR説明はリスク順（認証→UI）で構成され、Tailwind CDNとコメントコア（選択ハイライト・右カード・SVG線・localStorage）が含まれる。diffが必要ならdiff2html、フローが必要ならMermaidのみが追加される。",
+      "expected_output": "ビルド不要の単一HTMLが出力される。PR説明はリスク順（認証→UI）で構成され、Tailwind CDNとコメントコア（選択ハイライト・右カード・SVG線・localStorage）が含まれる。専門用語があれば左注釈を付ける（PRレビューでは任意推奨）。diffが必要ならdiff2html、フローが必要ならMermaidのみが追加される。",
       "files": [],
       "expectations": [
         "Output is a complete single-file HTML document with DOCTYPE and html root",
@@ -15,13 +15,14 @@
         "Includes #copy-all-btn for bulk comment copy",
         "Uses localStorage key pattern comments_${location.pathname}",
         "Presents authentication changes before UI copy changes (risk-first order)",
-        "Includes diff2html for code diff visualization when reviewing PR changes"
+        "Includes diff2html for code diff visualization when reviewing PR changes",
+        "When specialized terms appear, may include [data-annotation-panel] with mark[data-term-id] and static term definitions (recommended for PR review, not required)"
       ]
     },
     {
       "id": 2,
       "prompt": "新入社員向けに、問い合わせ対応の業務フローをインタラクティブな1ページHTMLにまとめて。全体像はマインドマップかフロー図で、各ステップに補足コメントを付けられるようにして。",
-      "expected_output": "業務フローパターンに沿った単一HTML。MarkmapまたはMermaidで全体像を示し、本文は短い段落でステップ説明、コメントコア契約を満たす。Alpine.jsはタブ等が必要な場合のみ。",
+      "expected_output": "業務フローパターンに沿った単一HTML。MarkmapまたはMermaidで全体像を示し、本文は短い段落でステップ説明、コメントコア契約を満たす。業務用語は左注釈で解説する（必須寄り）。Alpine.jsはタブ等が必要な場合のみ。",
       "files": [],
       "expectations": [
         "Output is a complete single-file HTML document with DOCTYPE and html root",
@@ -32,13 +33,18 @@
         "Includes #copy-all-btn for bulk comment copy",
         "Uses localStorage key pattern comments_${location.pathname}",
         "Includes Mermaid or Markmap diagram for workflow overview",
-        "Includes step-by-step inquiry handling content"
+        "Includes step-by-step inquiry handling content",
+        "Includes [data-annotation-panel] for author-defined term definitions",
+        "Marks first occurrence of specialized terms with mark[data-term-id]",
+        "Stores term definitions as static HTML data (e.g. #term-annotations JSON), not localStorage",
+        "Shows one left annotation card on hover or tap over mark[data-term-id] (not always-visible cards)",
+        "Does not duplicate long inline parenthetical definitions when left annotations are present"
       ]
     },
     {
       "id": 3,
       "prompt": "我が家の猫の食事管理ルールを、家族共有用の説明ページHTMLにして。コードは関係ない。表でフード種類と量を書いて、気になるところにメモを付けられるようにして。",
-      "expected_output": "非コーディング汎用パターンの単一HTML。Tailwindのみが基本で、表と見出し構成、コメントコア付き。Workerやnpmビルドは含まれない。",
+      "expected_output": "非コーディング汎用パターンの単一HTML。Tailwindのみが基本で、表と見出し構成、コメントコア付き。Workerやnpmビルドは含まれない。専門用語がなければ左注釈は不要。",
       "files": [],
       "expectations": [
         "Output is a complete single-file HTML document with DOCTYPE and html root",
@@ -49,7 +55,29 @@
         "Includes #copy-all-btn for bulk comment copy",
         "Uses localStorage key pattern comments_${location.pathname}",
         "Includes HTML table for food types and quantities",
-        "Includes cat meal management content"
+        "Includes cat meal management content",
+        "Does not require [data-annotation-panel] when document uses no specialized terms"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "新機能の実装方針をプランニング用HTMLにまとめて。CQRSやイベントソーシングなど専門用語が出てくるので、読者が用語を左側で確認できるようにして。テキスト選択コメントも付けられる形式で。",
+      "expected_output": "非コーディング/プランニングパターンの単一HTML。専門用語の初出をmark[data-term-id]でマークし、ホバー／タップ時に左[data-annotation-panel]へ解説カード1枚を表示。右コメントコアも維持。括弧内の長い説明と左注釈の二重記載は禁止。",
+      "files": [],
+      "expectations": [
+        "Output is a complete single-file HTML document with DOCTYPE and html root",
+        "No npm/webpack/vite build dependency (CDN-only scripts acceptable)",
+        "Includes [data-content-root] for comment selection anchor",
+        "Includes [data-comment-panel] for comment cards",
+        "Includes #connector-svg with #connector-lines group",
+        "Includes #copy-all-btn for bulk comment copy",
+        "Uses localStorage key pattern comments_${location.pathname}",
+        "Includes [data-annotation-panel] for author-defined term definitions",
+        "Marks first occurrence of specialized terms (e.g. CQRS, event sourcing) with mark[data-term-id]",
+        "Stores term definitions as static HTML data (e.g. #term-annotations JSON), not localStorage",
+        "Shows one left annotation card on hover or tap over mark[data-term-id] (not always-visible cards)",
+        "Does not duplicate long inline parenthetical definitions when left annotations are present",
+        "Preserves right-side user comment functionality alongside left term annotations"
       ]
     }
   ]
