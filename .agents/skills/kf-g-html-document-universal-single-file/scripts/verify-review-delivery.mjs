@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 const R2_BASE = 'https://ai-html.hacksaw.work/';
 const MAX_INLINE_IMAGE_BYTES = 2 * 1024 * 1024;
 const MAX_INLINE_TOTAL_BYTES = 5 * 1024 * 1024;
-const SOURCE_CHECK_TIMEOUT_MS = 10_000;
+const SOURCE_CHECK_TIMEOUT_MS = 3_000;
 
 function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`;
