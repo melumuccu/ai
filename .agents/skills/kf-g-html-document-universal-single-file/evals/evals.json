@@ -82,7 +82,24 @@
         "Hides term cards when their marks scroll out of the viewport",
         "Does not duplicate long inline parenthetical definitions when left annotations are present",
         "Preserves right-side user comment functionality alongside left term annotations",
-        "Decorates mark[data-term-id] with highlight styling only (no badge, pill, or inline term label on body term marks)"
+        "Decorates mark[data-term-id] with highlight styling only (no badge, pill, or inline term label on body term marks)",
+        "When citing external documentation as evidence, wraps source claims in verified http(s) anchor links within [data-content-root] per source-citations.md (fragment URLs preferred)"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "REST API のレート制限方針を調査結果付きのプランニングHTMLにまとめて。MDN や OpenAPI 仕様を根拠に書くので、該当見出しへの fragment 付きリンクにして、到達性も確認してから載せて。",
+      "expected_output": "非コーディング/プランニングパターンの単一HTML。外部資料を根拠にした主張を [data-content-root] 内の <a href> でリンク化。fragment 優先、到達性検証済み URL のみ使用。左注釈と出典リンクを混同しない。",
+      "files": [],
+      "expectations": [
+        "Output is a complete single-file HTML document with DOCTYPE and html root",
+        "No npm/webpack/vite build dependency (CDN-only scripts acceptable)",
+        "Includes [data-content-root] for comment selection anchor",
+        "Wraps external source claims in http(s) anchor links within [data-content-root]",
+        "Prefers fragment URLs (#heading) for cited documentation sections when available",
+        "Uses only reachability-verified URLs (no 404 or unreachable links in source anchors)",
+        "Does not append long parenthetical URLs after anchor links",
+        "Does not confuse source anchor links with mark[data-term-id] left annotations"
       ]
     }
   ]
