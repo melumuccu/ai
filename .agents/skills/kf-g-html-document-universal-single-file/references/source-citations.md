@@ -29,12 +29,7 @@
 
 ### リンク識別の維持
 
-1. 下線と本文と異なるリンク色を維持する（ブラウザ UA 既定に近い識別手段でよい）
-1. `:visited` も未訪問と区別できる色にする
-1. Tailwind preflight や `text-base-content` 等で UA 相当の装飾が消える場合は、テンプレートの復元 CSS を残すか同等の CSS を入れる
-1. daisyUI の `link` / `link-primary` を使ってもよいが、必須ではない
-1. `text-decoration: none` のみ、本文同色の上書き、`no-underline` など、リンク識別手段を消す指定は付けない
-1. コメント用 `mark[data-comment-id]` や用語 `mark[data-term-id]` の下線・背景ルールと混同した指定は `<a>` 専用ルールとする
+`[data-content-root] a[href]` のリンク装飾 CSS は `assets/universal-single-file-template.html` を正本とする。コメント用 `mark[data-comment-id]` や用語 `mark[data-term-id]` とは `<a>` 専用ルールで区別する。
 
 ## fragment 優先
 

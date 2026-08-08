@@ -4,13 +4,16 @@
 
 ## レイアウト（3 列）
 
+3 列 flex の具体マークアップは `#layout-root` を含む `assets/universal-single-file-template.html` を正本とする。
+
+**契約上必須の識別子:**
+
 | 列 | 要素 | 役割 |
 | --- | --- | --- |
 | 左 | `#annotation-rail` / `[data-annotation-panel]` | 著者定義の専門用語解説カード |
 | 中央 | `[data-content-root]` | 本文・選択・オフセット計算の基準 |
 | 右 | `#comment-rail` / `[data-comment-panel]` | 閲覧者のユーザーコメントカード |
 
-- ルートコンテナ: `#layout-root`（3 列 flex、幅は `max-w-screen-2xl` 等）
 - モバイル（lg 未満）: 左注釈（`#annotation-panel-mobile`）→ 本文 → 右コメント（`#comment-panel-mobile`）の縦積み
 - コネクタ SVG（`#connector-svg` / `#connector-lines`）は **右コメント専用**（**左注釈 UI:** panel カード表示）
 
@@ -41,21 +44,14 @@
 
 ### データモデル
 
-`#term-annotations` 内 JSON 配列（著者が HTML 生成時に埋め込む）:
+`#term-annotations` 内 JSON 配列（著者が HTML 生成時に埋め込む）。具体例は template の `#term-annotations` を正本とする。
 
-```json
-[
-  {
-    "id": "icp",
-    "term": "ICP",
-    "definition": "Ideal Customer Profile。最も価値を感じ、継続利用・紹介しやすい理想顧客像。"
-  }
-]
-```
+**必須キー:**
 
 - `id`: 本文 `mark[data-term-id]` と対応する安定 ID
 - `term`: カード見出しに表示する用語名
 - `definition`: カード本文に表示する解説
+
 - バックエンド同期・閲覧者による CRUD はスコープ外
 
 ### ライフサイクル
@@ -168,8 +164,8 @@
 1. `targetY` 昇順（同値は `createdAt`）でソートする
 1. 先頭カードから順に配置する
    - 希望位置 = ハイライトの `getBoundingClientRect().top` をパネル基準に変換した値
-   - 実際の top = `max(希望位置, 前カードの bottom + 12px)`（いずれもパネル相対座標）
-1. 最小ギャップ **12px** を維持する
+   - 実際の top = `max(希望位置, 前カードの bottom + MIN_CARD_GAP)`（いずれもパネル相対座標）
+1. 最小ギャップ **12px**（template 内 `MIN_CARD_GAP = 12` を正本）を維持する
 1. SVG 線は **実際に配置されたカード位置** の中心へ向ける
 
 スクロール・リサイズ時は `requestAnimationFrame` で右コメント位置を再計算する。左注釈は `IntersectionObserver` と再描画で可視集合を更新する。
@@ -192,44 +188,16 @@
 
 ## コピー形式（右コメント）
 
-コピー用 Markdown ヘッダー（個別・全件共通で先頭 1 回）:
+具体実装は template のコピー関数を正本とする。
 
-```text
-# [HTML_FILE_NAME.html](HTML_FILE_URL) へのコメント
-```
+**契約:**
 
-- `HTML_FILE_NAME`: 現在ページ URL の最終パスセグメント（`decodeURIComponent`、失敗時 `document.html`）
-- `HTML_FILE_URL`: クエリ・ハッシュを除いた現在の HTML URL
-- ホスト名や版番号（v3/v4 等）をハードコードしない
-
-個別（`data-action="copy"`）:
-
-```text
-# [example.html](https://example.com/path/example.html) へのコメント
-
-> 引用テキスト
-
-コメント本文
-```
-
-全件（`#copy-all-btn`）:
-
-```text
-# [example.html](https://example.com/path/example.html) へのコメント
-
-> quote1
-
-comment1
-
----
-
-> quote2
-
-comment2
-```
-
-- 全件コピーではヘッダーを **先頭 1 回のみ** 付与する（各コメントブロック内では繰り返さない）
-- コメント間の区切りは `\n\n---\n\n` を厳密に使う
+- ヘッダー（個別・全件共通で先頭 1 回）: `# [HTML_FILE_NAME.html](HTML_FILE_URL) へのコメント`
+  - `HTML_FILE_NAME`: 現在ページ URL の最終パスセグメント（`decodeURIComponent`、失敗時 `document.html`）
+  - `HTML_FILE_URL`: クエリ・ハッシュを除いた現在の HTML URL
+  - ホスト名や版番号（v3/v4 等）をハードコードしない
+- 個別: ヘッダー + `> quote` + コメント本文
+- 全件: ヘッダー 1 回 + 各コメントを `\n\n---\n\n` で区切る
 - クリップボード API 失敗時は hidden textarea + `execCommand('copy')` にフォールバック
 - `#copy-feedback` を 1.5 秒表示する
 
@@ -255,17 +223,7 @@ comment2
 
 ## Mermaid テキスト選択
 
-Mermaid を使う場合、次の CSS を必ず含める:
-
-```css
-.mermaid svg text,
-.mermaid svg tspan {
-  user-select: text;
-  -webkit-user-select: text;
-  cursor: text;
-  pointer-events: auto;
-}
-```
+Mermaid を使う場合、template の Mermaid `user-select` CSS を正本とする。
 
 ## 失敗時の扱い
 
