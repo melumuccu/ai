@@ -28,4 +28,4 @@ description: 'Use this skill whenever the user asks for advice, review, critique
 1. Blocking / Non-blocking / Open questions を分類している
 1. 称賛や同意を既定の冒頭に置いていない
 1. 敵対対象は提案・成果物であり、人への敵意がない
-1. 各指摘に対処策・選択肢があり、推奨があればバッジで示している
+1. 各指摘に対処策がある。実質的分岐があれば選択肢を列挙し、推奨は行末 `(推奨)`（HTML はバッジ）。ほぼ1択なら採用・反映済みを伝えている

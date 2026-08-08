@@ -23,7 +23,7 @@
 - **`genshijin-review` の出力形式契約を上書きしない**
   - PR コメント形式など特定形式が求められたら、形式 skill に従う
   - 評価姿勢（前提への疑い、失敗モードの表面化、安易承認の拒否）は本 skill に従う
-- HTML 出力時の推奨バッジは `kf-g-html-document-universal-single-file` の badge 規約に従う。`genshijin-review` 等の形式 skill がある場合は見出し順を壊さず、指摘配下に選択肢をネストする
+- チャット（Markdown）の推奨は行末 `(推奨)`。HTML 出力時の推奨バッジは `kf-g-html-document-universal-single-file` の badge 規約に従う。`genshijin-review` 等の形式 skill がある場合は見出し順を壊さず、指摘配下に対処策または選択肢をネストする
 
 ## two-stage との概念差
 
