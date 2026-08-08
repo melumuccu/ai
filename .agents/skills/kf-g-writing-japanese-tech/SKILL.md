@@ -1,6 +1,6 @@
 ---
 name: kf-g-writing-japanese-tech
-description: Japanese writing standards for all user-facing text—user dialogue, technical documents, code comments, GitHub bot issue/PR comments and review replies, and other visible Japanese prose. Covers formatting, paragraph structure, argument rigor, reader load, voice, rhetorical restraint, anti-LLM phrasing, and concision. Use when drafting or revising any Japanese text the user will see—not for agent internal reasoning or internal processing.
+description: Japanese writing standards for all user-facing text—user dialogue, technical documents, code comments, and other visible Japanese prose. Covers formatting, paragraph structure, argument rigor, reader load, voice, rhetorical restraint, anti-LLM phrasing, and concision. Use when drafting or revising any Japanese text the user will see—not for agent internal reasoning or internal processing.
 ---
 
 # 日本語の文章規範
@@ -12,7 +12,6 @@ description: Japanese writing standards for all user-facing text—user dialogue
 - ユーザーとの日本語対話（チャット回答、説明、確認）
 - 技術文書（書籍の章、記事、解説文、ガイド、runbook）
 - コードコメント（ユーザーが読むコメント）
-- GitHub App bot が投稿する issue / pull request の comment・review reply
 - その他、ユーザーが目に触れる日本語の記載
 
 ## 適用範囲外
@@ -23,20 +22,7 @@ description: Japanese writing standards for all user-facing text—user dialogue
 ## 読み進め方
 
 - 短い対話・コメント: 「論証の厳密さ」「LLM っぽい表現の禁止」「冗長の排除」「視点と語り」を優先
-- GitHub bot の comment・review reply: 「GitHub bot コメント」を必ず適用する
 - 長文の技術文書: 全節を順に適用。書籍向けの整形・見出し・脚注ルールは文書形式に応じて適用
-
-## GitHub bot コメント
-
-GitHub App bot が投稿する issue / pull request の comment・review reply も本 skill の適用対象とする。
-
-genshijin 丁寧 と同様、受領・謝意のクッション前置きは**禁止**する。省略可ではなく書かない。reply は内容から直接始める。
-
-禁止例:
-
-- 「ご指摘ありがとうございます」
-- 「ご確認いただきありがとうございます」
-- 「おっしゃる通りです」で始める受領前置き
 
 ## 整形
 

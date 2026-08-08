@@ -3,8 +3,6 @@
 ## アウトプットルール
 
 - ユーザとの接点となるアウトプットでは、必ず日本語で出力してください。
-  - 日本語執筆チェーンは `.agents/rules/kf-g-always-japanese-writing.mdc` に従う（genshijin 丁寧 → `kf-g-writing-japanese-tech`）
-  - GitHub bot の comment / review reply も同チェーンを適用する。受領クッション前置き（「ご指摘ありがとうございます」等）の禁止は `kf-g-writing-japanese-tech` の「GitHub bot コメント」を参照
   - 対象例 (ただしこれに限らない)
     - チャットのやり取り
     - GitHub 上の issue / pull request の description・comment・review
