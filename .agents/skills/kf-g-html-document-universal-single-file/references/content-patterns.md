@@ -78,6 +78,35 @@
 
 色だけに頼らない。badge テキスト、見出し、枠線、必要に応じてアイコンまたは太字を併用する。
 
+### タイポグラフィ
+
+`[data-content-root]` 内の本文・補足・強調は、次の 3 値スケールのみ使う。
+
+| 用途 | サイズ | Tailwind クラス |
+| --- | --- | --- |
+| 本文（基本） | `1rem` | `text-base`（省略可。親に `leading-relaxed` 等を付けてよい） |
+| 補足説明 | `0.85rem` | `text-[0.85rem]` |
+| 強調本文 | `1.15rem` | `text-[1.15rem]` |
+
+- 本文・補足・強調用途で上記以外の `font-size` を使わない
+- `text-sm`（0.875rem）・`text-lg`（1.125rem）を本文サイズ用途に使わない
+- 見出し（`h1`→`h2`→`h3`）は階層を飛ばさない。見出し専用サイズ（例: `text-xl` on `h2`）は 3 値スケール外でもよいが、**本文用途に流用しない**
+- ページ chrome（navbar・レール見出し・dialog ラベル・コメントカード UI）や `badge` 内ラベルは UI 用途として例外可
+
+### 色彩・コントラスト
+
+白または薄い背景（`bg-base-100` / `bg-base-200` / 薄色 card 背景等）上では、可読性が落ちる文字色・表現を禁止する。
+
+| 禁止例 | 理由 |
+| --- | --- |
+| 黄色・薄黄・ライム系の**文字色** | 背景とのコントラスト不足 |
+| 薄いグレー文字（例: `text-base-content/60` 以下の opacity 単独、`text-gray-300` 等） | 本文・補足の可読性低下 |
+| 色だけで状態・リスクを伝える | [情報エンコード（色非依存）](#情報エンコード色非依存) と両立不可 |
+
+- 状態表現は badge + 薄背景 + 枠線 + テキストラベル（既存ルールと両立）
+- **例外**: コメント選択ハイライトの黄色**背景**（`mark[data-comment-id]`）は禁止対象外。文字色は暗色（`text-base-content` 等）を維持する
+- daisyUI `alert-warning` / `bg-warning/10` 等（暗文字 + 警告背景）は可
+
 ### 専門用語・左注釈
 
 #### 専門用語の定義
@@ -157,7 +186,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
       <span class="badge badge-primary badge-outline">概要</span>
       <h2 class="card-title text-lg">変更の目的</h2>
     </div>
-    <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+    <ul class="mt-2 list-disc space-y-1 pl-5">
       <li>要点1</li>
       <li>要点2</li>
     </ul>
@@ -174,21 +203,21 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
       <div class="card-body gap-2 py-3">
         <span class="badge badge-error w-fit">高リスク</span>
         <h3 class="font-semibold">認証・課金</h3>
-        <p class="text-sm">変更点と確認方法</p>
+        <p>変更点と確認方法</p>
       </div>
     </div>
     <div class="card border border-warning/40 bg-warning/10 shadow-sm">
       <div class="card-body gap-2 py-3">
         <span class="badge badge-warning w-fit">中リスク</span>
         <h3 class="font-semibold">API 契約</h3>
-        <p class="text-sm">変更点と確認方法</p>
+        <p>変更点と確認方法</p>
       </div>
     </div>
     <div class="card border border-success/40 bg-success/10 shadow-sm">
       <div class="card-body gap-2 py-3">
         <span class="badge badge-success w-fit">低リスク</span>
         <h3 class="font-semibold">文言・スタイル</h3>
-        <p class="text-sm">変更点と確認方法</p>
+        <p>変更点と確認方法</p>
       </div>
     </div>
   </div>
@@ -200,7 +229,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
   <div class="collapse collapse-arrow bg-base-100 border border-base-300">
     <input type="checkbox" />
     <div class="collapse-title font-medium">グループ名（要約1行）</div>
-    <div class="collapse-content text-sm">
+    <div class="collapse-content">
       <p>詳細・根拠。上段の表/図と重複しない。</p>
     </div>
   </div>
@@ -283,6 +312,8 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. インフラ操作を含む依頼で「手動インフラ操作記録」パターンを満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離したか）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
 1. 積み順・論理分離・二重記載禁止・色非依存エンコードを満たしたか
+1. 本文・補足・強調が 3 値タイポグラフィスケール（`text-base` / `text-[0.85rem]` / `text-[1.15rem]`）に従い、`text-sm` / `text-lg` を本文用途に使っていないか
+1. 薄背景上で薄いグレー文字・黄色文字等、低コントラスト表現を使っていないか（`mark[data-comment-id]` の黄色背景は例外）
 1. 表・図・steps と同内容の段落がないか
 1. 専門用語の初出が `mark[data-term-id]` でマークされ、左注釈（`[data-annotation-panel]` / `#term-annotations`）と対応しているか（パターン別必須度を満たすこと）
 1. 括弧内の長い説明と左注釈が重複していないか

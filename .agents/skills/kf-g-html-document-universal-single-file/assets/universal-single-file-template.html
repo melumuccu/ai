@@ -117,7 +117,7 @@
         <div id="annotation-panel-mobile" class="space-y-3" data-annotation-panel></div>
       </div>
 
-      <p class="mb-6 text-base-content/70">
+      <p class="mb-6">
         本文を選択すると、右側（狭い画面では下）にコメントカードが追加されます。再読み込み後も同じ URL 上で復元されます。
         左側（狭い画面では本文上）には、viewport 内に見えている専門用語の解説カードが文書順に積み上がります（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）。スクロールで見えなくなった用語のカードは非表示になります。
       </p>
@@ -129,7 +129,7 @@
             <span class="badge badge-primary badge-outline">概要</span>
             <h2 class="card-title text-lg">ドキュメントの目的</h2>
           </div>
-          <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+          <ul class="mt-2 list-disc space-y-1 pl-5">
             <li>ビルド不要の単一 HTML で説明ページを作る。</li>
             <li>daisyUI v5 + Tailwind browser CDN でスタイルする。</li>
             <li>コメントコアは vanilla JS のみで動作する。</li>
@@ -138,7 +138,7 @@
         </div>
       </section>
 
-      <p class="mb-4 text-sm text-base-content/70">
+      <p class="mb-4 text-[0.85rem]">
         要約の次は、比較なら <code class="text-xs">table</code>、手順なら <code class="text-xs">steps</code> や Mermaid で構造化する。表・図に載せた事実は段落で繰り返さない。
       </p>
 
@@ -152,7 +152,7 @@
         </ol>
       </section>
 
-      <p class="mb-4 text-sm text-base-content/70">
+      <p class="mb-4 text-[0.85rem]">
         表・steps で拾い切れない補足は、1段落1論点の短い段落にまとめる。
       </p>
 
@@ -166,27 +166,27 @@
             <div class="card-body gap-2 py-3">
               <span class="badge badge-error w-fit">高リスク</span>
               <h3 class="font-semibold">破壊的変更</h3>
-              <p class="text-sm">データ移行・認証・課金への影響。確認手順を明記する。</p>
+              <p>データ移行・認証・課金への影響。確認手順を明記する。</p>
             </div>
           </div>
           <div class="card border border-warning/40 bg-warning/10 shadow-sm">
             <div class="card-body gap-2 py-3">
               <span class="badge badge-warning w-fit">中リスク</span>
               <h3 class="font-semibold">互換性</h3>
-              <p class="text-sm">API 契約変更・表示崩れの可能性。回帰確認が必要。</p>
+              <p>API 契約変更・表示崩れの可能性。回帰確認が必要。</p>
             </div>
           </div>
           <div class="card border border-success/40 bg-success/10 shadow-sm">
             <div class="card-body gap-2 py-3">
               <span class="badge badge-success w-fit">低リスク</span>
               <h3 class="font-semibold">軽微な変更</h3>
-              <p class="text-sm">文言・スタイル・ドキュメント追記。</p>
+              <p>文言・スタイル・ドキュメント追記。</p>
             </div>
           </div>
         </div>
       </section>
 
-      <p class="mb-4 text-sm text-base-content/70">
+      <p class="mb-4 text-[0.85rem]">
         根拠・手順全文・参考資料などの詳細は、最後に <code class="text-xs">collapse</code> へ置く。
       </p>
 
@@ -196,7 +196,7 @@
         <div class="collapse collapse-arrow bg-base-100 border border-base-300">
           <input type="checkbox" />
           <div class="collapse-title font-medium">Mermaid 図の追加方法</div>
-          <div class="collapse-content text-sm">
+          <div class="collapse-content">
             <p>フローが複雑な場合のみ Mermaid を読み込み、次の pre を class="mermaid" に差し替える。SVG 内テキストも選択可能。</p>
           </div>
         </div>
