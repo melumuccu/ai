@@ -6,6 +6,7 @@ import { resolve } from 'node:path';
 const R2_BASE = 'https://ai-html.hacksaw.work/';
 const MAX_INLINE_IMAGE_BYTES = 2 * 1024 * 1024;
 const MAX_INLINE_TOTAL_BYTES = 5 * 1024 * 1024;
+const SOURCE_CHECK_TIMEOUT_MS = 10_000;
 
 function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`;
@@ -44,11 +45,18 @@ const SCREENSHOT_TARGET_PATTERN = /^[a-zA-Z0-9_-]+$/;
 
 function usage() {
   console.error(
-    'usage: node scripts/verify-review-delivery.mjs <html-file> [--frontend] [--r2-required] [--html-object-key KEY] [--screenshot-target TARGET] [--public-url URL] [--pr-body-file FILE]'
+    'usage: node scripts/verify-review-delivery.mjs <html-file> [--frontend] [--r2-required] [--html-object-key KEY] [--screenshot-target TARGET] [--public-url URL] [--pr-body-file FILE] [--check-sources]'
+  );
+  console.error(
+    '  --check-sources  Verify http(s) source links in [data-content-root] are reachable (HEAD, GET fallback). Default off.'
   );
 }
 
 function parseArgs(argv) {
+  if (argv.includes('--help') || argv.includes('-h')) {
+    return { help: true };
+  }
+
   const positional = [];
   const options = {
     frontend: false,
@@ -57,12 +65,15 @@ function parseArgs(argv) {
     screenshotTarget: null,
     publicUrl: null,
     prBodyFile: null,
+    checkSources: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--frontend') {
       options.frontend = true;
+    } else if (arg === '--check-sources') {
+      options.checkSources = true;
     } else if (arg === '--r2-required') {
       options.r2Required = true;
     } else if (arg === '--html-object-key') {
@@ -394,7 +405,141 @@ function validatePrBody(body, publicUrl, run) {
   run.check(`PR body: [${versionLabel}](${publicUrl}) link`, linkPattern.test(body));
 }
 
-function main() {
+function extractContentRootInnerHtml(html) {
+  const openRe = /<([a-zA-Z][\w:-]*)[^>]*\bdata-content-root\b[^>]*>/i;
+  const openMatch = html.match(openRe);
+  if (!openMatch) return null;
+
+  const tagName = openMatch[1].toLowerCase();
+  const openEnd = openMatch.index + openMatch[0].length;
+  const tagRe = new RegExp(`<\\/?${tagName}\\b[^>]*>`, 'gi');
+  tagRe.lastIndex = openMatch.index;
+  let depth = 0;
+  let match;
+
+  while ((match = tagRe.exec(html)) !== null) {
+    const isClose = /^<\//.test(match[0]);
+    if (match.index === openMatch.index) {
+      depth = 1;
+      continue;
+    }
+    depth += isClose ? -1 : 1;
+    if (depth === 0) {
+      return html.slice(openEnd, match.index);
+    }
+  }
+
+  return null;
+}
+
+function extractExternalLinksFromContentRoot(html) {
+  const inner = extractContentRootInnerHtml(html);
+  if (inner == null) return { inner: null, links: [] };
+
+  const links = [];
+  const linkRe = /<a\b[^>]*\bhref=["'](https?:\/\/[^"']+)["'][^>]*>/gi;
+  let match;
+  while ((match = linkRe.exec(inner)) !== null) {
+    links.push(match[1]);
+  }
+  return { inner, links };
+}
+
+function urlWithoutFragment(href) {
+  try {
+    const parsed = new URL(href);
+    parsed.hash = '';
+    return parsed.href;
+  } catch {
+    return href.split('#')[0];
+  }
+}
+
+function isReachableStatus(status) {
+  return status >= 200 && status < 300;
+}
+
+function formatFetchError(err) {
+  if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+    return `timeout after ${SOURCE_CHECK_TIMEOUT_MS / 1000}s`;
+  }
+  const code = err.cause?.code;
+  if (code === 'ENOTFOUND') {
+    const host = err.cause?.hostname ?? 'unknown host';
+    return `DNS lookup failed (${host})`;
+  }
+  if (code === 'ECONNREFUSED') {
+    return 'connection refused';
+  }
+  if (code === 'ECONNRESET') {
+    return 'connection reset';
+  }
+  return err.message || String(err);
+}
+
+async function probeUrl(url, method) {
+  try {
+    const response = await fetch(url, {
+      method,
+      redirect: 'follow',
+      signal: AbortSignal.timeout(SOURCE_CHECK_TIMEOUT_MS),
+      headers: method === 'GET' ? { Range: 'bytes=0-0' } : undefined,
+    });
+    if (isReachableStatus(response.status)) {
+      return { ok: true };
+    }
+    return { ok: false, reason: `HTTP ${response.status}` };
+  } catch (err) {
+    return { ok: false, reason: formatFetchError(err) };
+  }
+}
+
+async function checkSourceUrlReachable(href) {
+  const baseUrl = urlWithoutFragment(href);
+  const headResult = await probeUrl(baseUrl, 'HEAD');
+  if (headResult.ok) return headResult;
+
+  const getResult = await probeUrl(baseUrl, 'GET');
+  if (getResult.ok) return getResult;
+
+  return { ok: false, reason: getResult.reason ?? headResult.reason ?? 'unreachable' };
+}
+
+async function validateSourceLinks(html, run) {
+  const { inner, links } = extractExternalLinksFromContentRoot(html);
+  run.check('[data-content-root] present for source link check', inner != null);
+
+  if (links.length === 0) {
+    console.log('source links: none found in [data-content-root] (--check-sources)');
+    return;
+  }
+
+  const cache = new Map();
+  for (const href of links) {
+    const baseUrl = urlWithoutFragment(href);
+    if (href.includes('#')) {
+      console.warn(`source link warning: fragment in ${href} (not validated)`);
+    }
+
+    if (cache.has(baseUrl)) {
+      const cached = cache.get(baseUrl);
+      const label = cached.ok
+        ? `source link reachable: ${href}`
+        : `source link reachable: ${href} (${cached.reason})`;
+      run.check(label, cached.ok);
+      continue;
+    }
+
+    const result = await checkSourceUrlReachable(href);
+    cache.set(baseUrl, result);
+    const label = result.ok
+      ? `source link reachable: ${href}`
+      : `source link reachable: ${href} (${result.reason})`;
+    run.check(label, result.ok);
+  }
+}
+
+async function main() {
   let args;
   try {
     args = parseArgs(process.argv.slice(2));
@@ -402,6 +547,11 @@ function main() {
     usage();
     console.error(err.message);
     process.exit(1);
+  }
+
+  if (args.help) {
+    usage();
+    process.exit(0);
   }
 
   const run = createRunner();
@@ -463,6 +613,10 @@ function main() {
     }
   }
 
+  if (args.checkSources) {
+    await validateSourceLinks(html, run);
+  }
+
   if (run.failures.length > 0) {
     console.error('verify-review-delivery: FAILED');
     for (const item of run.failures) {
@@ -474,4 +628,7 @@ function main() {
   console.log(`verify-review-delivery: PASSED (${run.passed()} checks)`);
 }
 
-main();
+main().catch((err) => {
+  console.error(err.message);
+  process.exit(1);
+});
