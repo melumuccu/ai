@@ -32,6 +32,29 @@
       cursor: help;
     }
 
+    /* 出典リンク: Tailwind preflight / text-base-content で消える UA 相当の識別手段を復元する。
+       コメント用 mark[data-comment-id]・用語 mark[data-term-id] とは別ルール。 */
+    [data-content-root] a[href] {
+      color: LinkText;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    [data-content-root] a[href]:visited {
+      color: VisitedText;
+    }
+
+    @supports not (color: LinkText) {
+      [data-content-root] a[href] {
+        color: oklch(var(--color-primary));
+      }
+
+      [data-content-root] a[href]:visited {
+        color: oklch(var(--color-secondary));
+      }
+    }
+
     #connector-svg {
       position: fixed;
       inset: 0;

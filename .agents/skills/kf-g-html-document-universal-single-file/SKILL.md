@@ -124,6 +124,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] 2軸以上の比較は `table`、3ステップ超の順序・分岐は `steps` または Mermaid、並列 3〜7 項目は短い箇条書き
 - [ ] 表・図・steps と同内容の長文段落がない（二重記載禁止）
 - [ ] 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL と到達性検証を満たした（[source-citations.md](references/source-citations.md)、パターン別必須度を確認）
+- [ ] `[data-content-root]` 内の出典 `<a href>` に下線と本文と異なるリンク色があり、`:visited` も区別できる（識別手段を消す指定を付けていない。テンプレート復元 CSS を維持）
 - [ ] 出典 `<a>` と左注釈（`mark[data-term-id]`）を混同していない
 - [ ] 専門用語の初出を `mark[data-term-id]` でマークした（パターン別必須度を満たす場合）
 - [ ] 左 `[data-annotation-panel]` にホバー／タップで用語解説カード 1 枚が表示される（専門用語を使う文書の場合）

@@ -126,7 +126,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 ### 出典・外部参照
 
-外部資料を根拠に `[data-content-root]` 本文を書くときは、[source-citations.md](source-citations.md) の手順に従う。
+外部資料を根拠に `[data-content-root]` 本文を書くときは、[source-citations.md](source-citations.md) の手順に従う（リンク化・fragment 優先・到達性検証に加え、**リンクの視覚** で目視識別可能な装飾を維持する）。
 
 | 要素 | 役割 |
 | --- | --- |
