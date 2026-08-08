@@ -51,22 +51,6 @@
       position: relative;
     }
 
-    .annotation-card--active {
-      z-index: 25;
-    }
-
-    @media (max-width: 1023px) {
-      .annotation-card--mobile-fixed {
-        position: fixed;
-        left: 1rem;
-        right: 1rem;
-        bottom: 1rem;
-        z-index: 40;
-        max-height: 40vh;
-        overflow-y: auto;
-      }
-    }
-
     .comment-card:focus-within,
     .annotation-card:focus-within {
       outline: 2px solid rgb(59, 130, 246);
@@ -128,14 +112,14 @@
     </aside>
 
     <main id="doc-content" data-content-root class="min-w-0 flex-1 select-text leading-relaxed">
-      <div class="mb-6 lg:hidden">
+      <div id="annotation-mobile-section" class="mb-6 hidden lg:hidden">
         <h2 class="mb-2 text-sm font-semibold text-base-content/60">用語解説</h2>
         <div id="annotation-panel-mobile" class="space-y-3" data-annotation-panel></div>
       </div>
 
       <p class="mb-6 text-base-content/70">
         本文を選択すると、右側（狭い画面では下）にコメントカードが追加されます。再読み込み後も同じ URL 上で復元されます。
-        左側には著者定義の専門用語解説があります。用語（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）にカーソルを当てると、表示中の左レーン最上に解説カードが表示されます（下の方の同一用語でも同じ位置）。
+        左側（狭い画面では本文上）には、viewport 内に見えている専門用語の解説カードが文書順に積み上がります（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）。スクロールで見えなくなった用語のカードは非表示になります。
       </p>
 
       <!-- 要約 -->
@@ -149,7 +133,7 @@
             <li>ビルド不要の単一 HTML で説明ページを作る。</li>
             <li>daisyUI v5 + Tailwind browser CDN でスタイルする。</li>
             <li>コメントコアは vanilla JS のみで動作する。</li>
-            <li>左レールに <mark data-term-id="icp">ICP</mark> などの専門用語解説をホバー／タップで表示する。</li>
+            <li>左レールに <mark data-term-id="icp">ICP</mark> など、viewport 内の専門用語解説を文書順に積み上げ表示する。</li>
           </ul>
         </div>
       </section>
@@ -274,7 +258,7 @@
       const STORAGE_PREFIX = 'comments_';
       const MIN_CARD_GAP = 12;
       const COPY_FEEDBACK_MS = 1500;
-      const TERM_HIDE_DELAY = 200;
+      const TERM_IO_THRESHOLD = 0.1;
 
       const contentRoot = document.querySelector('[data-content-root]');
       const panels = Array.from(document.querySelectorAll('[data-comment-panel]'));
@@ -291,14 +275,18 @@
       const copyFeedback = document.getElementById('copy-feedback');
       const commentRail = document.getElementById('comment-rail');
       const annotationRail = document.getElementById('annotation-rail');
+      const annotationMobileSection = document.getElementById('annotation-mobile-section');
 
       /** @type {Map<string, { id: string, quote: string, comment: string, anchor: object, createdAt: string, card: HTMLElement|null, mark: HTMLElement|null, targetY: number }>} */
       const state = new Map();
-      /** @type {Map<string, { id: string, term: string, definition: string, mark: HTMLElement, card: HTMLElement|null }>} */
+      /** @type {Map<string, { id: string, term: string, definition: string, marks: HTMLElement[] }>} */
       const termState = new Map();
-      let activeTermId = null;
-      let termHideTimer = null;
-      let mobileTermOpen = false;
+      /** @type {Map<HTMLElement, string>} */
+      const markToTermId = new Map();
+      /** @type {Map<HTMLElement, boolean>} */
+      const markVisibility = new Map();
+      /** @type {IntersectionObserver|null} */
+      let termObserver = null;
       let pendingRange = null;
       let editModeId = null;
 
@@ -563,7 +551,7 @@
 
       function createTermCard(entry) {
         const card = document.createElement('article');
-        card.className = 'annotation-card annotation-card--active card bg-base-100 p-3 shadow-sm border border-info/30';
+        card.className = 'annotation-card card bg-base-100 p-3 shadow-sm border border-info/30';
         card.dataset.termId = entry.id;
         card.innerHTML =
           '<h3 class="mb-2 text-sm font-semibold"></h3>' +
@@ -575,6 +563,84 @@
         return card;
       }
 
+      function compareMarksDocumentOrder(a, b) {
+        const pos = a.compareDocumentPosition(b);
+        if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+        if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+        const dy = a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+        return dy !== 0 ? dy : 0;
+      }
+
+      function getVisibleTermIdsInDocumentOrder() {
+        const visibleMarks = [];
+        for (const [mark, isVisible] of markVisibility) {
+          if (isVisible) visibleMarks.push(mark);
+        }
+        visibleMarks.sort(compareMarksDocumentOrder);
+
+        const orderedIds = [];
+        const seen = new Set();
+        for (const mark of visibleMarks) {
+          const termId = markToTermId.get(mark);
+          if (!termId || seen.has(termId)) continue;
+          seen.add(termId);
+          orderedIds.push(termId);
+        }
+        return orderedIds;
+      }
+
+      function mountTermCardClone(card, entry) {
+        const clone = card.cloneNode(true);
+        clone.querySelector('[data-action="copy"]')?.addEventListener('click', () => copyTerm(entry));
+        return clone;
+      }
+
+      function renderVisibleTermCards() {
+        const orderedIds = getVisibleTermIdsInDocumentOrder();
+
+        for (const panel of annotationPanels) {
+          panel.innerHTML = '';
+        }
+
+        const hasCards = orderedIds.length > 0;
+        if (annotationRail) {
+          annotationRail.classList.toggle('hidden', !hasCards || !isDesktopLayout());
+        }
+        if (annotationMobileSection) {
+          annotationMobileSection.classList.toggle('hidden', !hasCards || isDesktopLayout());
+        }
+        if (!hasCards) return;
+
+        for (const id of orderedIds) {
+          const entry = termState.get(id);
+          if (!entry) continue;
+          const card = createTermCard(entry);
+          if (primaryAnnotationPanel) primaryAnnotationPanel.appendChild(card);
+          const mobilePanel = document.getElementById('annotation-panel-mobile');
+          if (mobilePanel && mobilePanel !== primaryAnnotationPanel) {
+            mobilePanel.appendChild(mountTermCardClone(card, entry));
+          }
+        }
+      }
+
+      function updateVisibleTermsFromObserver(entries) {
+        for (const entry of entries) {
+          markVisibility.set(entry.target, entry.isIntersecting);
+        }
+        renderVisibleTermCards();
+      }
+
+      function initTermIntersectionObserver() {
+        if (termObserver) termObserver.disconnect();
+        termObserver = new IntersectionObserver(updateVisibleTermsFromObserver, {
+          root: null,
+          threshold: TERM_IO_THRESHOLD
+        });
+        for (const mark of markToTermId.keys()) {
+          termObserver.observe(mark);
+        }
+      }
+
       function mountCard(entry) {
         const card = createCard(entry);
         entry.card = card;
@@ -584,86 +650,6 @@
           commentRail.classList.remove('hidden');
         }
         return card;
-      }
-
-      function clearTermHideTimer() {
-        if (termHideTimer) {
-          clearTimeout(termHideTimer);
-          termHideTimer = null;
-        }
-      }
-
-      function hideTermCard(delay = TERM_HIDE_DELAY) {
-        clearTermHideTimer();
-        termHideTimer = setTimeout(hideTermCardImmediate, delay);
-      }
-
-      function hideTermCardImmediate() {
-        clearTermHideTimer();
-        if (activeTermId) {
-          const activeEntry = termState.get(activeTermId);
-          if (activeEntry?.card) {
-            activeEntry.card.remove();
-            activeEntry.card = null;
-          }
-        }
-        activeTermId = null;
-        mobileTermOpen = false;
-        if (primaryAnnotationPanel) {
-          primaryAnnotationPanel.innerHTML = '';
-          primaryAnnotationPanel.style.minHeight = '';
-        }
-        const mobile = document.getElementById('annotation-panel-mobile');
-        if (mobile) mobile.innerHTML = '';
-        if (annotationRail) annotationRail.classList.add('hidden');
-      }
-
-      function positionActiveTermCard() {
-        const entry = activeTermId ? termState.get(activeTermId) : null;
-        if (!entry || !entry.card || !isDesktopLayout() || !primaryAnnotationPanel) return;
-
-        entry.card.style.position = 'absolute';
-        entry.card.style.left = '0';
-        entry.card.style.right = '0';
-        entry.card.style.top = '0px';
-
-        const panelRect = primaryAnnotationPanel.getBoundingClientRect();
-        const cardRect = entry.card.getBoundingClientRect();
-        primaryAnnotationPanel.style.minHeight = (cardRect.bottom - panelRect.top + MIN_CARD_GAP) + 'px';
-      }
-
-      function bindTermCardHover(card) {
-        card.addEventListener('mouseenter', clearTermHideTimer);
-        card.addEventListener('mouseleave', () => hideTermCard());
-      }
-
-      function showTermCard(entry) {
-        if (!primaryAnnotationPanel) return;
-        clearTermHideTimer();
-        hideTermCardImmediate();
-        activeTermId = entry.id;
-
-        const card = createTermCard(entry);
-        entry.card = card;
-        bindTermCardHover(card);
-
-        if (isDesktopLayout()) {
-          primaryAnnotationPanel.appendChild(card);
-          if (annotationRail) annotationRail.classList.remove('hidden');
-          positionActiveTermCard();
-        } else {
-          mobileTermOpen = true;
-          card.classList.add('annotation-card--mobile-fixed');
-          document.body.appendChild(card);
-        }
-      }
-
-      function toggleTermCardMobile(entry) {
-        if (activeTermId === entry.id && mobileTermOpen) {
-          hideTermCardImmediate();
-        } else {
-          showTermCard(entry);
-        }
       }
 
       function syncMobilePanel() {
@@ -680,32 +666,10 @@
         return Array.from(state.values()).sort((a, b) => a.targetY - b.targetY || a.createdAt.localeCompare(b.createdAt));
       }
 
-      function bindTermMark(mark, entry) {
+      function bindTermMarkAccessibility(mark, entry) {
         mark.setAttribute('tabindex', '0');
-        mark.setAttribute('role', 'button');
+        mark.setAttribute('role', 'note');
         mark.setAttribute('aria-label', '専門用語: ' + entry.term);
-        mark.addEventListener('mouseenter', () => {
-          if (isDesktopLayout()) showTermCard(entry);
-        });
-        mark.addEventListener('mouseleave', () => {
-          if (isDesktopLayout()) hideTermCard();
-        });
-        mark.addEventListener('click', (e) => {
-          if (!isDesktopLayout()) {
-            e.preventDefault();
-            toggleTermCardMobile(entry);
-          }
-        });
-        mark.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            if (isDesktopLayout()) {
-              showTermCard(entry);
-            } else {
-              toggleTermCardMobile(entry);
-            }
-          }
-        });
       }
 
       function focusCard(id) {
@@ -837,20 +801,24 @@
 
         for (const item of items) {
           if (!item || !item.id) continue;
-          const marks = contentRoot.querySelectorAll('[data-term-id="' + item.id + '"]');
+          const marks = Array.from(contentRoot.querySelectorAll('[data-term-id="' + item.id + '"]'));
           if (!marks.length) continue;
           const entry = {
             id: item.id,
             term: item.term || item.id,
             definition: item.definition || '',
-            mark: marks[0],
-            card: null
+            marks
           };
           termState.set(item.id, entry);
           for (const mark of marks) {
-            bindTermMark(mark, entry);
+            markToTermId.set(mark, item.id);
+            markVisibility.set(mark, false);
+            bindTermMarkAccessibility(mark, entry);
           }
         }
+
+        initTermIntersectionObserver();
+        renderVisibleTermCards();
       }
 
       function isDesktopLayout() {
@@ -916,7 +884,6 @@
 
       function layoutAll() {
         layoutPanel(sortedEntries(), primaryPanel);
-        positionActiveTermCard();
         drawAllLines();
       }
 
@@ -1048,17 +1015,6 @@
 
       copyAllBtn.addEventListener('click', copyAll);
 
-      document.addEventListener('click', (e) => {
-        if (!mobileTermOpen || isDesktopLayout()) return;
-        const target = e.target;
-        if (target instanceof Element && (target.closest('[data-term-id]') || target.closest('.annotation-card'))) return;
-        hideTermCardImmediate();
-      });
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && activeTermId) hideTermCardImmediate();
-      });
-
       let raf = null;
       function scheduleLayout() {
         if (raf) cancelAnimationFrame(raf);
@@ -1071,6 +1027,7 @@
             }
           }
           layoutAll();
+          renderVisibleTermCards();
         });
       }
 
