@@ -73,8 +73,18 @@ artifacts/skill-modification-review/<target-skill>/<timestamp>/{before,after}/
 1. 改修意図とレビュー観点を添える
 1. 承認・修正指示・却下のいずれかの返答を待つ
 
+## 修正指示後の再生成（イテレーション）
+
+ユーザから修正指示があった場合は、次の手順で after のみ再生成する。
+
+1. skill を修正する
+1. 固定プロンプト・題材・入力は初回と同一のまま維持する
+1. **新 Worker B（after）subagent のみ起動**する（Worker A は起動しない）
+1. `after/` のみ作成・更新し、再度 [review-request.md](review-request.md) の形式で提示する
+1. `before/`・スナップショット skill・`prompt.txt` は初回のまま維持する
+
 ## 承認後に skill 修正を確定する
 
 1. ユーザ承認後にのみ skill 改修を確定する（commit / PR / marketplace 更新など）
-1. 修正指示があった場合は skill を直し、必要なら手順 2 以降を再実行する
-1. 却下時は改修方針を見直し、スナップショットからやり直す
+1. 修正指示があった場合は「修正指示後の再生成（イテレーション）」へ進む
+1. 却下時は改修方針を見直し、スナップショットから初回手順（before + after 両 worker 並列起動）をやり直す

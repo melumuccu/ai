@@ -18,6 +18,7 @@
 | プロンプト統一 | before / after で固定プロンプト・入力・成果物種別を同一にする |
 | 差分の意味 | 目視差分は skill 改修由来のみとする |
 | 承認前確定禁止 | ユーザ承認前に skill 改修を確定しない |
+| before 不変（修正指示サイクル） | 修正指示サイクルでは `before/`・スナップショット skill・`prompt.txt` を更新しない |
 
 ## 禁止事項
 
@@ -27,6 +28,8 @@
 - 1 worker に複数 skill 版または比較指示（「before と after を両方見て」）を渡す
 - Worker A の出力を Worker B の入力に使う（連鎖生成）
 - ユーザ承認前に skill を commit / merge / marketplace 確定する
+- 修正指示サイクルで Worker A（before）を再起動する
+- 修正指示サイクルで `before/` を更新する
 
 ## 委譲時の skill 列挙ルール
 

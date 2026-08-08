@@ -31,7 +31,7 @@ description: Use this skill whenever revising a self-made skill and preparing us
 
 | ファイル | 参照開始条件 |
 | --- | --- |
-| [procedure.md](references/procedure.md) | 着手条件、スナップショット、固定条件、並列起動、成果物収集、承認後の確定 |
+| [procedure.md](references/procedure.md) | 着手条件、スナップショット、固定条件、並列起動、成果物収集、修正指示後の after 単独再生成、承認後の確定 |
 | [sample-artifact-selection.md](references/sample-artifact-selection.md) | 対象 skill に応じた成果物種別の選び方と同一対象内容の固定 |
 | [isolation-and-invariants.md](references/isolation-and-invariants.md) | 独立 subagent、禁止事項、委譲時の skill 列挙ルール |
 | [review-request.md](references/review-request.md) | ユーザへのレビュー依頼形式（before/after 並置、差分の見方、承認待ち） |
@@ -42,6 +42,7 @@ description: Use this skill whenever revising a self-made skill and preparing us
 - 修正前 skill と修正後 skill を同一 subagent に渡さない
 - 1 worker = 1 skill 版のみ
 - before / after でプロンプト・入力・成果物種別を統一し、差分は skill 改修由来のみとする
+- 修正指示サイクルでは `before/` を維持し、新 Worker B で `after/` のみ再生成する
 
 ## 最終チェック
 
