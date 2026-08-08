@@ -97,7 +97,7 @@
         "Includes [data-content-root] for comment selection anchor",
         "Wraps external source claims in http(s) anchor links within [data-content-root]",
         "Prefers fragment URLs (#heading) for cited documentation sections when available",
-        "Uses only reachability-verified URLs (no 404 or unreachable links in source anchors)",
+        "Uses only reachability-verified URLs per source-citations.md (manual curl/WebFetch before linking; stop hook kf-lint content/url-reachable warn on turn completion)",
         "Does not append long parenthetical URLs after anchor links",
         "Does not confuse source anchor links with mark[data-term-id] left annotations"
       ]

@@ -13,11 +13,10 @@ description: Use this skill when creating or revising build-free, single-file in
 | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [references/core-contract.md](references/core-contract.md)                                   | コメントコアと左注釈の DOM・データ・レイアウト・永続化を実装するとき                                                                        |
 | [references/content-patterns.md](references/content-patterns.md)                             | PR 説明・業務フロー・非コーディング向けの構成、CDN 選定、視覚構造・可読性（§ 論理セクション分離・図表化・専門用語・左注釈・出典リンク・情報エンコード・アクセシビリティ） |
-| [references/source-citations.md](references/source-citations.md)                             | 外部資料を根拠に `[data-content-root]` 本文を書く／出典リンクの到達性を検証するとき |
+| [references/source-citations.md](references/source-citations.md)                             | 外部資料を根拠に `[data-content-root]` 本文を書く／出典リンクの到達性を確認するとき |
 | [references/r2-static-delivery.md](references/r2-static-delivery.md)                         | R2 公開前提・Wrangler OAuth・版管理の確認                                                                                                   |
 | [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較                                                                                      |
-| [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の完了ゲート・validator・非コミット規則                                                                              |
-| [scripts/verify-review-delivery.mjs](scripts/verify-review-delivery.mjs)                     | HTML / R2 URL / PR description の機械検証                                                                                                   |
+| [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の非コミット規則・完了手順・PR description 形式                                                                      |
 | [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh)               | スクリーンショット PNG → AVIF 固定変換                                                                                                      |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html)     | 実装の起点テンプレート                                                                                                                      |
 
@@ -63,7 +62,7 @@ description: Use this skill when creating or revising build-free, single-file in
 1. 手動インフラ構築または CLI 配布を含む依頼では、[content-patterns.md](references/content-patterns.md) の「手動インフラ操作記録」を必ず本文に含める（**手動インフラ構築手順** と **目視確認手順** を分離）
 1. ローカルで開き、選択→コメント→編集→再読み込み→削除→コピーを確認する
 1. R2 配布時は [r2-static-delivery.md](references/r2-static-delivery.md) のチェックリストに従う
-1. issue / PR 向けに HTML を生成・アップロードする場合は、次節「GitHub 連携」を完了し、[pr-review-delivery.md](references/pr-review-delivery.md) の完了ゲートを満たしてから description を確定する
+1. issue / PR 向けに HTML を生成・アップロードする場合は、次節「GitHub 連携」を完了し、[pr-review-delivery.md](references/pr-review-delivery.md) の完了手順を満たしてから description を確定する
 
 ## GitHub 連携（HTML 配布あり）
 
@@ -91,18 +90,17 @@ PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) 
 
 撮影・変換・R2 オブジェクト命名・容量ゲート・HTML 埋め込み手順は [frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) を参照。
 
-## 完了ゲート（issue / PR 向け HTML 配布）
+## 完了手順（issue / PR 向け HTML 配布）
 
-issue / PR 向け R2 配布時は、upload 前と PR body 更新後の validator 合格が **必須**。手順を飛ばしたり、validator 失敗のまま upload / description 更新を確定してはならない。
+issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-delivery.md](references/pr-review-delivery.md) の手順を満たしてから upload / description を確定する。
 
-```bash
-node scripts/verify-review-delivery.mjs <html-file> [--frontend]
-node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
-  --public-url https://ai-html.hacksaw.work/<object-key> \
-  --pr-body-file <pr-body.md>
-```
+| 項目 | 確認方法 |
+| --- | --- |
+| HTML コア契約・daisyUI・コメント機能等 | 出力チェックリスト（目視 / ローカル操作） |
+| 出典 URL 到達性 | 執筆時は [source-citations.md](references/source-citations.md) の手順（`curl` / `WebFetch` 等）。turn 完了時は Cursor stop hook + kf-lint `content/url-reachable`（warn）。警告時は修正またはユーザ目視フォールバック |
+| R2 URL・PR description | アップロード後の公開 URL 確認と description 目視 |
 
-詳細手順・validator 検証範囲は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
+詳細は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
 
 ## 出力チェックリスト
 
@@ -145,7 +143,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] PR レビュー用 HTML + フロントエンド変更: **when** と **condition（スクリーンショット撮影可能）** を確認した。撮影不能なら `img-comparison-slider` を読み込まない
 - [ ] PR レビュー用 HTML + フロントエンド変更 + スクリーンショット撮影可能: `img-comparison-slider` を CDN で読み込み、修正前（`slot="first"`）・修正後（`slot="second"`）の before/after 比較を提示した
 - [ ] before/after 画像: HTML 本体と同じ R2 バケットへ AVIF（`image/avif`）として `--remote` put し、確認済み公開 URL のみ `src` に指定した（data URL 埋め込みは使わない）。固定変換手順で PNG → AVIF 変換・検証済みで、容量ゲート（1 画像 2 MiB / 合計 5 MiB 推奨）を満たした
-- [ ] issue / PR 向け R2 配布: [pr-review-delivery.md](references/pr-review-delivery.md) の upload 前・PR body 更新後 validator が合格した
+- [ ] issue / PR 向け R2 配布: [pr-review-delivery.md](references/pr-review-delivery.md) の完了手順を満たした（出力チェックリスト・公開 URL 確認・description 形式）。出典リンクありの場合は stop hook（kf-lint `content/url-reachable` warn）の警告に対応した
 
 ## スコープ外
 

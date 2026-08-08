@@ -119,7 +119,7 @@ after:  <html_basename>_<target>_after.avif
 ```
 
 - `html_basename` = HTML オブジェクトキーから `.html` を除いた部分
-- `<target>` = **撮影対象 slug**（validator では `--screenshot-target TARGET` で指定）。英数字・ハイフン・アンダースコアのみ（例: `home`, `settings-modal`）
+- `<target>` = **撮影対象 slug**。英数字・ハイフン・アンダースコアのみ（例: `home`, `settings-modal`）
 - 拡張子は **`.avif` 固定**。before / after は **同一拡張子** とする。キー拡張子と `--content-type` は **`image/avif`** で一致させる
 - 既存 key の上書き禁止（HTML・画像とも）
 
@@ -164,7 +164,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット
 
 ### size / Content-Type / 公開 URL 確認
 
-validator は R2 画像 URL を **ネットワーク取得しない**。以下でローカル確認する。
+R2 画像 URL は **CLI でローカル確認** する（公開 URL への HTTP 取得は別途目視確認）。
 
 **get + MIME + サイズ:**
 
@@ -179,9 +179,9 @@ wc -c /tmp/check-image
 **公開 URL 確認:**
 
 1. `https://ai-html.hacksaw.work/<html-object-key>` を Access 認証後に開く
-2. `img-comparison-slider` 内の before/after 画像が表示されることを確認
-3. DevTools → **Network** で画像リクエストが 200、Content-Type が **`image/avif`** であることを確認
-4. HTML `src` のオブジェクトキーが `{html_basename}_{target}_before.avif` / `{html_basename}_{target}_after.avif` と一致することを確認
+1. `img-comparison-slider` 内の before/after 画像が表示されることを確認
+1. DevTools → **Network** で画像リクエストが 200、Content-Type が **`image/avif`** であることを確認
+1. HTML `src` のオブジェクトキーが `{html_basename}_{target}_before.avif` / `{html_basename}_{target}_after.avif` と一致することを確認
 
 ## CLI 配布 runbook（本 repository）
 
@@ -278,23 +278,11 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`。R2 AVIF 必須なら `--r2-required --html-object-key <object-key> --screenshot-target <target>` も付ける）。legacy data URL 埋め込み時のみ 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
-
-```bash
-node scripts/verify-review-delivery.mjs <html-file> [--frontend]
-```
-
-1. validator 合格後、**新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
+1. **R2 upload 前** に [SKILL.md](../SKILL.md) の出力チェックリストを満たす（HTML コア契約・daisyUI・版ラベル一致など）。before/after 画像は AVIF 必須・命名規則・容量推奨（1 画像 2 MiB / 合計 5 MiB）を目視確認する
+1. 出典リンクを含む場合は執筆時に到達性を確認し、turn 完了時の stop hook（kf-lint `content/url-reachable` warn）の警告に対応する
+1. **新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
 1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で Access 認証後に目視確認手順を実施
-1. PR description を更新したら、確認済み URL と body ファイルで validator を再実行する
-
-```bash
-node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
-  --public-url https://ai-html.hacksaw.work/<object-key> \
-  --pr-body-file <pr-body.md>
-```
-
-1. 再検証合格後に description を確定する
+1. PR / issue description を更新し、確認済み URL と版ラベル `v{N}` の一致を目視確認する（形式は [pr-review-delivery.md](pr-review-delivery.md)）
 
 ## Cloudflare 操作（Wrangler OAuth）
 

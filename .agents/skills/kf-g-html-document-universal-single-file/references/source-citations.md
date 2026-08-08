@@ -78,6 +78,14 @@
 | `curl -L <URL>` | HEAD 失敗時の GET フォールバック |
 | `WebFetch` | ページ本文・見出し id の存在確認 |
 
+## turn 完了時の到達性（stop hook）
+
+執筆時の手動確認に加え、HTML 保存後は **Cursor stop hook** により kf-lint `content/url-reachable`（warn）が `[data-content-root]` 内の外部 http(s) 出典 `<a href>` を検査する。
+
+- 警告が出たら URL を修正するか、到達不能理由を collapse / 操作記録に残し未リンクとする
+- 一時障害や認証壁で false positive の可能性がある場合は、ユーザ目視でフォールバックする
+- 詳細は [pr-review-delivery.md](pr-review-delivery.md)
+
 ## 左注釈との関係
 
 | 機能 | 要素 | 用途 |
@@ -96,7 +104,3 @@
 1. 左注釈（`mark[data-term-id]`）と出典 `<a>` を混同していないか
 1. リンクの直後に長い括弧 URL を併記していないか
 1. リンク化した出典文言を長文で繰り返していないか（二重記載禁止）
-
-## validator
-
-`node scripts/verify-review-delivery.mjs <html-file> --check-sources` で、`[data-content-root]` 内の外部 http(s) 出典 `<a>` のページ到達性を機械検証できる（opt-in）。詳細は [pr-review-delivery.md](pr-review-delivery.md)。

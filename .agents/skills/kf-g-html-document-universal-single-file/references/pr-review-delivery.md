@@ -1,6 +1,6 @@
-# issue / PR 向け R2 配布（完了ゲート・validator）
+# issue / PR 向け R2 配布
 
-issue または PR 向けに HTML を R2 配布するときの機械検証と非コミット規則。
+issue または PR 向けに HTML を R2 配布するときの非コミット規則と完了手順。
 
 ## コミュ用ファイルの非コミット
 
@@ -10,46 +10,42 @@ issue / PR 向けに生成する **レビュー用 HTML** と **before/after ス
 | --- | --- |
 | **commit 禁止** | 生成済み PR レビュー HTML、before/after スクリーンショット、R2 upload 前の作業用コピー |
 | **保管場所** | 一時ディレクトリまたは `.gitignore` 済み workspace 内（例: `tmp/`、`artifacts/`）。repository root への直置きは避ける |
-| **配布** | upload 前に validator で検証し、新規 `v{N}` オブジェクトキーで R2 へ put する |
+| **配布** | 出力チェックリストで目視確認し、新規 `v{N}` オブジェクトキーで R2 へ put する |
 | **PR description** | 確認済み R2 HTML の公開 URL のみ `[v{N}](URL)` でリンクする。生成ファイル本体は載せない |
-| **commit 可** | 本 skill の SKILL.md、`references/`、`scripts/`、`assets/` テンプレート、validator、runbook 等の **ソース・支援ファイル** |
+| **commit 可** | 本 skill の SKILL.md、`references/`、`scripts/`、`assets/` テンプレート、runbook 等の **ソース・支援ファイル** |
 
-## 完了ゲート（issue / PR 向け HTML 配布）
+## 完了手順（issue / PR 向け HTML 配布）
 
-issue または PR 向けに HTML を R2 配布するとき、次の順序と機械検証を **必須** とする。手順を飛ばしたり、validator 失敗のまま upload / description 更新を確定してはならない。
+issue または PR 向けに HTML を R2 配布するとき、次の順序で完了する。
 
 ### 手順
 
 1. HTML を生成し、ローカルでコメントコアを目視確認する
-1. **R2 upload 前** に validator を実行する（フロントエンド変更 + スクリーンショット比較ありなら `--frontend` を付ける）
-
-```bash
-node scripts/verify-review-delivery.mjs <html-file> [--frontend]
-```
-
-1. 合格後、新規 `v{N}` として R2 へアップロードする（[r2-static-delivery.md](r2-static-delivery.md)）
+1. [SKILL.md](../SKILL.md) の **出力チェックリスト** を満たす（HTML コア契約・daisyUI・コメント機能・版管理・PR description 形式など）
+1. 出典リンクを含む場合は [source-citations.md](source-citations.md) に従い、執筆時に到達性を確認する（`curl` / `WebFetch` 等）。turn 完了時の **Cursor stop hook** により kf-lint `content/url-reachable`（warn）が走る。警告が出たら修正するか、ユーザ目視でフォールバックする
+1. 新規 `v{N}` として R2 へアップロードする（[r2-static-delivery.md](r2-static-delivery.md)）
 1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
-1. PR description を更新する（`## レビュー用資料` 配下に `[v{N}](確認済みURL)` のみ）
-1. **PR body 更新後** に validator を再実行する
+1. PR / issue description を更新する（issue: `## プランニング用資料`、PR: `## レビュー用資料` 配下に `[v{N}](確認済みURL)` のみ）
+1. description の URL がアップロード先 `v{N}` と一致することを目視確認する
 
-```bash
-node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
-  --public-url https://ai-html.hacksaw.work/<object-key> \
-  --pr-body-file <pr-body.md>
-```
+### PR description 形式
 
-1. 再検証も合格して初めて description を確定する
+| 用途 | 見出し | リンク形式 |
+| --- | --- | --- |
+| issue プランニング | `## プランニング用資料` | `[v{N}](https://ai-html.hacksaw.work/<object-key>)` |
+| PR レビュー | `## レビュー用資料` | `[v{N}](https://ai-html.hacksaw.work/<object-key>)` |
 
-### validator の検証範囲
+- 版ラベル `v{N}` は R2 オブジェクトキーの版番号と一致させる
+- 確認済み公開 URL のみ記載する（未確認 URL は載せない）
 
-| オプション | 検証内容 |
+## 到達性検証（stop hook へ移行）
+
+機械 validator による完了ゲートは **廃止** し、stop hook と手動チェックリストへ移行した。
+
+| 項目 | 現行 |
 | --- | --- |
-| （常時） | doctype、`data-theme`、daisyUI / Tailwind CDN、コメントコア DOM・`data-action`・localStorage key |
-| `--frontend` | `img-comparison-slider` CDN、`slot="first"` / `"second"`、width 100%、画像 src（data URL または確認済み R2 URL）、data URL 容量（1 画像 2 MiB / 合計 5 MiB）、撮影条件（viewport・branch・URL）。R2 URL はネットワーク取得せず CLI 確認手順を出力 |
-| `--r2-required` | `data:image/` 禁止。`slot="first"` / `"second"` の src が `https://ai-html.hacksaw.work/` の確認済み R2 URL かつ `.avif` 拡張子であること |
-| `--html-object-key` | HTML オブジェクトキーが `_vN.html` 形式であること。`--r2-required` と併用時は、画像 src の R2 オブジェクトキーが `{html_basename}_before.avif` / `{html_basename}_after.avif` と一致すること |
-| `--public-url` | URL が `https://ai-html.hacksaw.work/` で、オブジェクトキーに `_vN.html` を含む |
-| `--pr-body-file` | body に `## レビュー用資料` と、確認済み URL に一致する `[vN](URL)` がある |
-| `--check-sources` | `[data-content-root]` 内の外部 `http://` / `https://` 出典 `<a href>` のページ到達性（HEAD、失敗時 GET）。404 等で fail。fragment 有無は必須 fail にしない。同一 origin+path+query は重複チェックしない。デフォルト off（opt-in）。出典リンクを含む HTML で推奨。出典リンクの執筆ルールは [source-citations.md](source-citations.md) |
+| 出典 URL 到達性 | Cursor stop hook + kf-lint `content/url-reachable`（warn）。エージェントは turn 完了時に警告を受け、必要ならユーザ目視フォールバック |
+| HTML コア契約・daisyUI 等 | [SKILL.md](../SKILL.md) 出力チェックリストによる目視 / 手順確認 |
+| R2 URL・PR description | アップロード後の公開 URL 確認と description 目視 |
 
-失敗時は列挙された項目を修正し、該当ステップからやり直す。
+執筆時の到達性確認（使用前）は [source-citations.md](source-citations.md) の手順（`curl` / `WebFetch` 等）で行う。
