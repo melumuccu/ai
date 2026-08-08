@@ -81,7 +81,8 @@
         "Deduplicates cards when multiple mark[data-term-id] with the same id are visible simultaneously",
         "Hides term cards when their marks scroll out of the viewport",
         "Does not duplicate long inline parenthetical definitions when left annotations are present",
-        "Preserves right-side user comment functionality alongside left term annotations"
+        "Preserves right-side user comment functionality alongside left term annotations",
+        "Decorates mark[data-term-id] with highlight styling only (no badge, pill, or inline term label on body term marks)"
       ]
     }
   ]

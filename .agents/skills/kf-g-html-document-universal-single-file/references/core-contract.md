@@ -37,7 +37,7 @@
 | 左レール | `#annotation-rail` | デスクトップ用 sticky 左余白 |
 | 注釈パネル | `[data-annotation-panel]` | 用語カード配置先（`#annotation-panel` / `#annotation-panel-mobile`） |
 | 用語データ | `#term-annotations` | `type="application/json"` の著者定義用語配列 |
-| 用語マーク | `mark[data-term-id="{id}"]` | 本文内の専門用語ハイライト |
+| 用語マーク | `mark[data-term-id="{id}"]` | 本文内の専門用語ハイライト（背景色等のみ。badge・「用語」ラベル等の余計な視覚装飾は禁止。a11y 属性は可） |
 
 ### データモデル
 
