@@ -50,5 +50,6 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 | `--html-object-key` | HTML オブジェクトキーが `_vN.html` 形式であること。`--r2-required` と併用時は、画像 src の R2 オブジェクトキーが `{html_basename}_before.avif` / `{html_basename}_after.avif` と一致すること |
 | `--public-url` | URL が `https://ai-html.hacksaw.work/` で、オブジェクトキーに `_vN.html` を含む |
 | `--pr-body-file` | body に `## レビュー用資料` と、確認済み URL に一致する `[vN](URL)` がある |
+| `--check-sources` | `[data-content-root]` 内の外部 `http://` / `https://` 出典 `<a href>` のページ到達性（HEAD、失敗時 GET）。404 等で fail。fragment 有無は必須 fail にしない。同一 origin+path+query は重複チェックしない。デフォルト off（opt-in）。出典リンクを含む HTML で推奨。出典リンクの執筆ルールは [source-citations.md](source-citations.md) |
 
 失敗時は列挙された項目を修正し、該当ステップからやり直す。
