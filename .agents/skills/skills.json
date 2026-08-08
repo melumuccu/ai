@@ -80,14 +80,14 @@
     "path": ".agents/skills/kf-g-agent-orchestrator/SKILL.md"
   },
   {
-    "description": "Formats AI agent planning output with concise Japanese, mermaid diagrams, tables, and footnotes for niche terms. Use when planning implementation, architecture, migration, rollout, phased work, design proposals, or when SwitchMode enters plan mode; also when drafting plans for GitHub issues or PR comments.",
-    "name": "kf-g-agent-planning-structured-plan-output",
-    "path": ".agents/skills/kf-g-agent-planning-structured-plan-output/SKILL.md"
-  },
-  {
     "description": "Use this skill whenever the user asks to research, compare, review, evaluate, explain, recommend, or select something and the request does not clearly ask for file edits. In these cases, report findings only and do not modify documents, source code, dependencies, generated files, or git state until the user explicitly approves applying changes.",
     "name": "kf-g-agent-research-report-only-unless-approved",
     "path": ".agents/skills/kf-g-agent-research-report-only-unless-approved/SKILL.md"
+  },
+  {
+    "description": "Use this skill whenever the user asks for advice, review, critique, evaluation, feedback, or a second opinion on a design, plan, proposal, document, approach, or similar artifact. Apply adversarial evaluation: challenge assumptions, surface failure modes and risks, and refuse rubber-stamping. Do not use for post-implementation two-stage programming reviews (use kf-g-agent-review-post-implementation-two-stage) or as the edit-approval gate (use kf-g-agent-research-report-only-unless-approved); those skills remain complementary.",
+    "name": "kf-g-agent-review-adversarial-evaluation",
+    "path": ".agents/skills/kf-g-agent-review-adversarial-evaluation/SKILL.md"
   },
   {
     "description": "Use this skill for programming design and implementation reviews after completion, including code, configuration, tests, and CI/CD changes. Start with a diff-first review, then resume the same reviewer for plan alignment. Route documentation-only, business-planning, general-research, and nontechnical work through the appropriate single-stage review process.",
@@ -105,17 +105,12 @@
     "path": ".agents/skills/kf-g-code-comment-rules/SKILL.md"
   },
   {
-    "description": "Issue の planning を行うコマンド",
-    "name": "kf-g-command-do-issue-planning",
-    "path": ".agents/skills/kf-g-command-do-issue-planning/SKILL.md"
-  },
-  {
     "description": "ステージング済みと未ステージングのGit差分を比較し、手動修正から再利用可能な判断ルールを抽出します。ユーザーに確認を取った後、スキルの作成または更新を行います。",
     "name": "kf-g-command-do-manual-fix-to-skill",
     "path": ".agents/skills/kf-g-command-do-manual-fix-to-skill/SKILL.md"
   },
   {
-    "description": "PR の未解決 review comment に対応するコマンド。指摘を論理変更グループへ分類し、グループごとに atomic commit・push・個別 reply を行う。",
+    "description": "PR の未解決 review comment に対応する専用skill。指摘を論理変更グループへ分類し、グループごとに atomic commit・push・個別 reply を行う。",
     "name": "kf-g-command-do-pr-rev-comment",
     "path": ".agents/skills/kf-g-command-do-pr-rev-comment/SKILL.md"
   },
@@ -198,11 +193,6 @@
     "description": "Use when authoring or bootstrapping GitHub Actions workflows that run on Mac Studio self-hosted runners with a repository-specific label. Covers runs-on label convention, runner-name pairing, bootstrap workflow integration, and prerequisites before merge.",
     "name": "kf-g-github-actions-self-hosted-runner-label",
     "path": ".agents/skills/kf-g-github-actions-self-hosted-runner-label/SKILL.md"
-  },
-  {
-    "description": "Use this skill whenever starting, planning, implementing, tracking, or closing GitHub issue work. Always use it when the user says to start implementation/planning from issues, asks to pick the next issue, or asks for issue-linked work, because issue work should use a dedicated worktree and continuous issue progress records.",
-    "name": "kf-g-github-issue-worktree-management",
-    "path": ".agents/skills/kf-g-github-issue-worktree-management/SKILL.md"
   },
   {
     "description": "Use this skill whenever working with GitHub issues, pull requests, comments, reviews, repository metadata, or agent-authored GitHub activity. Always use it before posting GitHub comments or reviews, checking remote repository context, or deciding whether GitHub App bot credentials are available.",
