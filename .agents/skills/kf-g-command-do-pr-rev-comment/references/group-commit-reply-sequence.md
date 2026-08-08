@@ -42,14 +42,21 @@ flowchart TD
 1. `git push` で remote に反映する
 1. push 後、グループ G{n} ごとに次を実行する
    1. G{n} に対応する thread へ個別 reply する
-   1. reply に commit リンクと変更概要を含める
+   1. reply 本文は変更概要から始め、続けて commit リンクを書く
    1. resolve はユーザーが行う。エージェントは resolve しない
 
 ## reply 本文の最低項目
 
-- 対応した変更の概要（1〜3 行）
-- 対応 commit へのリンク（`[{commit message 1 行目}]({PR base URL}/changes/{commit id})`）
-- 説明のみ・保留の場合はその理由
+1. 対応した変更の概要（1〜3 行）を先頭に書く
+1. 対応 commit へのリンク（`[{commit message 1 行目}]({PR base URL}/changes/{commit id})`）を続けて書く
+1. 説明のみ・保留の場合は、その旨と理由を先頭から書く
+
+## reply 本文の文体
+
+1. reply 本文は変更概要・commit リンク・説明理由から始める
+1. 受領クッション前置きを書かない（`ご指摘ありがとうございます`、`ご質問ありがとうございます` など、必須でない受領表現はすべて禁止）
+1. 挨拶・お礼・謝罪などの前置きを書かない
+1. `genshijin 丁寧` のクッション言葉・過度な前置き削除と整合させる
 
 ## 同じファイルに複数グループがある場合
 

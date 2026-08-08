@@ -69,9 +69,9 @@ node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_N
 1. すべてのグループの commit が完了したら push する
 1. push 前に thread へ reply しない
 1. push 後、各グループに対応する thread だけ個別 reply する
-1. reply には、対応した commit（message 1 行目をラベルとしたリンク）と変更概要を書く
+1. reply 本文は変更概要から始める。続けて対応 commit（message 1 行目をラベルとしたリンク）を書く
+1. 説明のみ・保留の thread は reply 本文をその旨から始める
 1. resolve はユーザーが行う。エージェントは resolve しない
-1. 説明のみ・保留の thread は reply で理由を残す
 1. reply 前に bot preflight を成功させ、上記 bot helper script を使う
 1. bot preflight 失敗時は setup 手順を表示して停止し、人間 `gh` 認証や `GH_TOKEN` へ fallback しない
 
@@ -80,6 +80,8 @@ node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_N
 - 複数 thread を 1 つの reply にまとめない
 - push 前に reply しない
 - thread を resolve しない
+- 受領クッション前置きを書く（`ご指摘ありがとうございます`、`ご質問ありがとうございます` など、必須でない受領表現はすべて禁止）
+- 変更概要・commit リンク・説明理由の前に、挨拶・お礼・謝罪などの前置きを書く
 
 ## 完了確認
 
