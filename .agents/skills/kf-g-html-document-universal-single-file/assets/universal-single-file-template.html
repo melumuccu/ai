@@ -122,15 +122,23 @@
         左側（狭い画面では本文上）には、viewport 内に見えている専門用語の解説カードが文書順に積み上がります（例: <mark data-term-id="icp">ICP</mark>、<mark data-term-id="tam">TAM</mark>）。スクロールで見えなくなった用語のカードは非表示になります。
       </p>
 
-      <!-- タイポグラフィ・見出しサンプル -->
+      <!-- 文書サンプル（見出し・本文3値） -->
       <section class="mb-6">
-        <h2 class="text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">タイポグラフィ・見出しサンプル</h2>
-        <h1 class="text-4xl bg-[rgb(20,58,78)] text-white px-4 py-2 mb-4">見出し h1（text-4xl）</h1>
-        <h2 class="text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">見出し h2（text-2xl）</h2>
-        <h3 class="text-lg text-[rgb(34,135,189)] mb-[10px] pb-[10px]">見出し h3（text-lg）</h3>
-        <p class="mb-2">本文（text-base）。標準サイズの段落です。</p>
-        <p class="mb-2 text-sm">補足（text-sm）。注釈や二次情報向けです。</p>
-        <p class="mb-4 text-lg font-medium">強調（text-lg）。重要な結論向けです。</p>
+        <h1 class="text-4xl bg-[rgb(20,58,78)] text-white px-4 py-2 mt-16 mb-6">単一 HTML レビュー資料の書き方</h1>
+        <p class="mb-4">
+          このテンプレートは、ビルド不要の単一 HTML でレビュー資料を作成するための起点です。本文を選択してコメントを付け、左レールで専門用語を補足できます。
+        </p>
+        <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">本文サイズの選び方</h2>
+        <p class="mb-2">
+          通常の説明文は <code class="text-xs">text-base</code> を使います。読者が流し読みしやすいよう、1段落1論点を心がけてください。
+        </p>
+        <p class="mb-4 text-sm">
+          補足や注釈は <code class="text-xs">text-sm</code> で書きます。表や steps に載せた内容を段落で繰り返さないでください。
+        </p>
+        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px]">強調が必要なとき</h3>
+        <p class="mb-4 text-lg font-medium">
+          結論や判断の要点は <code class="text-xs">text-lg</code> で1文にまとめます。見出し h3 と同じサイズですが、色と余白で区別します。
+        </p>
       </section>
 
       <!-- 要約 -->
@@ -138,7 +146,7 @@
         <div class="card-body py-4">
           <div class="flex items-center gap-2">
             <span class="badge badge-primary badge-outline">概要</span>
-            <h2 class="card-title text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">ドキュメントの目的</h2>
+            <h2 class="card-title text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">ドキュメントの目的</h2>
           </div>
           <ul class="mt-2 list-disc space-y-1 pl-5">
             <li>ビルド不要の単一 HTML で説明ページを作る。</li>
@@ -159,7 +167,7 @@
 
       <!-- 使い方（steps） -->
       <section class="mb-6">
-        <h2 class="text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">使い方</h2>
+        <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">使い方</h2>
         <ol class="steps steps-vertical lg:steps-horizontal w-full">
           <li class="step step-primary">説明したい箇所をドラッグして選択する</li>
           <li class="step step-primary">表示される入力欄にコメントを書いて追加する</li>
@@ -175,26 +183,26 @@
 
       <!-- リスク badge + 薄背景 + 枠線 -->
       <section class="mb-6">
-        <h2 class="text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">リスク表現（デモ）</h2>
+        <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">リスク表現（デモ）</h2>
         <div class="grid gap-3 sm:grid-cols-3">
           <div class="card border border-error/40 bg-error/10 shadow-sm">
             <div class="card-body gap-2 py-3">
               <span class="badge badge-error w-fit">高リスク</span>
-              <h3 class="text-lg text-[rgb(34,135,189)] mb-[10px] pb-[10px] font-semibold">破壊的変更</h3>
+              <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">破壊的変更</h3>
               <p>データ移行・認証・課金への影響。確認手順を明記する。</p>
             </div>
           </div>
           <div class="card border border-warning/40 bg-warning/10 shadow-sm">
             <div class="card-body gap-2 py-3">
               <span class="badge badge-warning w-fit">中リスク</span>
-              <h3 class="text-lg text-[rgb(34,135,189)] mb-[10px] pb-[10px] font-semibold">互換性</h3>
+              <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">互換性</h3>
               <p>API 契約変更・表示崩れの可能性。回帰確認が必要。</p>
             </div>
           </div>
           <div class="card border border-success/40 bg-success/10 shadow-sm">
             <div class="card-body gap-2 py-3">
               <span class="badge badge-success w-fit">低リスク</span>
-              <h3 class="text-lg text-[rgb(34,135,189)] mb-[10px] pb-[10px] font-semibold">軽微な変更</h3>
+              <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">軽微な変更</h3>
               <p>文言・スタイル・ドキュメント追記。</p>
             </div>
           </div>
@@ -207,7 +215,7 @@
 
       <!-- 補足（collapse） -->
       <section class="mb-6">
-        <h2 class="text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">補足</h2>
+        <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">補足</h2>
         <div class="collapse collapse-arrow bg-base-100 border border-base-300">
           <input type="checkbox" />
           <div class="collapse-title font-medium">Mermaid 図の追加方法</div>

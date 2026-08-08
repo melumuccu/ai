@@ -30,7 +30,7 @@ description: Use this skill when creating or revising build-free, single-file in
 | 論理分離       | 概要・リスク群・意図グループ等を親 `section`、見出し、余白、背景または divider で分離 |
 | 視覚エンコード | 状態・リスク・カテゴリは badge + 薄背景 + 枠線 + テキストラベル（色だけに依存しない） |
 | タイポグラフィ | 本文 `text-base`、補足 `text-sm`、強調 `text-lg` の 3 値のみ。任意値 rem（`text-[0.85rem]` / `text-[1.15rem]` 等）は本文用途で使わない |
-| 見出し | `[data-content-root]` 内: h1 `text-4xl` + 暗背景 + 明色文字、h2 `text-2xl` + 下線、h3 `text-lg` + 青文字（詳細は content-patterns § 見出し） |
+| 見出し | `[data-content-root]` 内: h1 `text-4xl mt-16 mb-6` + 暗背景 + 明色文字、h2 `text-2xl mt-12 mb-4` + 下線、h3 `text-lg mt-4 mb-2` + 青文字（詳細は content-patterns § 見出し） |
 | 色彩・コントラスト | 薄背景上の黄色文字・薄グレー文字等を禁止。`mark[data-comment-id]` の黄色背景は例外（文字色は暗色維持） |
 | 二重記載禁止   | 表・図・steps に載せた事実を長文段落で繰り返さない                                    |
 | 専門用語       | 初出を `mark[data-term-id]` で**ハイライトのみ**装飾し、viewport 内可視用語の解説カードを左 `[data-annotation-panel]` に文書順で積み上げる。badge・「用語」ラベル等の余計な装飾は禁止（詳細は [content-patterns.md](references/content-patterns.md) § 専門用語・左注釈） |

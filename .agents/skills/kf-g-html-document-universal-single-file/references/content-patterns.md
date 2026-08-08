@@ -97,11 +97,11 @@
 
 `[data-content-root]` 内の文書見出しに適用する。ページ chrome（navbar タイトル等）は対象外。
 
-| 要素 | 元 px | サイズクラス | 装飾クラス |
-| --- | ---: | --- | --- |
-| h1 | 36 | `text-4xl` | `bg-[rgb(20,58,78)]` + **明色文字必須** `text-white` + 適度な `px`/`py` |
-| h2 | 24 | `text-2xl` | `pb-1` + `mb-3` + `border-b-4` + `border-[rgb(20,58,78)]` |
-| h3 | 18 | `text-lg` | `text-[rgb(34,135,189)]` + `mb-[10px]` + `pb-[10px]` |
+| 要素 | 元 px | サイズクラス | margin（上下のみ、左右 0） | 装飾クラス |
+| --- | ---: | --- | --- | --- |
+| h1 | 36 | `text-4xl` | `margin: 4rem 0 1.5rem 0` → `mt-16 mb-6` | `bg-[rgb(20,58,78)]` + **明色文字必須** `text-white` + 適度な `px`/`py` |
+| h2 | 24 | `text-2xl` | `margin: 3rem 0 1rem 0` → `mt-12 mb-4` | `pb-1` + `border-b-4` + `border-[rgb(20,58,78)]` |
+| h3 | 18 | `text-lg` | `margin: 1rem 0 0.5rem 0` → `mt-4 mb-2` | `text-[rgb(34,135,189)]` + `pb-[10px]` |
 
 - h1 は暗背景に暗文字を禁止する（可読性のため `text-white` 等の明色を必須とする）
 - h3 と本文強調はどちらも `text-lg` だが、見出しは上記色・余白で区別する
@@ -197,7 +197,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
   <div class="card-body py-4">
     <div class="flex items-center gap-2">
       <span class="badge badge-primary badge-outline">概要</span>
-      <h2 class="card-title text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">変更の目的</h2>
+      <h2 class="card-title text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">変更の目的</h2>
     </div>
     <ul class="mt-2 list-disc space-y-1 pl-5">
       <li>要点1</li>
@@ -210,26 +210,26 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 <!-- リスク群（高→中→低） -->
 <section class="mb-6">
-  <h2 class="text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">リスク順レビュー</h2>
+  <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">リスク順レビュー</h2>
   <div class="grid gap-3 sm:grid-cols-3">
     <div class="card border border-error/40 bg-error/10 shadow-sm">
       <div class="card-body gap-2 py-3">
         <span class="badge badge-error w-fit">高リスク</span>
-        <h3 class="text-lg text-[rgb(34,135,189)] mb-[10px] pb-[10px] font-semibold">認証・課金</h3>
+        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">認証・課金</h3>
         <p>変更点と確認方法</p>
       </div>
     </div>
     <div class="card border border-warning/40 bg-warning/10 shadow-sm">
       <div class="card-body gap-2 py-3">
         <span class="badge badge-warning w-fit">中リスク</span>
-        <h3 class="text-lg text-[rgb(34,135,189)] mb-[10px] pb-[10px] font-semibold">API 契約</h3>
+        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">API 契約</h3>
         <p>変更点と確認方法</p>
       </div>
     </div>
     <div class="card border border-success/40 bg-success/10 shadow-sm">
       <div class="card-body gap-2 py-3">
         <span class="badge badge-success w-fit">低リスク</span>
-        <h3 class="text-lg text-[rgb(34,135,189)] mb-[10px] pb-[10px] font-semibold">文言・スタイル</h3>
+        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">文言・スタイル</h3>
         <p>変更点と確認方法</p>
       </div>
     </div>
@@ -238,7 +238,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 <!-- 意図グループ + 詳細 collapse -->
 <section class="mb-6">
-  <h2 class="text-2xl pb-1 mb-3 border-b-4 border-[rgb(20,58,78)]">意図グループ</h2>
+  <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">意図グループ</h2>
   <div class="collapse collapse-arrow bg-base-100 border border-base-300">
     <input type="checkbox" />
     <div class="collapse-title font-medium">グループ名（要約1行）</div>
