@@ -155,7 +155,6 @@ skill 名を決めるときは、次の順で考えてください。
 
 ### 変更後は一覧情報も更新する
 
-- skill を追加、改名、削除した後は `.agents/skills/skills.json` を再生成して整合を取る
 - `.claude-plugin/marketplace.json` を使っている場合は、skill の追加・名前変更・削除を反映して plugin の分類も更新する
 
 
