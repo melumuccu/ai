@@ -11,6 +11,7 @@ import {
   runMarkdownLint,
   runSkillLint,
 } from "./rules/runners.js";
+import { runUrlReachableLint } from "./rules/url-reachable.js";
 
 /** @param {string[]} args */
 export async function runCli(args) {
@@ -51,6 +52,7 @@ export async function runCli(args) {
   const stylelintFiles = files.filter((f) => inferEngine(f) === "stylelint");
   const markdownFiles = files.filter((f) => inferEngine(f) === "markdown");
   const dockerFiles = files.filter((f) => inferEngine(f) === "docker");
+  const contentFiles = files.filter((f) => /\.(?:md|html?)$/i.test(f));
 
   const diagnostics = [
     ...(await runEslint(config, eslintFiles)),
@@ -58,6 +60,7 @@ export async function runCli(args) {
     ...runMarkdownLint(config, markdownFiles),
     ...runSkillLint(config, markdownFiles, cwd),
     ...runDockerLint(config, dockerFiles),
+    ...(await runUrlReachableLint(config, contentFiles)),
   ];
 
   printDiagnostics(diagnostics, format);

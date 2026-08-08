@@ -31,6 +31,7 @@
     "css/no-root-font-size-px": "error",
     "css/no-root-font-size-625": "error",
     "css/no-enabled-hover": "warn",
-    "css/no-functional-animation-duration": "warn"
+    "css/no-functional-animation-duration": "warn",
+    "content/url-reachable": "warn"
   }
 }
