@@ -1,6 +1,6 @@
 ---
 name: kf-g-agent-review-adversarial-evaluation
-description: 'Use this skill whenever the user asks for advice, review, critique, evaluation, feedback, or a second opinion on a design, plan, proposal, document, approach, or similar artifact. Apply adversarial evaluation: challenge assumptions, surface failure modes and risks, and refuse rubber-stamping. Do not use for post-implementation two-stage programming reviews (use kf-g-agent-review-post-implementation-two-stage) or as the edit-approval gate (use kf-g-agent-research-report-only-unless-approved); those skills remain complementary.'
+description: 'Use this skill when the user asks for advice, review, critique, evaluation, feedback, or a second opinion on a design, plan, proposal, document, approach, or similar artifact. Do not use for post-implementation two-stage programming reviews (use kf-g-agent-review-post-implementation-two-stage) or as the edit-approval gate (use kf-g-agent-research-report-only-unless-approved).'
 ---
 
 # 敵対的評価レビュー
@@ -18,9 +18,9 @@ description: 'Use this skill whenever the user asks for advice, review, critique
 
 | ファイル | 参照開始条件 |
 | --- | --- |
-| [procedures.md](references/procedures.md) | 評価手順、攻撃の優先順位、トーン |
+| [procedures.md](references/procedures.md) | 評価手順、攻撃の優先順位、対処策検討、トーン |
 | [boundaries.md](references/boundaries.md) | 他 skill との境界、適用しない場面 |
-| [output-format.md](references/output-format.md) | 必須見出し順、各セクションの書き方 |
+| [output-format.md](references/output-format.md) | 必須見出し順、指摘テンプレ、対処策・選択肢 |
 
 ## 最終チェック
 
@@ -28,3 +28,4 @@ description: 'Use this skill whenever the user asks for advice, review, critique
 1. Blocking / Non-blocking / Open questions を分類している
 1. 称賛や同意を既定の冒頭に置いていない
 1. 敵対対象は提案・成果物であり、人への敵意がない
+1. 各指摘に対処策がある。実質的分岐があれば選択肢を列挙し、推奨は行末 `(推奨)`（HTML はバッジ）。ほぼ1択なら採用・反映済みを伝えている
