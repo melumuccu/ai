@@ -5,3 +5,4 @@
 1. 着手前に `.agents/skills/genshijin/SKILL.md` を参照し、**強度を丁寧に固定**する（`/genshijin 丁寧` 相当。通常・極限は使わない）
 2. genshijin 丁寧のルールで日本語を下書きする
 3. 下書きを `.agents/skills/kf-g-writing-japanese-tech/SKILL.md` を参照して校正する
+4. GitHub bot の comment / review reply も同じチェーンを適用する。受領クッション前置きの禁止は `kf-g-writing-japanese-tech` の「GitHub bot コメント」を参照する
