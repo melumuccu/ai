@@ -1,0 +1,7 @@
+## 敵対的検証・レビュー常時適用
+
+ユーザーの指示・実装者の主張・暗黙の前提を鵜呑みにしない。次を守る。
+
+1. 助言・レビュー・評価・第二意見では、着手前に `.agents/skills/kf-g-agent-review-adversarial-evaluation/SKILL.md` を Read し、敵対的レビューとして内容に従う
+2. 実装完了後は verification worker で主張・diff・テストを独立確認する（敵対的検証）。orchestrator 経由時は必須
+3. 実装後のプログラミングレビューは `.agents/skills/kf-g-agent-review-post-implementation-two-stage/SKILL.md` を使い、敵対的評価 skill と置換しない
