@@ -12,14 +12,8 @@
 | diff2html | Git diff の視覚的説明が必要 |
 | Alpine.js | 小さな UI 状態（タブ・折りたたみ）のみ。**コメントコア:** vanilla JS を維持 |
 
-**daisyUI 公式 CDN（ビルド不要 HTML）:**
+**daisyUI CDN タグと `data-theme`:** `assets/universal-single-file-template.html` の `<head>` / `<html>` を正本とする。
 
-```html
-<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-```
-
-- `<html>` に `data-theme="light"`（または依頼に合うテーマ）を設定する
 - ページ chrome、カード、バッジ、アラート、折りたたみ、手順 UI は daisyUI コンポーネントクラス（`btn`, `card`, `alert`, `badge`, `collapse`, `steps` など）を使う
 - **コメントコア:** vanilla JS を維持。Alpine は小 UI のみ
 - daisyUI CDN モードで利用可能なバリアントのみ使う
@@ -68,43 +62,23 @@
 
 ### 情報エンコード（色非依存）
 
-| 意味 | badge | 背景・枠線 |
-| --- | --- | --- |
-| 高リスク | `badge-error` + 「高リスク」 | `border-error/40 bg-error/10` |
-| 中リスク | `badge-warning` + 「中リスク」 | `border-warning/40 bg-warning/10` |
-| 低リスク | `badge-success` + 「低リスク」 | `border-success/40 bg-success/10` |
-| 注意 | `badge-warning` + ラベル | `alert alert-warning` |
-| 完了 | `badge-success` + ラベル | `badge` テキストで状態を明示 |
-
-**冗長エンコード:** badge テキスト + 背景 + 枠線 + ラベルを併用する。
+**冗長エンコード:** badge テキスト + 背景 + 枠線 + ラベルを併用する。リスク段階の具体クラスは `assets/universal-single-file-template.html` を正本とする。注意は `alert`、完了は success 系 badge 等でテキストラベルを必ず付ける。
 
 ### タイポグラフィ
 
-`[data-content-root]` 内の本文・補足・強調は、次の 3 値スケールのみ使う。
-
-| 用途 | サイズ | Tailwind クラス |
-| --- | --- | --- |
-| 本文（基本） | `1rem` | `text-base`（省略可。親に `leading-relaxed` 等を付けてよい） |
-| 補足説明 | `0.875rem` | `text-sm` |
-| 強調本文 | `1.125rem` | `text-lg` |
+`[data-content-root]` 内の本文・補足・強調は **本文 `text-base` / 補足 `text-sm` / 強調 `text-lg`** の 3 値スケールのみ使う。具体例は `assets/universal-single-file-template.html` を正本とする。
 
 - 本文・補足・強調用途で上記以外の `font-size` を使わない
 - `text-[0.85rem]` / `text-[1.15rem]` 等の任意値 rem は本文用途で使わない
 - **見出し階層:** h1→h2→h3 を連続させる。**本文用途に見出しサイズを流用しない**
 - ページ chrome（navbar・レール見出し・dialog ラベル・コメントカード UI）や `badge` 内ラベルは UI 用途として例外可
 
-#### 見出し（Notion → Tailwind）
+#### 見出し（Notion 準拠）
 
-`[data-content-root]` 内の文書見出しに適用する。ページ chrome（navbar タイトル等）は対象外。
-
-| 要素 | 元 px | サイズクラス | margin（上下のみ、左右 0） | 装飾クラス |
-| --- | ---: | --- | --- | --- |
-| h1 | 36 | `text-4xl` | `margin: 4rem 0 1.5rem 0` → `mt-16 mb-6` | `bg-[rgb(20,58,78)]` + **明色文字必須** `text-white` + 適度な `px`/`py` |
-| h2 | 24 | `text-2xl` | `margin: 3rem 0 1rem 0` → `mt-12 mb-4` | `pb-1` + `border-b-4` + `border-[rgb(20,58,78)]` |
-| h3 | 18 | `text-lg` | `margin: 1rem 0 0.5rem 0` → `mt-4 mb-2` | `text-[rgb(34,135,189)]` + `pb-[10px]` |
+`[data-content-root]` 内の h1/h2/h3 は Notion 準拠のサイズ・装飾とする。具体クラスは `assets/universal-single-file-template.html` を正本とする。ページ chrome（navbar タイトル等）は対象外。
 
 - h1 は暗背景 + 明色文字（`text-white` 等）を必須とする
-- h3 と本文強調はどちらも `text-lg` だが、見出しは上記色・余白で区別する
+- h3 と本文強調はどちらも `text-lg` だが、見出しは色・余白で区別する
 
 ### 色彩・コントラスト
 
@@ -132,21 +106,13 @@
 
 #### UI 役割
 
-| 要素 | 役割 |
-| --- | --- |
-| 右レール | ユーザーコメント（既存。`[data-comment-panel]`） |
-| 左レール | 著者定義の専門用語解説（viewport 内可視用語を `[data-annotation-panel]` に文書順で積み上げ。SVG コネクタなし） |
-| 用語マーク | `mark[data-term-id]` |
-| 注釈パネル | `[data-annotation-panel]` |
-| 注釈データ | `#term-annotations` 内 JSON（静的。**左注釈データ:** HTML に静的埋め込み） |
-
-DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) とテンプレートを正本とする。本文では契約名と必須属性のみ参照し、実装細部を重複記載しない。
+DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) と `assets/universal-single-file-template.html` を正本とする。
 
 #### 執筆ルール
 
 1. 専門用語の初出を `mark[data-term-id]` でマークし、viewport 内に見えている用語の解説カードを左注釈パネルへ文書順に積み上げ表示する
 1. **単一情報源:** 本文の長い括弧説明と左注釈を重複させない（括弧は短い補足のみ可）
-1. 用語マークの視覚装飾は**ハイライトのみ**（背景色＋下線等。コメント mark とは色分けで区別）。badge・「用語」テキストラベル・ピル・アイコン等は付けない
+1. 用語マークの視覚装飾は template の `mark[data-term-id]` CSS に従い**ハイライトのみ**とする（badge・「用語」ラベル・ピル・アイコン等は付けない）
 1. a11y 属性（`aria-label` / `role` / `tabindex`）は視覚装飾ではないため維持してよい
 1. 左注釈カードは用語名、定義、必要なら関連語へのリンクまたは短い例を載せる
 
@@ -199,66 +165,6 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. diff 抜粋が必要なら diff2html（任意）
 1. フローが複雑なら Mermaid（任意）
 1. 詳細は collapse（上段の表/図と重複させない）
-
-**HTML 構造例（`[data-content-root]` 内）:**
-
-```html
-<!-- 要約 -->
-<section class="card mb-6 border border-primary/30 bg-primary/5 shadow-sm">
-  <div class="card-body py-4">
-    <div class="flex items-center gap-2">
-      <span class="badge badge-primary badge-outline">概要</span>
-      <h2 class="card-title text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">変更の目的</h2>
-    </div>
-    <ul class="mt-2 list-disc space-y-1 pl-5">
-      <li>要点1</li>
-      <li>要点2</li>
-    </ul>
-  </div>
-</section>
-
-<div class="divider my-6">リスク</div>
-
-<!-- リスク群（高→中→低） -->
-<section class="mb-6">
-  <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">リスク順レビュー</h2>
-  <div class="grid gap-3 sm:grid-cols-3">
-    <div class="card border border-error/40 bg-error/10 shadow-sm">
-      <div class="card-body gap-2 py-3">
-        <span class="badge badge-error w-fit">高リスク</span>
-        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">認証・課金</h3>
-        <p>変更点と確認方法</p>
-      </div>
-    </div>
-    <div class="card border border-warning/40 bg-warning/10 shadow-sm">
-      <div class="card-body gap-2 py-3">
-        <span class="badge badge-warning w-fit">中リスク</span>
-        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">API 契約</h3>
-        <p>変更点と確認方法</p>
-      </div>
-    </div>
-    <div class="card border border-success/40 bg-success/10 shadow-sm">
-      <div class="card-body gap-2 py-3">
-        <span class="badge badge-success w-fit">低リスク</span>
-        <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px] font-semibold">文言・スタイル</h3>
-        <p>変更点と確認方法</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 意図グループ + 詳細 collapse -->
-<section class="mb-6">
-  <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">意図グループ</h2>
-  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-    <input type="checkbox" />
-    <div class="collapse-title font-medium">グループ名（要約1行）</div>
-    <div class="collapse-content">
-      <p>詳細・根拠。上段の表/図と重複しない。</p>
-    </div>
-  </div>
-</section>
-```
 
 **避ける:** Worker 連携、レビュー API、自動アップロードコードの埋め込み、表/図と同内容の長文段落
 
