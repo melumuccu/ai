@@ -27,17 +27,9 @@
 
 `[data-content-root]` 内の出典 `<a href>` は、リンクであることが目視で分かる装飾を維持する。
 
-### 必須
+### リンク識別の維持
 
-1. 下線と本文と異なるリンク色を維持する（ブラウザ UA 既定に近い識別手段でよい）
-1. `:visited` も未訪問と区別できる色にする
-1. Tailwind preflight や `text-base-content` 等で UA 相当の装飾が消える場合は、テンプレートの復元 CSS を残すか同等の CSS を入れる
-1. daisyUI の `link` / `link-primary` を使ってもよいが、必須ではない
-
-### 禁止
-
-1. `text-decoration: none` のみ、本文同色の上書き、`no-underline` など、リンク識別手段を消す指定
-1. コメント用 `mark[data-comment-id]` や用語 `mark[data-term-id]` の下線・背景ルールと混同した指定（`<a>` 専用ルールとする）
+`[data-content-root] a[href]` のリンク装飾 CSS は `assets/universal-single-file-template.html` を正本とする。コメント用 `mark[data-comment-id]` や用語 `mark[data-term-id]` とは `<a>` 専用ルールで区別する。
 
 ## fragment 優先
 
@@ -56,7 +48,7 @@
 | 左注釈 | `mark[data-term-id]` | 著者定義の専門用語解説 |
 | 出典リンク | `<a href="https://...">` | 外部資料への根拠参照 |
 
-混同禁止。専門用語の定義は左注釈、外部資料の引用は本文 `<a>` とする。
+専門用語の定義は左注釈、外部資料の引用は本文 `<a>` とする（機能を分離する）。
 
 ## 生成時チェック
 
@@ -65,4 +57,4 @@
 1. 可能な箇所で fragment 付き URL を使っているか。ページ URL のみの場合、理由を記録したか
 1. 左注釈（`mark[data-term-id]`）と出典 `<a>` を混同していないか
 1. リンクの直後に長い括弧 URL を併記していないか
-1. リンク化した出典文言を長文で繰り返していないか（二重記載禁止）
+1. リンク化した出典文言を長文で繰り返していないか（**単一情報源**）

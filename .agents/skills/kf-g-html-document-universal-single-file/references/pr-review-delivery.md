@@ -1,18 +1,18 @@
 # issue / PR 向け R2 配布
 
-issue または PR 向けに HTML を R2 配布するときの非コミット規則と完了手順。
+issue または PR 向けに HTML を R2 配布するときの成果物の正本と配布手順。
 
-## コミュ用ファイルの非コミット
+## 成果物の正本
 
-issue / PR 向けに生成する **レビュー用 HTML** と **before/after スクリーンショット**（PNG・AVIF 等）は、コミュニケーション・レビュー配布用の成果物であり **Git へ commit しない**。正本は R2 のみとする。
+issue / PR 向けに生成する **レビュー用 HTML** と **before/after スクリーンショット**（PNG・AVIF 等）は、コミュニケーション・レビュー配布用の成果物。**成果物の正本:** レビュー HTML は R2。Git には skill ソースのみ。
 
 | 区分 | 扱い |
 | --- | --- |
-| **commit 禁止** | 生成済み PR レビュー HTML、before/after スクリーンショット、R2 upload 前の作業用コピー |
+| **R2 正本** | 生成済み PR レビュー HTML、before/after スクリーンショット、R2 upload 前の作業用コピー |
 | **保管場所** | 一時ディレクトリまたは `.gitignore` 済み workspace 内（例: `tmp/`、`artifacts/`）。repository root への直置きは避ける |
 | **配布** | 出力チェックリストで目視確認し、新規 `v{N}` オブジェクトキーで R2 へ put する |
 | **PR description** | 確認済み R2 HTML の公開 URL のみ `[v{N}](URL)` でリンクする。生成ファイル本体は載せない |
-| **commit 可** | 本 skill の SKILL.md、`references/`、`scripts/`、`assets/` テンプレート、runbook 等の **ソース・支援ファイル** |
+| **Git 管理** | 本 skill の SKILL.md、`references/`、`scripts/`、`assets/` テンプレート、runbook 等の **ソース・支援ファイル** |
 
 ## 完了手順（issue / PR 向け HTML 配布）
 
