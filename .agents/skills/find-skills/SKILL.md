@@ -24,9 +24,8 @@ The Skills CLI (`npx skills`) is the package manager for the open agent skills e
 
 **Key commands:**
 
-- `npx skills find [query]` - Search for skills interactively or by keyword
+- `npx skills find [query] [--owner <owner>]` - Search for skills interactively or by keyword, optionally scoped to a GitHub owner
 - `npx skills add <package>` - Install a skill from GitHub or other sources
-- `npx skills check` - Check for skill updates
 - `npx skills update` - Update all installed skills
 
 **Browse skills at:** https://skills.sh/
@@ -38,8 +37,8 @@ The Skills CLI (`npx skills`) is the package manager for the open agent skills e
 When a user asks for help with something, identify:
 
 1. The domain (e.g., React, testing, design, deployment)
-2. The specific task (e.g., writing tests, creating animations, reviewing PRs)
-3. Whether this is a common enough task that a skill likely exists
+1. The specific task (e.g., writing tests, creating animations, reviewing PRs)
+1. Whether this is a common enough task that a skill likely exists
 
 ### Step 2: Check the Leaderboard First
 
@@ -54,7 +53,7 @@ For example, top skills for web development include:
 If the leaderboard doesn't cover the user's need, run the find command:
 
 ```bash
-npx skills find [query]
+npx skills find [query] [--owner <owner>]
 ```
 
 For example:
@@ -68,17 +67,17 @@ For example:
 **Do not recommend a skill based solely on search results.** Always verify:
 
 1. **Install count** — Prefer skills with 1K+ installs. Be cautious with anything under 100.
-2. **Source reputation** — Official sources (`vercel-labs`, `anthropics`, `microsoft`) are more trustworthy than unknown authors.
-3. **GitHub stars** — Check the source repository. A skill from a repo with <100 stars should be treated with skepticism.
+1. **Source reputation** — Official sources (`vercel-labs`, `anthropics`, `microsoft`) are more trustworthy than unknown authors.
+1. **GitHub stars** — Check the source repository. A skill from a repo with <100 stars should be treated with skepticism.
 
 ### Step 5: Present Options to the User
 
 When you find relevant skills, present them to the user with:
 
 1. The skill name and what it does
-2. The install count and source
-3. The install command they can run
-4. A link to learn more at skills.sh
+1. The install count and source
+1. The install command they can run
+1. A link to learn more at skills.sh
 
 Example response:
 
@@ -120,16 +119,16 @@ When searching, consider these common categories:
 ## Tips for Effective Searches
 
 1. **Use specific keywords**: "react testing" is better than just "testing"
-2. **Try alternative terms**: If "deploy" doesn't work, try "deployment" or "ci-cd"
-3. **Check popular sources**: Many skills come from `vercel-labs/agent-skills` or `ComposioHQ/awesome-claude-skills`
+1. **Try alternative terms**: If "deploy" doesn't work, try "deployment" or "ci-cd"
+1. **Check popular sources**: Many skills come from `vercel-labs/agent-skills` or `ComposioHQ/awesome-claude-skills`
 
 ## When No Skills Are Found
 
 If no relevant skills exist:
 
 1. Acknowledge that no existing skill was found
-2. Offer to help with the task directly using your general capabilities
-3. Suggest the user could create their own skill with `npx skills init`
+1. Offer to help with the task directly using your general capabilities
+1. Suggest the user could create their own skill with `npx skills init`
 
 Example:
 

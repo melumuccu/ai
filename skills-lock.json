@@ -11,18 +11,19 @@
       "source": "sickn33/antigravity-awesome-skills",
       "sourceType": "github",
       "skillPath": "skills/docker-expert/SKILL.md",
-      "computedHash": "0974b5f64fcd284c1bd662810e2388f7beb9be6784c597de4d0ad4213ccbd6af"
+      "computedHash": "14840bcfb3fad72711975c3413416779ce5b9b14517fb5e326e248314e04f4d6"
     },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
-      "computedHash": "d31e234f0c90694a670222cdd1dafa853e051d7066beda389f1097c22dadd461"
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "b146008599c31057cef1c145774cea5d5afb30e8f43fa802e47a4b461419aaaf"
     },
     "genshijin": {
       "source": "InterfaceX-co-jp/genshijin",
       "sourceType": "github",
       "skillPath": "skills/genshijin/SKILL.md",
-      "computedHash": "62c8d8fe9704b296d67fd666a27227e507f338a3f0931aa8187405fe44992405"
+      "computedHash": "905fc789552518db9405ddbc767aca68794fab0af686af73d73999f39bffda91"
     },
     "genshijin-commit": {
       "source": "InterfaceX-co-jp/genshijin",
@@ -34,7 +35,7 @@
       "source": "InterfaceX-co-jp/genshijin",
       "sourceType": "github",
       "skillPath": "skills/genshijin-compress/SKILL.md",
-      "computedHash": "7c894d3b8c607d8bedcf94552ec71f38940d9d5eda8c0d763c7801758b0646b5"
+      "computedHash": "aa43afec4b24c33ff73e63f3825d107ce9be6b34fca40df860f46148fdab6b19"
     },
     "genshijin-crew": {
       "source": "InterfaceX-co-jp/genshijin",
@@ -66,34 +67,29 @@
       "skillPath": "skills/gh/SKILL.md",
       "computedHash": "4161832d3b900386bfeb687167ea990e65bae91327c7fb1235c0db54ad15eb63"
     },
-    "prompt-builder": {
-      "source": "github/awesome-copilot",
-      "sourceType": "github",
-      "skillPath": "skills/prompt-builder/SKILL.md",
-      "computedHash": "1591d452ec2ba6d70faaa96b481f7c8261a280df838fee9c5295804fa28acbd3"
-    },
     "skill-creator": {
       "source": "anthropics/skills",
       "sourceType": "github",
-      "computedHash": "b122f4d1e91aa1d83027e050b5b37c3156203ee85458d7b1360bc48167c9e02a"
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "computedHash": "5ea13a6d9f0d4bb694405d79acd00cadec0d21bb138c4dd10fcf3c500cb835c2"
     },
     "svelte-code-writer": {
       "source": "sveltejs/ai-tools",
       "sourceType": "github",
       "skillPath": "plugins/claude/svelte/skills/svelte-code-writer/SKILL.md",
-      "computedHash": "c0e2cce9855f8e312cbb0a05aef164b4659c672d7723e4e598ffa6bc94890542"
+      "computedHash": "6f78193a79906175595ce8e4ca8d726da350eb99035a9544b6553620df5673a1"
     },
     "svelte-core-bestpractices": {
       "source": "sveltejs/ai-tools",
       "sourceType": "github",
       "skillPath": "plugins/claude/svelte/skills/svelte-core-bestpractices/SKILL.md",
-      "computedHash": "bec11e369679027edf9d4acbe6d9788f8da33dc14b48b874f231d3ba13705324"
+      "computedHash": "98b4ee346ac45e13740c9f3353b604d5c6e844c96cdc8867052fa961cbdb525d"
     },
     "tdd": {
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/tdd/SKILL.md",
-      "computedHash": "15a7b5e36383ebadb2dec5e586679e55e9663d292da418926b8da6fc0ef27d84"
+      "computedHash": "614ac2e45fb0ec02f6ce422d26bd9aa4e33aa4867323f5a3a5c0c20b96f78ff4"
     }
   }
 }
