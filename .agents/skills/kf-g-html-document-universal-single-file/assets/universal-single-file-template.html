@@ -17,6 +17,7 @@
     }
 
     mark[data-comment-id] {
+      display: inline;
       background: rgba(250, 204, 21, 0.35);
       text-decoration: underline;
       text-decoration-color: rgb(234, 179, 8);
@@ -387,19 +388,7 @@
         return null;
       }
 
-      function wrapRange(range, id) {
-        const mark = document.createElement('mark');
-        mark.dataset.commentId = id;
-        mark.setAttribute('tabindex', '0');
-        mark.setAttribute('role', 'button');
-        mark.setAttribute('aria-label', 'コメント付きテキスト');
-        try {
-          range.surroundContents(mark);
-        } catch {
-          const contents = range.extractContents();
-          mark.appendChild(contents);
-          range.insertNode(mark);
-        }
+      function bindMarkEvents(mark, id) {
         mark.addEventListener('click', () => focusCard(id));
         mark.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -407,7 +396,145 @@
             focusCard(id);
           }
         });
+      }
+
+      function createMarkElement(id) {
+        const mark = document.createElement('mark');
+        mark.dataset.commentId = id;
+        mark.setAttribute('tabindex', '0');
+        mark.setAttribute('role', 'button');
+        mark.setAttribute('aria-label', 'コメント付きテキスト');
+        bindMarkEvents(mark, id);
         return mark;
+      }
+
+      const FORBIDDEN_MARK_PARENTS = new Set(['TR', 'TABLE', 'TBODY', 'THEAD', 'TFOOT', 'UL', 'OL']);
+
+      function isForbiddenMarkParent(element) {
+        return element && element.nodeType === Node.ELEMENT_NODE && FORBIDDEN_MARK_PARENTS.has(element.tagName);
+      }
+
+      function canWrapTextNode(textNode) {
+        if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return false;
+        const parent = textNode.parentElement;
+        if (!parent) return false;
+        return !isForbiddenMarkParent(parent);
+      }
+
+      function normalizeSubRangeForWrap(sub) {
+        const cloned = sub.cloneRange();
+        let startNode = cloned.startContainer;
+        let endNode = cloned.endContainer;
+        let startOffset = cloned.startOffset;
+        let endOffset = cloned.endOffset;
+
+        if (startNode.nodeType !== Node.TEXT_NODE || endNode.nodeType !== Node.TEXT_NODE) {
+          return cloned;
+        }
+
+        if (startNode === endNode) {
+          const originalStartOffset = startOffset;
+          if (startOffset > 0 && startOffset < startNode.textContent.length) {
+            startNode = startNode.splitText(startOffset);
+            endNode = startNode;
+            endOffset = endOffset - originalStartOffset;
+            startOffset = 0;
+          }
+          if (endOffset - startOffset < endNode.textContent.length) {
+            endNode.splitText(endOffset - startOffset);
+          }
+          const single = document.createRange();
+          single.selectNodeContents(startNode);
+          return single;
+        }
+
+        if (startOffset > 0 && startOffset < startNode.textContent.length) {
+          startNode = startNode.splitText(startOffset);
+          startOffset = 0;
+        }
+        if (endOffset > 0 && endOffset < endNode.textContent.length) {
+          endNode.splitText(endOffset);
+        }
+
+        const normalized = document.createRange();
+        normalized.setStart(startNode, startOffset);
+        normalized.setEnd(endNode, endOffset);
+        return normalized;
+      }
+
+      function splitRangeIntoTextSubRanges(range) {
+        const subRanges = [];
+        const root = range.commonAncestorContainer.nodeType === Node.TEXT_NODE
+          ? range.commonAncestorContainer.parentNode
+          : range.commonAncestorContainer;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+          acceptNode(node) {
+            if (!node.textContent.length) return NodeFilter.FILTER_REJECT;
+            if (!canWrapTextNode(node)) return NodeFilter.FILTER_REJECT;
+            try {
+              if (!range.intersectsNode(node)) return NodeFilter.FILTER_REJECT;
+            } catch {
+              return NodeFilter.FILTER_REJECT;
+            }
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        });
+
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          const sub = document.createRange();
+          if (node === range.startContainer && node === range.endContainer) {
+            sub.setStart(node, range.startOffset);
+            sub.setEnd(node, range.endOffset);
+          } else if (node === range.startContainer) {
+            sub.setStart(node, range.startOffset);
+            sub.setEnd(node, node.textContent.length);
+          } else if (node === range.endContainer) {
+            sub.setStart(node, 0);
+            sub.setEnd(node, range.endOffset);
+          } else {
+            sub.selectNodeContents(node);
+          }
+          if (!sub.collapsed) subRanges.push(sub);
+        }
+        return subRanges;
+      }
+
+      function showWrapFailureError() {
+        window.alert('選択範囲にコメントを追加できませんでした。別の範囲を選んでください。');
+      }
+
+      function wrapRange(range, id) {
+        const subRanges = splitRangeIntoTextSubRanges(range);
+        const marks = [];
+
+        for (const sub of subRanges) {
+          const normalized = normalizeSubRangeForWrap(sub);
+          if (normalized.collapsed) continue;
+          if (!canWrapTextNode(normalized.startContainer)) continue;
+
+          const mark = createMarkElement(id);
+          try {
+            normalized.surroundContents(mark);
+            marks.push(mark);
+          } catch {
+            /* 構造境界を跨ぐ sub-range はスキップ */
+          }
+        }
+
+        return marks;
+      }
+
+      function getPrimaryMark(entry) {
+        return entry.marks && entry.marks.length ? entry.marks[0] : null;
+      }
+
+      function unwrapMark(mark) {
+        if (!mark || !mark.parentNode) return;
+        const parent = mark.parentNode;
+        while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+        mark.remove();
+        parent.normalize();
       }
 
       function bindCardActions(card, entry) {
@@ -594,8 +721,14 @@
         const range = findRangeByAnchor(anchor) || pendingRange;
         if (!range) return;
 
-        const mark = wrapRange(range, id);
-        const rect = mark.getBoundingClientRect();
+        const marks = wrapRange(range, id);
+        if (!marks.length) {
+          showWrapFailureError();
+          return;
+        }
+
+        const primaryMark = marks[0];
+        const rect = primaryMark.getBoundingClientRect();
         const entry = {
           id,
           quote,
@@ -603,7 +736,7 @@
           anchor,
           createdAt: new Date().toISOString(),
           card: null,
-          mark,
+          marks,
           targetY: rect.top + window.scrollY
         };
         state.set(id, entry);
@@ -628,11 +761,8 @@
         const entry = state.get(id);
         if (!entry) return;
 
-        if (entry.mark) {
-          const parent = entry.mark.parentNode;
-          while (entry.mark.firstChild) parent.insertBefore(entry.mark.firstChild, entry.mark);
-          entry.mark.remove();
-          parent.normalize();
+        for (const mark of entry.marks || []) {
+          unwrapMark(mark);
         }
         if (entry.card) entry.card.remove();
         state.delete(id);
@@ -673,8 +803,10 @@
           if (!item || !item.id || !item.quote) continue;
           const range = findRangeByAnchor(item.anchor);
           if (!range) continue;
-          const mark = wrapRange(range, item.id);
-          const rect = mark.getBoundingClientRect();
+          const marks = wrapRange(range, item.id);
+          if (!marks.length) continue;
+          const primaryMark = marks[0];
+          const rect = primaryMark.getBoundingClientRect();
           const entry = {
             id: item.id,
             quote: item.quote,
@@ -682,7 +814,7 @@
             anchor: item.anchor,
             createdAt: item.createdAt || new Date().toISOString(),
             card: null,
-            mark,
+            marks,
             targetY: rect.top + window.scrollY
           };
           state.set(item.id, entry);
@@ -743,8 +875,9 @@
         let prevBottom = -Infinity;
 
         for (const entry of entries) {
-          if (!entry.mark || !entry.card) continue;
-          const markRect = entry.mark.getBoundingClientRect();
+          const primaryMark = getPrimaryMark(entry);
+          if (!primaryMark || !entry.card) continue;
+          const markRect = primaryMark.getBoundingClientRect();
           entry.targetY = markRect.top + window.scrollY;
 
           const desiredTop = markRect.top - panelRect.top;
@@ -763,8 +896,9 @@
       }
 
       function drawLine(entry) {
-        if (!entry.mark || !entry.card) return;
-        const from = entry.mark.getBoundingClientRect();
+        const primaryMark = getPrimaryMark(entry);
+        if (!primaryMark || !entry.card) return;
+        const from = primaryMark.getBoundingClientRect();
         const to = entry.card.getBoundingClientRect();
         const x1 = from.right;
         const x2 = to.left;
@@ -930,8 +1064,9 @@
         if (raf) cancelAnimationFrame(raf);
         raf = requestAnimationFrame(() => {
           for (const entry of state.values()) {
-            if (entry.mark) {
-              const rect = entry.mark.getBoundingClientRect();
+            const primaryMark = getPrimaryMark(entry);
+            if (primaryMark) {
+              const rect = primaryMark.getBoundingClientRect();
               entry.targetY = rect.top + window.scrollY;
             }
           }
