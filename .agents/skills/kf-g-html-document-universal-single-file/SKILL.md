@@ -1,6 +1,6 @@
 ---
 name: kf-g-html-document-universal-single-file
-description: Build a build-free, single-file interactive HTML document with text-selection comments, hover-triggered left-side term annotation cards for specialized vocabulary (no SVG connectors for terms), SVG connectors for user comments only, and localStorage persistence for user comments only (term annotations are static HTML, not persisted), PR walkthroughs, business flows, and non-coding docs. Use this whenever the user wants a one-page HTML explanation, interactive documentation, annotated guide, or shareable static page—even if they do not say "single-file HTML". Does not provide backend sync, authentication, or Worker deployment.
+description: Use this skill when creating or revising build-free, single-file interactive HTML documents—for example PR or issue review HTML, annotated guides, walkthroughs, or shareable static explanation pages. Apply it whenever the user wants one-page interactive documentation or a shareable HTML explanation, even if they do not say "single-file HTML".
 ---
 
 # 単一 HTML インタラクティブドキュメント
