@@ -97,7 +97,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 | 項目 | 確認方法 |
 | --- | --- |
 | HTML コア契約・daisyUI・コメント機能等 | 出力チェックリスト（目視 / ローカル操作） |
-| 出典 URL 到達性 | 執筆時は [source-citations.md](references/source-citations.md) の手順（`curl` / `WebFetch` 等）。turn 完了時は Cursor stop hook + kf-lint `content/url-reachable`（warn）。警告時は修正またはユーザ目視フォールバック |
+| 出典 URL 到達性 | 執筆時は [source-citations.md](references/source-citations.md) の手順（`curl` / `WebFetch` 等）。turn 完了時は Cursor stop hook + kf-lint `content/url-reachable`（warn）が変更 `.md` / `.html` 全文の `http(s)://` を検査。警告時は修正またはユーザ目視フォールバック |
 | R2 URL・PR description | アップロード後の公開 URL 確認と description 目視 |
 
 詳細は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。

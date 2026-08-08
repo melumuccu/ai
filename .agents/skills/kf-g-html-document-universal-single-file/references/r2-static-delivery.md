@@ -279,7 +279,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
 1. **R2 upload 前** に [SKILL.md](../SKILL.md) の出力チェックリストを満たす（HTML コア契約・daisyUI・版ラベル一致など）。before/after 画像は AVIF 必須・命名規則・容量推奨（1 画像 2 MiB / 合計 5 MiB）を目視確認する
-1. 出典リンクを含む場合は執筆時に到達性を確認し、turn 完了時の stop hook（kf-lint `content/url-reachable` warn）の警告に対応する
+1. 出典リンクを含む場合は執筆時に到達性を確認し、turn 完了時の stop hook（kf-lint `content/url-reachable` warn、対象は変更 `.md` / `.html` 全文の `http(s)://`）の警告に対応する
 1. **新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
 1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で Access 認証後に目視確認手順を実施
 1. PR / issue description を更新し、確認済み URL と版ラベル `v{N}` の一致を目視確認する（形式は [pr-review-delivery.md](pr-review-delivery.md)）

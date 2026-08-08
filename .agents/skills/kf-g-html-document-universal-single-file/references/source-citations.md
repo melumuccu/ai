@@ -80,7 +80,7 @@
 
 ## turn 完了時の到達性（stop hook）
 
-執筆時の手動確認に加え、HTML 保存後は **Cursor stop hook** により kf-lint `content/url-reachable`（warn）が `[data-content-root]` 内の外部 http(s) 出典 `<a href>` を検査する。
+執筆時の手動確認に加え、変更された `.md` / `.html` 保存後は **Cursor stop hook** により kf-lint `content/url-reachable`（warn）がファイル全文の `http(s)://` を検査する（`[data-content-root]` 内の `<a href>` に限定しない）。
 
 - 警告が出たら URL を修正するか、到達不能理由を collapse / 操作記録に残し未リンクとする
 - 一時障害や認証壁で false positive の可能性がある場合は、ユーザ目視でフォールバックする
