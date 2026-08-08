@@ -77,16 +77,6 @@ node ~/.agents/credentials/github/scripts/github-agent-update-issue-state.mjs OW
 - user token に自動 fallback しない。bot credential が未設定または無効な場合は setup 手順を表示して停止する。
 - review comment 対応時は reply 成功後に thread resolve する。
 
-## Review comment reply の文体
-
-1. reply 本文は変更概要から始める。続けて対応 commit リンクを書く
-1. 説明のみ・保留の thread は reply 本文をその旨から始める
-1. 受領クッション前置きを書かない（`ご指摘ありがとうございます`、`ご質問ありがとうございます` など、必須でない受領表現はすべて禁止）
-1. 挨拶・お礼・謝罪などの前置きを書かない
-1. `genshijin 丁寧` のクッション言葉・過度な前置き削除と整合させる
-
-参照: `kf-g-command-do-pr-rev-comment`
-
 Token:
 
 - write helper script は投稿直前に installation token を発行する。
