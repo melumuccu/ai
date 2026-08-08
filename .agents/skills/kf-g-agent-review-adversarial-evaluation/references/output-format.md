@@ -43,7 +43,7 @@
 - 推奨は行末の `(推奨)`（絵文字なし）。推奨が無い場合は付けない
 - 実質的分岐があるときだけ A/B 等のラベル付き選択肢を列挙する
 - ほぼ1択のときは採用・反映まで完了し、何を採用したかをユーザーに伝える
-- HTML（コミュ用）では daisyUI `<span class="badge badge-primary badge-outline">推奨</span>` を用い、`kf-g-html-document-universal-single-file` の badge 規約に従う（チャット規約 `(推奨)` とは分離。形式 skill を上書きしない）
+- HTML（コミュ用）では badge で表現する
 
 ## 出力例（骨格）
 
