@@ -126,6 +126,17 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. 括弧内の長い説明が左注釈と重複していないか（二重記載禁止）
 1. 用語マークがハイライトのみで装飾され、badge・「用語」ラベル等の余計な視覚装飾が付いていないか（コメント mark との色分けは維持）
 
+### 出典・外部参照
+
+外部資料を根拠に `[data-content-root]` 本文を書くときは、[source-citations.md](source-citations.md) の手順に従う（リンク化・fragment 優先に加え、**リンクの視覚** で目視識別可能な装飾を維持する）。
+
+| 要素 | 役割 |
+| --- | --- |
+| 出典 `<a href="...">` | 外部資料への根拠参照（fragment 優先） |
+| 左注釈 `mark[data-term-id]` | 著者定義の専門用語解説（別機能） |
+
+**パターン別必須度:** プランニング・調査・非コーディングは外部根拠箇所で必須。PR レビューは出典を引用した箇所のみ必須。
+
 ### a11y / レスポンシブ
 
 - キーボード: collapse・dialog・コメント操作が Tab/Enter で操作可能
@@ -286,3 +297,6 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. 表・図・steps と同内容の段落がないか
 1. 専門用語の初出が `mark[data-term-id]` でマークされ、左注釈（`[data-annotation-panel]` / `#term-annotations`）と対応しているか（パターン別必須度を満たすこと）
 1. 括弧内の長い説明と左注釈が重複していないか
+1. 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL を使っているか（[source-citations.md](source-citations.md)、パターン別必須度を確認）
+1. 出典リンクと左注釈（`mark[data-term-id]`）を混同していないか
+1. リンク化した出典文言を長文で繰り返していないか（二重記載禁止）
