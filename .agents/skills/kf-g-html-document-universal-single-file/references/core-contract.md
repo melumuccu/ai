@@ -97,7 +97,7 @@
 | --- | --- | --- |
 | 本文ルート | `[data-content-root]` | 選択・オフセット計算の基準 |
 | コメントパネル | `[data-comment-panel]` | カード配置先（デスクトップ用。モバイル複製可） |
-| コネクタ SVG | `#connector-svg` / `#connector-lines` | ハイライトからカードへの線（左右共用） |
+| コネクタ SVG | `#connector-svg` / `#connector-lines` | ハイライトからカードへの線（右コメント専用） |
 | コピー全件 | `#copy-all-btn` | ヘッダーの一括コピー |
 | コピー成功表示 | `#copy-feedback` | 1.5 秒表示 |
 | コメント dialog | `#comment-dialog` | 追加・編集用モーダル |
