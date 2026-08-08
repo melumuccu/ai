@@ -37,7 +37,9 @@
         "Includes [data-annotation-panel] for author-defined term definitions",
         "Marks first occurrence of specialized terms with mark[data-term-id]",
         "Stores term definitions as static HTML data (e.g. #term-annotations JSON), not localStorage",
-        "Shows one left annotation card on hover or tap over mark[data-term-id] (not always-visible cards)",
+        "Stacks visible term definition cards in [data-annotation-panel] in document order based on viewport visibility (IntersectionObserver), not hover/tap single-card display",
+        "Deduplicates cards when multiple mark[data-term-id] with the same id are visible simultaneously",
+        "Hides term cards when their marks scroll out of the viewport",
         "Does not duplicate long inline parenthetical definitions when left annotations are present"
       ]
     },
@@ -62,7 +64,7 @@
     {
       "id": 4,
       "prompt": "新機能の実装方針をプランニング用HTMLにまとめて。CQRSやイベントソーシングなど専門用語が出てくるので、読者が用語を左側で確認できるようにして。テキスト選択コメントも付けられる形式で。",
-      "expected_output": "非コーディング/プランニングパターンの単一HTML。専門用語の初出をmark[data-term-id]でマークし、ホバー／タップ時に左[data-annotation-panel]へ解説カード1枚を表示。右コメントコアも維持。括弧内の長い説明と左注釈の二重記載は禁止。",
+      "expected_output": "非コーディング/プランニングパターンの単一HTML。専門用語の初出をmark[data-term-id]でマークし、viewport内可視用語の解説カードを左[data-annotation-panel]へ文書順に積み上げ。右コメントコアも維持。単一情報源: 括弧内の長い説明と左注釈を重複させない。",
       "files": [],
       "expectations": [
         "Output is a complete single-file HTML document with DOCTYPE and html root",
@@ -75,16 +77,19 @@
         "Includes [data-annotation-panel] for author-defined term definitions",
         "Marks first occurrence of specialized terms (e.g. CQRS, event sourcing) with mark[data-term-id]",
         "Stores term definitions as static HTML data (e.g. #term-annotations JSON), not localStorage",
-        "Shows one left annotation card on hover or tap over mark[data-term-id] (not always-visible cards)",
+        "Stacks visible term definition cards in [data-annotation-panel] in document order based on viewport visibility (IntersectionObserver), not hover/tap single-card display",
+        "Deduplicates cards when multiple mark[data-term-id] with the same id are visible simultaneously",
+        "Hides term cards when their marks scroll out of the viewport",
         "Does not duplicate long inline parenthetical definitions when left annotations are present",
         "Preserves right-side user comment functionality alongside left term annotations",
+        "Decorates mark[data-term-id] with highlight styling only (no badge, pill, or inline term label on body term marks)",
         "When citing external documentation as evidence, wraps source claims in verified http(s) anchor links within [data-content-root] per source-citations.md (fragment URLs preferred)"
       ]
     },
     {
       "id": 5,
-      "prompt": "REST API のレート制限方針を調査結果付きのプランニングHTMLにまとめて。MDN や OpenAPI 仕様を根拠に書くので、該当見出しへの fragment 付きリンクにして、到達性も確認してから載せて。",
-      "expected_output": "非コーディング/プランニングパターンの単一HTML。外部資料を根拠にした主張を [data-content-root] 内の <a href> でリンク化。fragment 優先、到達性検証済み URL のみ使用。左注釈と出典リンクを混同しない。",
+      "prompt": "REST API のレート制限方針を調査結果付きのプランニングHTMLにまとめて。MDN や OpenAPI 仕様を根拠に書くので、該当見出しへの fragment 付きリンクにして。",
+      "expected_output": "非コーディング/プランニングパターンの単一HTML。外部資料を根拠にした主張を [data-content-root] 内の <a href> でリンク化。fragment 優先。左注釈と出典リンクを混同しない。",
       "files": [],
       "expectations": [
         "Output is a complete single-file HTML document with DOCTYPE and html root",
@@ -92,7 +97,7 @@
         "Includes [data-content-root] for comment selection anchor",
         "Wraps external source claims in http(s) anchor links within [data-content-root]",
         "Prefers fragment URLs (#heading) for cited documentation sections when available",
-        "Uses only reachability-verified URLs (no 404 or unreachable links in source anchors)",
+        "Follows source-citations.md for external links (fragment URLs preferred)",
         "Does not append long parenthetical URLs after anchor links",
         "Does not confuse source anchor links with mark[data-term-id] left annotations"
       ]

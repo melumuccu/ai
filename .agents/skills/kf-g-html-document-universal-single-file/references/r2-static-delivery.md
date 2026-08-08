@@ -11,17 +11,17 @@
 - Cloudflare Zero Trust: Google OAuth ログイン方式を設定。Access ポリシーで許可ユーザーを制限（ユーザー申告。ポリシー値・メール・client ID・シークレット・redirect URI は記録していない）
 - Cloudflare Access は **有効**。公開 URL へのアクセスは Access 認証後に HTML を表示する
 - 公開 URL は **オブジェクト URL を明示** する（バケットルートの index 挙動に依存しない）
-- HTML 公開経路: **Wrangler CLI のみ**（Dashboard Upload / Upload objects は使わない）
+- HTML 公開経路: **Wrangler CLI（`--remote`）のみ**
 
-## 版管理（上書き禁止）
+## 版管理
 
 `v{N}` は **版番号**（例: `v1`, `v2`）を表すプレースホルダ。
 
-- 同一内容の改訂でも、既存オブジェクトは **上書きしない**
+- **版管理:** 改訂ごとに新規 `v{N}` で put。既存版は保持
 - 改訂のたびに **新しい `v{N}` オブジェクト** としてアップロードする（例: `2026-08-03_今回の対応概要_v1.html` → `..._v2.html` → `..._v3.html` → `..._v4.html`）
 - 初版は `v1` とする。版番号は単調増加させ、欠番や再利用はしない
 - issue / PR の description に載せるリンクは、常に **最新版の確認済み URL**（`https://ai-html.hacksaw.work/<object-key>`）と **`v{N}` ラベル** に差し替える
-- 旧版 URL は R2 上に残す（履歴参照用）。削除や上書きはしない
+- 旧版 URL は R2 上に残す（履歴参照用）
 - Bucket Lock は本 repository では任意。現状未適用
 
 ### 次版 HTML の作成方針
@@ -41,14 +41,12 @@ HTML 配布ありの issue / PR では、description は最小サマリと用途
 1. URL または `v{N}` が未確定の間はリンクを置かない。確認後に description を更新する
 1. 新版アップロード時は、旧リンクと旧ラベルを新版へ差し替える
 
-## HTML 側でやらないこと
+## HTML 側の範囲
 
-- R2 アップロードコード
-- 署名 URL 生成
-- Worker 経由の API
-- 認証・バックエンド同期
+HTML ファイルに含めるのは閲覧・コメント UI のみとする。
 
-コメントは端末ローカルのみ。共有が必要ならコピー機能でテキスト出力する。
+- R2 アップロードコード、署名 URL 生成、Worker 経由 API、認証・バックエンド同期は HTML に含めない
+- コメントは端末ローカルのみ。共有が必要ならコピー機能でテキスト出力する
 
 ## 手動インフラ構築 runbook（本 repository）
 
@@ -65,7 +63,7 @@ Dashboard のラベルは Cloudflare UI 更新で変わることがある。破�
 1. GCP Console → プロジェクトセレクタ → **New Project** → プロジェクト名 `ai-html` → **Create**
 1. **APIs & Services** → **OAuth consent screen** を設定
 1. **Credentials** → **Create Credentials** → **OAuth client ID** → **Web application**
-1. Cloudflare Zero Trust が表示する redirect URI を **そのまま使用** する（推測・捏造しない）
+1. Cloudflare Zero Trust が表示する redirect URI を **そのまま使用** する（**確認済み値のみ書く**）
 1. client secret は Cloudflare の保護されたフォームにのみ入力する（HTML やチャットに貼らない）
 
 ### Cloudflare Zero Trust / Access（再現用）
@@ -90,13 +88,13 @@ Dashboard のラベルは Cloudflare UI 更新で変わることがある。破�
 1. バケット **Settings** → **Custom Domains** → **Add** `ai-html.hacksaw.work`
 1. 接続・検証し **Active** を確認
 
-Dashboard Upload / Upload objects は **公開経路に含めない**。
+**公開経路:** Wrangler CLI（`--remote`）のみ。Dashboard Upload / Upload objects は公開経路に含めない。
 
 ## R2 画像オブジェクト（before/after スクリーンショット）
 
 PR レビュー HTML で **確認済み公開 URL** 方式を選んだ場合、before/after 画像を HTML 本体とは **別オブジェクト** としてアップロードする。
 
-**R2 upload 形式は AVIF 標準。** 撮影元は PNG を保持し、配布前に固定スクリプトで AVIF へ変換する。WebP / JPEG / PNG を R2 upload 形式の第一候補やフォールバックとして使わない。AVIF を使えない例外はユーザー承認がある場合のみ。
+**R2 画像形式:** AVIF（`image/avif`）を標準。撮影元は PNG を保持し、配布前に固定スクリプトで AVIF へ変換する。
 
 ### 前提
 
@@ -105,7 +103,7 @@ PR レビュー HTML で **確認済み公開 URL** 方式を選んだ場合、b
 | バケット | `ai-html` |
 | 公開 URL | `https://ai-html.hacksaw.work/<object-key>` |
 | 公開経路 | Wrangler CLI のみ |
-| 版管理 | HTML 本体と同じ `v{N}` prefix。既存 key **上書き禁止** |
+| 版管理 | HTML 本体と同じ `v{N}` prefix。**版管理:** 改訂ごとに新規 key。既存 key は保持 |
 | Access | HTML と同様、Access 認証後に取得・目視確認 |
 
 ### オブジェクトキー命名
@@ -119,9 +117,9 @@ after:  <html_basename>_<target>_after.avif
 ```
 
 - `html_basename` = HTML オブジェクトキーから `.html` を除いた部分
-- `<target>` = **撮影対象 slug**（validator では `--screenshot-target TARGET` で指定）。英数字・ハイフン・アンダースコアのみ（例: `home`, `settings-modal`）
+- `<target>` = **撮影対象 slug**。英数字・ハイフン・アンダースコアのみ（例: `home`, `settings-modal`）
 - 拡張子は **`.avif` 固定**。before / after は **同一拡張子** とする。キー拡張子と `--content-type` は **`image/avif`** で一致させる
-- 既存 key の上書き禁止（HTML・画像とも）
+- **版管理:** 改訂ごとに新規 key。既存 key は保持（HTML・画像とも）
 
 例（`--screenshot-target home`）:
 
@@ -138,7 +136,7 @@ scripts/convert-screenshot-to-avif.sh artifacts/before.png artifacts/before.avif
 scripts/convert-screenshot-to-avif.sh artifacts/after.png artifacts/after.avif
 ```
 
-- 入力 `.png`、出力 `.avif` のみ。出力先が既存なら上書きせず失敗
+- 入力 `.png`、出力 `.avif` のみ。出力先が既存なら失敗（**版管理:** 新規 key のみ）
 - ffmpeg 引数: `-frames:v 1 -c:v libaom-av1 -still-picture 1 -crf 18 -b:v 0`
 - 変換後: `ffprobe` で codec `av1` と寸法一致、`file` で AVIF 実体確認、目視比較。元 PNG は削除しない
 
@@ -164,7 +162,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-04_スクリーンショット
 
 ### size / Content-Type / 公開 URL 確認
 
-validator は R2 画像 URL を **ネットワーク取得しない**。以下でローカル確認する。
+R2 画像 URL は **CLI でローカル確認** する（公開 URL への HTTP 取得は別途目視確認）。
 
 **get + MIME + サイズ:**
 
@@ -179,13 +177,13 @@ wc -c /tmp/check-image
 **公開 URL 確認:**
 
 1. `https://ai-html.hacksaw.work/<html-object-key>` を Access 認証後に開く
-2. `img-comparison-slider` 内の before/after 画像が表示されることを確認
-3. DevTools → **Network** で画像リクエストが 200、Content-Type が **`image/avif`** であることを確認
-4. HTML `src` のオブジェクトキーが `{html_basename}_{target}_before.avif` / `{html_basename}_{target}_after.avif` と一致することを確認
+1. `img-comparison-slider` 内の before/after 画像が表示されることを確認
+1. DevTools → **Network** で画像リクエストが 200、Content-Type が **`image/avif`** であることを確認
+1. HTML `src` のオブジェクトキーが `{html_basename}_{target}_before.avif` / `{html_basename}_{target}_after.avif` と一致することを確認
 
 ## CLI 配布 runbook（本 repository）
 
-HTML 公開は **Wrangler CLI のみ**。
+HTML 公開は **Wrangler CLI（`--remote`）のみ**。
 
 ### 前提確認と版選択
 
@@ -195,7 +193,7 @@ HTML 公開は **Wrangler CLI のみ**。
 | カスタムドメイン | `ai-html.hacksaw.work` |
 | 公開 URL 形式 | `https://ai-html.hacksaw.work/<object-key>` |
 | 今回のアップロード対象 | 新規 `v{N}` のみ（例: `2026-08-03_今回の対応概要_v4.html`） |
-| 上書き禁止 | `v1`, `v2`, `v3` など既存オブジェクトは変更しない |
+| 版管理 | **版管理:** 改訂ごとに新規 `v{N}`。`v1`, `v2`, `v3` など既存オブジェクトは保持 |
 
 **画面操作:** Cloudflare Dashboard → 左メニュー **R2 object storage** → **Overview** → バケット **`ai-html`** をクリック
 
@@ -269,7 +267,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 ### 失敗復旧とセキュリティ
 
 - **版重複:** 既存キーと衝突したら版番号を上げ、新オブジェクトとして再アップロードする
-- **旧版保護:** `v1` / `v2` / `v3` を削除・上書きしない
+- **旧版保護:** `v1` / `v2` / `v3` を保持する（**版管理:** 既存版は改変しない）
 - **シークレット:** API トークン、Access シークレット、OAuth client secret、R2 認証情報を HTML やチャットに貼らない
 - **Access:** 公開 HTML は Access 有効のまま運用する（意図的な無効化は別途合意）
 - **Bucket Lock:** 本 repository では任意。現状未適用
@@ -278,23 +276,11 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **R2 upload 前** に [verify-review-delivery.mjs](../scripts/verify-review-delivery.mjs) を実行する（フロントエンド before/after 比較ありなら `--frontend`。R2 AVIF 必須なら `--r2-required --html-object-key <object-key> --screenshot-target <target>` も付ける）。legacy data URL 埋め込み時のみ 1 画像 2 MiB / 合計 5 MiB の推奨上限も検証する
-
-```bash
-node scripts/verify-review-delivery.mjs <html-file> [--frontend]
-```
-
-1. validator 合格後、**新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを上書きしていないことを確認
+1. **R2 upload 前** に [SKILL.md](../SKILL.md) の出力チェックリストを満たす（HTML コア契約・daisyUI・版ラベル一致など）。before/after 画像は AVIF 必須・命名規則・容量推奨（1 画像 2 MiB / 合計 5 MiB）を目視確認する
+1. 出典リンクを含む場合は [source-citations.md](source-citations.md) に従う
+1. **新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを保持していることを確認
 1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で Access 認証後に目視確認手順を実施
-1. PR description を更新したら、確認済み URL と body ファイルで validator を再実行する
-
-```bash
-node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
-  --public-url https://ai-html.hacksaw.work/<object-key> \
-  --pr-body-file <pr-body.md>
-```
-
-1. 再検証合格後に description を確定する
+1. PR / issue description を更新し、確認済み URL と版ラベル `v{N}` の一致を目視確認する（形式は [pr-review-delivery.md](pr-review-delivery.md)）
 
 ## Cloudflare 操作（Wrangler OAuth）
 

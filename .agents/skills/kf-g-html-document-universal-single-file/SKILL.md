@@ -13,15 +13,14 @@ description: Use this skill when creating or revising build-free, single-file in
 | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [references/core-contract.md](references/core-contract.md)                                   | コメントコアと左注釈の DOM・データ・レイアウト・永続化を実装するとき                                                                        |
 | [references/content-patterns.md](references/content-patterns.md)                             | PR 説明・業務フロー・非コーディング向けの構成、CDN 選定、視覚構造・可読性（§ 論理セクション分離・図表化・専門用語・左注釈・出典リンク・情報エンコード・アクセシビリティ） |
-| [references/source-citations.md](references/source-citations.md)                             | 外部資料を根拠に `[data-content-root]` 本文を書く／出典リンクの到達性を検証するとき |
+| [references/source-citations.md](references/source-citations.md)                             | 外部資料を根拠に `[data-content-root]` 本文を書く／出典リンクをリンク化するとき |
 | [references/r2-static-delivery.md](references/r2-static-delivery.md)                         | R2 公開前提・Wrangler OAuth・版管理の確認                                                                                                   |
 | [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較                                                                                      |
-| [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の完了ゲート・validator・非コミット規則                                                                              |
-| [scripts/verify-review-delivery.mjs](scripts/verify-review-delivery.mjs)                     | HTML / R2 URL / PR description の機械検証                                                                                                   |
+| [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の成果物正本・完了手順・PR description 形式                                                                          |
 | [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh)               | スクリーンショット PNG → AVIF 固定変換                                                                                                      |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html)     | 実装の起点テンプレート                                                                                                                      |
 
-## 視覚構造・可読性（生成時必須）
+## 視覚構造・可読性
 
 [content-patterns.md](references/content-patterns.md) の「視覚構造・可読性・情報エンコード」を満たす。要点のみ:
 
@@ -32,7 +31,7 @@ description: Use this skill when creating or revising build-free, single-file in
 | 視覚エンコード | 状態・リスク・カテゴリは badge + 薄背景 + 枠線 + テキストラベル（色だけに依存しない） |
 | 二重記載禁止   | 表・図・steps に載せた事実を長文段落で繰り返さない                                    |
 | 専門用語       | 初出を `mark[data-term-id]` でマークし、ホバー／タップ時に左 `[data-annotation-panel]` に解説カード 1 枚を表示する（詳細は [content-patterns.md](references/content-patterns.md) § 専門用語・左注釈） |
-| 出典リンク     | 外部資料を根拠にした主張を `<a href="...">` でリンク化する。fragment 優先、到達性検証必須（詳細は [source-citations.md](references/source-citations.md)） |
+| 出典リンク     | 外部資料を根拠にした主張を `<a href="...">` でリンク化する。fragment 優先（詳細は [source-citations.md](references/source-citations.md)） |
 | コメント対象   | 説明本文は `[data-content-root]` 内に置き、テキスト選択可能に保つ                     |
 
 **図表化の判断:** 2軸以上の比較は `table`、3ステップ超の順序・分岐は `steps` または Mermaid、並列 3〜7 項目は短い箇条書き、段落 5 文超は分割または視覚要素へ。
@@ -43,15 +42,15 @@ description: Use this skill when creating or revising build-free, single-file in
 
 1. 依頼内容からパターンを選ぶ（[content-patterns.md](references/content-patterns.md)）
 1. **次版 HTML の作成方針**（改訂・R2 配布時）:
-   - **通常**: 直前版をコピーし、依頼された変更のみを加える。版間の連続性を保ち、差分を追跡しやすくする
-   - **例外**: 全文書き直し、構造再設計、直前版が不適切な場合は、テンプレートまたは独立作成してよい。理由は生成 HTML 本文または操作記録に記載する
-   - 既存 R2 オブジェクトは上書きしない。新しい `v{N}` オブジェクトキーでアップロードする
-   - アップロード前にコピー元版とアップロード先版を確認する。完成 HTML の版ラベルとファイル名がアップロード先 `v{N}` と一致することを確認する
+   - **通常**: 直前版をコピーし、依頼された変更のみを加える
+   - **例外**: 全文書き直し、構造再設計、直前版が不適切な場合はテンプレートまたは独立作成してよい。理由を生成 HTML 本文または操作記録に記載する
+   - **版管理:** 改訂ごとに新規 `v{N}` で put。既存版は保持（[r2-static-delivery.md](references/r2-static-delivery.md)）
+   - アップロード前にコピー元版とアップロード先版を確認し、HTML の版ラベルとファイル名が `v{N}` と一致することを確認する
 1. 初版または例外時はテンプレート HTML をコピーし、改訂時は直前版をコピーする。タイトルと `[data-content-root]` 内本文を差し替える
 1. 論理セクション（概要・リスク・意図グループ等）を親 `section` で分離し、積み順（要約 → 表/図/steps → 短段落 → collapse）に従って構成する
 1. 状態・リスク・カテゴリ・進捗等は badge、alert、card 背景、steps、table 等で冗長表現する。色だけに頼らずテキストラベル・見出し・枠線を併用する
 1. 表・図と同じ情報の段落重複がないか確認する（二重記載禁止）
-1. 外部資料を根拠にした主張を洗い出し、[source-citations.md](references/source-citations.md) に従って fragment 優先 URL を選定し、到達性検証後に `<a href="...">` でリンク化する
+1. 外部資料を根拠にした主張を洗い出し、[source-citations.md](references/source-citations.md) に従って fragment 優先 URL を選定し、`<a href="...">` でリンク化する
 1. 専門用語（頭文字略語、経済/ビジネス用語、標準エンジニアが知らない可能性が高いエンジニアリング用語）を洗い出し、初出を `mark[data-term-id]` でマークする
 1. 用語定義を HTML 内静的データ（`#term-annotations` JSON 等）に埋め込み、用語マークのホバー／タップで左 `[data-annotation-panel]` に解説カード 1 枚を表示する（localStorage は使わない。左注釈用 SVG コネクタは描かない）
 1. 本文の長い括弧説明と左注釈の二重記載がないか確認する
@@ -59,15 +58,14 @@ description: Use this skill when creating or revising build-free, single-file in
 1. 必要な CDN のみ追加する（daisyUI v5 + `@tailwindcss/browser@4` は常時。Mermaid / Markmap / diff2html / Alpine.js は内容に応じて。PR レビュー用 HTML でフロントエンド変更かつ [before/after 比較](references/frontend-screenshot-comparison.md) の条件を満たす場合は `img-comparison-slider` を追加）
 1. `<html>` に `data-theme` を設定し、ページ chrome と操作 UI は daisyUI コンポーネントクラス（`btn`, `card`, `alert`, `badge`, `collapse`, `steps` など）を使う。コメントコアは vanilla JS のまま維持する
 1. コメントコア契約を満たす DOM ID・属性を維持する（[core-contract.md](references/core-contract.md)）
-1. Mermaid を使う場合は SVG テキスト選択 CSS を入れる
-1. 手動インフラ構築または CLI 配布を含む依頼では、[content-patterns.md](references/content-patterns.md) の「手動インフラ操作記録」を必ず本文に含める（**手動インフラ構築手順** と **目視確認手順** を分離）
+1. 手動インフラ構築または CLI 配布を含む依頼では、[content-patterns.md](references/content-patterns.md) の「手動インフラ操作記録」を本文に含める
 1. ローカルで開き、選択→コメント→編集→再読み込み→削除→コピーを確認する
 1. R2 配布時は [r2-static-delivery.md](references/r2-static-delivery.md) のチェックリストに従う
-1. issue / PR 向けに HTML を生成・アップロードする場合は、次節「GitHub 連携」を完了し、[pr-review-delivery.md](references/pr-review-delivery.md) の完了ゲートを満たしてから description を確定する
+1. issue / PR 向けに HTML を生成・アップロードする場合は、次節「GitHub 連携」を完了し、[pr-review-delivery.md](references/pr-review-delivery.md) の完了手順を満たしてから description を確定する
 
 ## GitHub 連携（HTML 配布あり）
 
-issue または PR 向けに HTML を生成し R2 へアップロードする場合のみ適用する。HTML 配布がない依頼では本節を適用しない。
+**適用条件:** issue または PR 向けに HTML を生成し R2 へアップロードするときのみ本節に従う。
 
 ### 手順
 
@@ -77,32 +75,25 @@ issue または PR 向けに HTML を生成し R2 へアップロードする場
 1. 確認済みの最新 R2 URL を PR / issue workflow へ渡し、description を更新する
 
 - 既存 workflow で PR comment が必要な項目（Summary、検証結果など）は comment に残す
-
-- 生成成果物の Git 非コミット規則は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
+- **成果物の正本:** レビュー HTML は R2。Git には skill ソースのみ（[pr-review-delivery.md](references/pr-review-delivery.md)）
 
 ## フロントエンド変更時の before/after スクリーンショット比較
 
-PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) パターン A）かつフロントエンド変更を含む場合のみ適用する。
-
-- **when:** UI・スタイル・レイアウト・表示挙動の変更を含む PR
-- **condition:** agent がブラウザで対象画面のスクリーンショットを撮影できる（認証なし、または認証突破可能）
-- **適用しない:** 撮影不能時は `img-comparison-slider` を読み込まず、説明テキスト・Mermaid・diff2html で補完する
-- **必須:** 撮影可能時は R2 同一バケットへ AVIF 配布し、確認済み公開 URL のみ `src` に指定する
+**適用条件:** PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) パターン A）かつフロントエンド変更を含むときのみ本節に従う。**撮影不能時の代替:** 説明・Mermaid・diff2html（slider は省略）。
 
 撮影・変換・R2 オブジェクト命名・容量ゲート・HTML 埋め込み手順は [frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) を参照。
 
-## 完了ゲート（issue / PR 向け HTML 配布）
+## 完了手順（issue / PR 向け HTML 配布）
 
-issue / PR 向け R2 配布時は、upload 前と PR body 更新後の validator 合格が **必須**。手順を飛ばしたり、validator 失敗のまま upload / description 更新を確定してはならない。
+issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-delivery.md](references/pr-review-delivery.md) の手順を満たしてから upload / description を確定する。
 
-```bash
-node scripts/verify-review-delivery.mjs <html-file> [--frontend]
-node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
-  --public-url https://ai-html.hacksaw.work/<object-key> \
-  --pr-body-file <pr-body.md>
-```
+| 項目 | 確認方法 |
+| --- | --- |
+| HTML コア契約・daisyUI・コメント機能等 | 出力チェックリスト（目視 / ローカル操作） |
+| 出典リンク | [source-citations.md](references/source-citations.md) に従いリンク化・fragment 優先を確認 |
+| R2 URL・PR description | アップロード後の公開 URL 確認と description 目視 |
 
-詳細手順・validator 検証範囲は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
+詳細は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
 
 ## 出力チェックリスト
 
@@ -123,7 +114,7 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] 積み順: 要約カード → 表/図/steps → 短段落（1論点） → collapse（詳細）
 - [ ] 2軸以上の比較は `table`、3ステップ超の順序・分岐は `steps` または Mermaid、並列 3〜7 項目は短い箇条書き
 - [ ] 表・図・steps と同内容の長文段落がない（二重記載禁止）
-- [ ] 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL と到達性検証を満たした（[source-citations.md](references/source-citations.md)、パターン別必須度を確認）
+- [ ] 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL を満たした（[source-citations.md](references/source-citations.md)、パターン別必須度を確認）
 - [ ] `[data-content-root]` 内の出典 `<a href>` に下線と本文と異なるリンク色があり、`:visited` も区別できる（識別手段を消す指定を付けていない。テンプレート復元 CSS を維持）
 - [ ] 出典 `<a>` と左注釈（`mark[data-term-id]`）を混同していない
 - [ ] 専門用語の初出を `mark[data-term-id]` でマークした（パターン別必須度を満たす場合）
@@ -144,16 +135,14 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] PR レビュー用 HTML + フロントエンド変更: **when** と **condition（スクリーンショット撮影可能）** を確認した。撮影不能なら `img-comparison-slider` を読み込まない
 - [ ] PR レビュー用 HTML + フロントエンド変更 + スクリーンショット撮影可能: `img-comparison-slider` を CDN で読み込み、修正前（`slot="first"`）・修正後（`slot="second"`）の before/after 比較を提示した
 - [ ] before/after 画像: HTML 本体と同じ R2 バケットへ AVIF（`image/avif`）として `--remote` put し、確認済み公開 URL のみ `src` に指定した（data URL 埋め込みは使わない）。固定変換手順で PNG → AVIF 変換・検証済みで、容量ゲート（1 画像 2 MiB / 合計 5 MiB 推奨）を満たした
-- [ ] issue / PR 向け R2 配布: [pr-review-delivery.md](references/pr-review-delivery.md) の upload 前・PR body 更新後 validator が合格した
+- [ ] issue / PR 向け R2 配布: [pr-review-delivery.md](references/pr-review-delivery.md) の upload 前・PR body 更新後の手順を満たした
 
 ## スコープ外
 
-- Cloudflare Worker / Wrangler / API
-- R2 アップロードコードの HTML 埋め込み
-- コメントのサーバー同期・ログイン
+Cloudflare Worker / Wrangler API 埋め込み、R2 アップロードコードの HTML 埋め込み、コメントのサーバー同期・ログイン。詳細は [r2-static-delivery.md](references/r2-static-delivery.md) の「HTML 側の範囲」を参照。
 
 ## 最終確認
 
 1. 上記チェックリストをすべて満たす
-1. 不要 CDN を読み込んでいない
-1. デモ文言を依頼内容に合わせて置換済み
+1. 依頼内容に合わせてデモ文言を置換済み
+1. R2 配布時は公開 URL 確認を完了

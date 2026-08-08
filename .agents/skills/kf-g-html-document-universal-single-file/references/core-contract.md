@@ -4,15 +4,18 @@
 
 ## レイアウト（3 列）
 
+3 列 flex の具体マークアップは `#layout-root` を含む `assets/universal-single-file-template.html` を正本とする。
+
+**契約上必須の識別子:**
+
 | 列 | 要素 | 役割 |
 | --- | --- | --- |
 | 左 | `#annotation-rail` / `[data-annotation-panel]` | 著者定義の専門用語解説カード |
 | 中央 | `[data-content-root]` | 本文・選択・オフセット計算の基準 |
 | 右 | `#comment-rail` / `[data-comment-panel]` | 閲覧者のユーザーコメントカード |
 
-- ルートコンテナ: `#layout-root`（3 列 flex、幅は `max-w-screen-2xl` 等）
 - モバイル（lg 未満）: 左注釈（`#annotation-panel-mobile`）→ 本文 → 右コメント（`#comment-panel-mobile`）の縦積み
-- コネクタ SVG（`#connector-svg` / `#connector-lines`）は **右コメント専用**（左注釈には描画しない）
+- コネクタ SVG（`#connector-svg` / `#connector-lines`）は **右コメント専用**（**左注釈 UI:** panel カード表示）
 
 テンプレート: [assets/universal-single-file-template.html](../assets/universal-single-file-template.html)
 
@@ -25,10 +28,10 @@
 | 項目 | 左注釈 | 右コメント |
 | --- | --- | --- |
 | 定義者 | 著者（HTML 生成時に静的埋め込み） | 閲覧者（テキスト選択で追加） |
-| 永続化 | **なし**（localStorage しない） | `comments_${location.pathname}` |
+| 永続化 | **なし**（**左注釈データ:** `#term-annotations` を HTML に静的埋め込み） | `comments_${location.pathname}` |
 | 閲覧者操作 | 閲覧・コピーのみ（任意） | 追加・編集・削除・コピー |
 | マーク属性 | `data-term-id` | `data-comment-id` |
-| SVG コネクタ | **なし**（ホバー／タップ時にカードのみ） | mark 右端 → カード左端 |
+| SVG コネクタ | **なし**（viewport 内可視用語のカードのみ） | mark 右端 → カード左端 |
 
 ### 必須 DOM 識別子
 
@@ -37,60 +40,48 @@
 | 左レール | `#annotation-rail` | デスクトップ用 sticky 左余白 |
 | 注釈パネル | `[data-annotation-panel]` | 用語カード配置先（`#annotation-panel` / `#annotation-panel-mobile`） |
 | 用語データ | `#term-annotations` | `type="application/json"` の著者定義用語配列 |
-| 用語マーク | `mark[data-term-id="{id}"]` | 本文内の専門用語ハイライト |
+| 用語マーク | `mark[data-term-id="{id}"]` | 本文内の専門用語ハイライト（背景色等のみ。badge・「用語」ラベル等は付けない。a11y 属性は可） |
 
 ### データモデル
 
-`#term-annotations` 内 JSON 配列（著者が HTML 生成時に埋め込む）:
+`#term-annotations` 内 JSON 配列（著者が HTML 生成時に埋め込む）。具体例は template の `#term-annotations` を正本とする。
 
-```json
-[
-  {
-    "id": "icp",
-    "term": "ICP",
-    "definition": "Ideal Customer Profile。最も価値を感じ、継続利用・紹介しやすい理想顧客像。"
-  }
-]
-```
+**必須キー:**
 
 - `id`: 本文 `mark[data-term-id]` と対応する安定 ID
 - `term`: カード見出しに表示する用語名
 - `definition`: カード本文に表示する解説
+
 - バックエンド同期・閲覧者による CRUD はスコープ外
 
 ### ライフサイクル
 
 1. ページ load 時に `#term-annotations` を `JSON.parse` する
 1. 各 `id` に対応する `[data-term-id="{id}"]` を本文から **すべて** 取得する
-1. 用語マークにインタラクションを付与する（下記「表示トリガー」）
-1. トリガー時に左パネルへ daisyUI `card`（用語名 + 定義）を **1 枚だけ** 生成する
-1. トリガー解除時にカードを除去する
-1. デスクトップで表示中は、カードを表示中の左レーン（sticky `#annotation-panel`）の最上に固定する（viewport 外に出さない）
+1. 各用語マークを `IntersectionObserver`（`root: null` = viewport）で監視する
+1. **viewport 内に見えている**用語マークに対応するカードを左パネルへ daisyUI `card`（用語名 + 定義）として **文書順に積み上げ** 生成する
+1. スクロールで見えなくなった用語のカードは除去する
+1. 同一 `data-term-id` が複数マークで同時可視でも、カードは **1 枚**（先勝ち）
 
 - マーク未発見・JSON パース失敗は静かにスキップする
 - 左カードにコピーボタンを置く場合は `definition` をコピーする
-- **左注釈用 SVG コネクタは描画しない**（`data-connector="term"` / `connector-line-term` は使わない）
+- **左注釈 UI:** panel カード表示（`#connector-svg` は右コメント専用。左注釈用 SVG コネクタは描かない）
 
-### 表示トリガー
+### 可視判定と表示
 
-**デスクトップ（lg 以上）:**
+**デスクトップ・モバイル共通:**
 
-1. 同一 `data-term-id` の **すべての** `mark[data-term-id]` へ `mouseenter`（または `pointerenter`）で対応カードを表示する
-1. `mouseleave`（または `pointerleave`）で非表示にする（**200ms 程度**の hide delay を許容）
-1. ポインタがマークから左カードへ移っても消えない（カード側でも hide タイマーをキャンセルする）
-1. 同時に表示する左カードは **常に 1 枚**（別用語へ移ったら差し替え）
+1. `IntersectionObserver`（`root: null`、実用的な `threshold`）で各 `mark[data-term-id]` の viewport 可視を判定する
+1. ホバー／タップ依存は **使わない**
+1. 可視 mark を文書順（`compareDocumentPosition` または `getBoundingClientRect().top`）で並べ、`data-term-id` 重複は先勝ちで 1 枚にまとめる
+1. 左 `[data-annotation-panel]` 内に可視用語分のカードを **縦積み**（`space-y-3` 等）で配置する
+1. 可視用語が 0 件のときは左レール（デスクトップ）／モバイル用語セクションを非表示にしてよい
 
-**モバイル（lg 未満）:**
+### 左カード配置
 
-1. `click` または `focus` で対応カードをトグル表示する
-1. パネル外タップ、または `Escape` で閉じる
-1. 必要に応じて `position: fixed` のカードを使ってよい
-
-### 左カード配置（デスクトップ）
-
-- 左 `[data-annotation-panel]` 内に **1 枚** のカードを置く
-- カードの縦位置は、表示中の左レーン（sticky `#annotation-panel`）の最上に固定する（`position: absolute; top: 0` 等）。用語マークの位置には追従しない
-- 衝突回避レイアウトは不要（常に 1 枚のため）
+- 左 `[data-annotation-panel]` 内に可視用語分のカードを **縦積み** で置く
+- 用語マークの Y 位置へ個別追従しない（右コメントのような衝突回避レイアウトは不要）
+- 並び順は文書上から下（可視 mark の document / Y 順）
 
 ---
 
@@ -102,7 +93,7 @@
 | --- | --- | --- |
 | 本文ルート | `[data-content-root]` | 選択・オフセット計算の基準 |
 | コメントパネル | `[data-comment-panel]` | カード配置先（デスクトップ用。モバイル複製可） |
-| コネクタ SVG | `#connector-svg` / `#connector-lines` | ハイライトからカードへの線（左右共用） |
+| コネクタ SVG | `#connector-svg` / `#connector-lines` | ハイライトからカードへの線（右コメント専用） |
 | コピー全件 | `#copy-all-btn` | ヘッダーの一括コピー |
 | コピー成功表示 | `#copy-feedback` | 1.5 秒表示 |
 | コメント dialog | `#comment-dialog` | 追加・編集用モーダル |
@@ -139,8 +130,8 @@
 1. ダイアログまたはインライン入力でコメントを受け取る
 1. 選択範囲を `<mark data-comment-id="{id}">` でラップする
    - **1 コメント = 複数 `<mark>` 可**（同一 `data-comment-id`）。table / list 等でセル跨ぎ選択時はテキストノード単位に分割 wrap する
-   - `surroundContents` のみ使用する。**`extractContents` fallback は禁止**（構造親直下テキストの wrap や DOM 破壊を防ぐ）
-   - 構造親（`tr` / `table` / `tbody` / `thead` / `tfoot` / `ul` / `ol`）の**直接の子**テキストは wrap 禁止。`td` / `th` / `li` 内およびその子孫 inline 内は許可
+   - **`surroundContents` のみ**使用する。`extractContents` は使わない（構造親直下テキストの wrap や DOM 破壊を防ぐ）
+   - 構造親（`tr` / `table` / `tbody` / `thead` / `tfoot` / `ul` / `ol`）の**直接の子**テキストは wrap 対象外。`td` / `th` / `li` 内およびその子孫 inline 内は許可
    - 同一テキストノード内の部分選択: `splitText` で start 分割後、`endOffset` を相対値へ補正してから end 分割する
    - 下線付きの視認可能ハイライト（背景色 + underline）。左注釈 `data-term-id` と色を区別する
    - wrap 結果が 0 mark のときはサイレント失敗せず、ユーザ向けエラーを表示する
@@ -167,17 +158,17 @@
 
 ## 衝突回避アルゴリズム（右コメント）
 
-右コメントパネルのみに適用する。左注釈は常に 1 枚のホバー／タップカードのため衝突回避しない。
+右コメントパネルのみに適用する。左注釈は viewport 可視用語の縦積みのため衝突回避しない。
 
 1. 各コメントエントリの `targetY` を、対応ハイライト（**先頭 mark** = `marks[0]`）のビューポート上端 + `scrollY` とする
 1. `targetY` 昇順（同値は `createdAt`）でソートする
 1. 先頭カードから順に配置する
    - 希望位置 = ハイライトの `getBoundingClientRect().top` をパネル基準に変換した値
-   - 実際の top = `max(希望位置, 前カードの bottom + 12px)`（いずれもパネル相対座標）
-1. 最小ギャップ **12px** を維持する
+   - 実際の top = `max(希望位置, 前カードの bottom + MIN_CARD_GAP)`（いずれもパネル相対座標）
+1. 最小ギャップ **12px**（template 内 `MIN_CARD_GAP = 12` を正本）を維持する
 1. SVG 線は **実際に配置されたカード位置** の中心へ向ける
 
-スクロール・リサイズ時は `requestAnimationFrame` で右コメント位置を再計算し、表示中の左カードは最上固定を維持する。
+スクロール・リサイズ時は `requestAnimationFrame` で右コメント位置を再計算する。左注釈は `IntersectionObserver` と再描画で可視集合を更新する。
 
 ## コネクタ座標系（右コメント専用）
 
@@ -193,48 +184,20 @@
 - 復元: ページ load 時に配列を読み、各 `anchor` から Range を復元してハイライトとカードを再構築する
 - オフセット不一致時は `quote` + `prefix`/`suffix` で fuzzy 再検索する
 - `JSON.parse` 失敗・非配列・項目欠落は静かに無視する（既存表示を壊さない）
-- **左注釈は永続化しない**（著者が HTML に静的埋め込み）
+- 左注釈は永続化しない（著者が HTML に静的埋め込み）
 
 ## コピー形式（右コメント）
 
-コピー用 Markdown ヘッダー（個別・全件共通で先頭 1 回）:
+具体実装は template のコピー関数を正本とする。
 
-```text
-# [HTML_FILE_NAME.html](HTML_FILE_URL) へのコメント
-```
+**契約:**
 
-- `HTML_FILE_NAME`: 現在ページ URL の最終パスセグメント（`decodeURIComponent`、失敗時 `document.html`）
-- `HTML_FILE_URL`: クエリ・ハッシュを除いた現在の HTML URL
-- ホスト名や版番号（v3/v4 等）をハードコードしない
-
-個別（`data-action="copy"`）:
-
-```text
-# [example.html](https://example.com/path/example.html) へのコメント
-
-> 引用テキスト
-
-コメント本文
-```
-
-全件（`#copy-all-btn`）:
-
-```text
-# [example.html](https://example.com/path/example.html) へのコメント
-
-> quote1
-
-comment1
-
----
-
-> quote2
-
-comment2
-```
-
-- 全件コピーではヘッダーを **先頭 1 回のみ** 付与する（各コメントブロック内では繰り返さない）
-- コメント間の区切りは `\n\n---\n\n` を厳密に使う
+- ヘッダー（個別・全件共通で先頭 1 回）: `# [HTML_FILE_NAME.html](HTML_FILE_URL) へのコメント`
+  - `HTML_FILE_NAME`: 現在ページ URL の最終パスセグメント（`decodeURIComponent`、失敗時 `document.html`）
+  - `HTML_FILE_URL`: クエリ・ハッシュを除いた現在の HTML URL
+  - ホスト名や版番号（v3/v4 等）をハードコードしない
+- 個別: ヘッダー + `> quote` + コメント本文
+- 全件: ヘッダー 1 回 + 各コメントを `\n\n---\n\n` で区切る
 - クリップボード API 失敗時は hidden textarea + `execCommand('copy')` にフォールバック
 - `#copy-feedback` を 1.5 秒表示する
 
@@ -252,25 +215,15 @@ comment2
 
 - 本文は `select-text` を維持し、すべてのテキストが選択可能
 - デスクトップ（lg 以上）: 左・右レール `sticky` で 3 列余白を確保
-- 狭い画面: 本文 → 右コメント（本文下）の縦積み。左注釈カードは用語タップ時に表示（fixed 可）
+- 狭い画面: 本文上に可視用語カードを縦積み → 本文 → 右コメント（本文下）の縦積み
 - 右コメントハイライト: `tabindex="0"`, `role="button"`, Enter/Space で対応カードへフォーカス
-- 左注釈ハイライト: デスクトップはホバー、モバイルは click/focus トグルで解説カードを表示
+- 左注釈ハイライト: `role="note"` と `aria-label` で用語名を通知。表示は viewport 可視に連動（ホバー／タップ不要）
 - カード操作ボタン: キーボードフォーカス可能、`focus:ring` を付与
 - コピー成功: `aria-live="polite"` で通知
 
 ## Mermaid テキスト選択
 
-Mermaid を使う場合、次の CSS を必ず含める:
-
-```css
-.mermaid svg text,
-.mermaid svg tspan {
-  user-select: text;
-  -webkit-user-select: text;
-  cursor: text;
-  pointer-events: auto;
-}
-```
+Mermaid を使う場合、template の Mermaid `user-select` CSS を正本とする。
 
 ## 失敗時の扱い
 
