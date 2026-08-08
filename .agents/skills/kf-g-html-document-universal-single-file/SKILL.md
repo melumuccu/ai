@@ -97,7 +97,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 | 項目 | 確認方法 |
 | --- | --- |
 | HTML コア契約・daisyUI・コメント機能等 | 出力チェックリスト（目視 / ローカル操作） |
-| 出典 URL 到達性 | Cursor stop hook + kf-lint `content/url-reachable`（warn）が変更 `.md` / `.html` 全文の `http(s)://` を検査（[source-citations.md](references/source-citations.md)）。警告時は修正またはユーザ目視フォールバック |
+| 出典リンク | [source-citations.md](references/source-citations.md) に従いリンク化・fragment 優先を確認 |
 | R2 URL・PR description | アップロード後の公開 URL 確認と description 目視 |
 
 詳細は [pr-review-delivery.md](references/pr-review-delivery.md) を参照。
@@ -143,7 +143,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 - [ ] PR レビュー用 HTML + フロントエンド変更: **when** と **condition（スクリーンショット撮影可能）** を確認した。撮影不能なら `img-comparison-slider` を読み込まない
 - [ ] PR レビュー用 HTML + フロントエンド変更 + スクリーンショット撮影可能: `img-comparison-slider` を CDN で読み込み、修正前（`slot="first"`）・修正後（`slot="second"`）の before/after 比較を提示した
 - [ ] before/after 画像: HTML 本体と同じ R2 バケットへ AVIF（`image/avif`）として `--remote` put し、確認済み公開 URL のみ `src` に指定した（data URL 埋め込みは使わない）。固定変換手順で PNG → AVIF 変換・検証済みで、容量ゲート（1 画像 2 MiB / 合計 5 MiB 推奨）を満たした
-- [ ] issue / PR 向け R2 配布: [pr-review-delivery.md](references/pr-review-delivery.md) の完了手順を満たした（出力チェックリスト・公開 URL 確認・description 形式）。出典リンクありの場合は stop hook（kf-lint `content/url-reachable` warn）の警告に対応した
+- [ ] issue / PR 向け R2 配布: [pr-review-delivery.md](references/pr-review-delivery.md) の完了手順を満たした（出力チェックリスト・公開 URL 確認・description 形式）
 
 ## スコープ外
 

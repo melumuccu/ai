@@ -49,14 +49,6 @@
 1. fragment が取れない場合のみページ URL を使う
 1. ページ URL のみを使う場合は、取得不能理由を collapse または操作記録に短く残す
 
-## turn 完了時の到達性（stop hook）
-
-変更された `.md` / `.html` 保存後は **Cursor stop hook** により kf-lint `content/url-reachable`（warn）がファイル全文の `http(s)://` を検査する（`[data-content-root]` 内の `<a href>` に限定しない）。
-
-- 警告が出たら URL を修正するか、到達不能理由を collapse / 操作記録に残し未リンクとする
-- 一時障害や認証壁で false positive の可能性がある場合は、ユーザ目視でフォールバックする
-- 詳細は [pr-review-delivery.md](pr-review-delivery.md)
-
 ## 左注釈との関係
 
 | 機能 | 要素 | 用途 |
