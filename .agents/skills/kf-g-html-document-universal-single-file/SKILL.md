@@ -29,7 +29,8 @@ description: Use this skill when creating or revising build-free, single-file in
 | 積み順         | 要約カード → 表/図/steps → 短段落（1論点） → collapse（詳細）                         |
 | 論理分離       | 概要・リスク群・意図グループ等を親 `section`、見出し、余白、背景または divider で分離 |
 | 視覚エンコード | 状態・リスク・カテゴリは badge + 薄背景 + 枠線 + テキストラベル（色だけに依存しない） |
-| タイポグラフィ | 本文 `text-base`、補足 `text-[0.85rem]`、強調 `text-[1.15rem]` の 3 値のみ。`text-sm` / `text-lg` を本文用途に使わない |
+| タイポグラフィ | 本文 `text-base`、補足 `text-sm`、強調 `text-lg` の 3 値のみ。任意値 rem（`text-[0.85rem]` / `text-[1.15rem]` 等）は本文用途で使わない |
+| 見出し | `[data-content-root]` 内: h1 `text-4xl` + 暗背景 + 明色文字、h2 `text-2xl` + 下線、h3 `text-lg` + 青文字（詳細は content-patterns § 見出し） |
 | 色彩・コントラスト | 薄背景上の黄色文字・薄グレー文字等を禁止。`mark[data-comment-id]` の黄色背景は例外（文字色は暗色維持） |
 | 二重記載禁止   | 表・図・steps に載せた事実を長文段落で繰り返さない                                    |
 | 専門用語       | 初出を `mark[data-term-id]` で**ハイライトのみ**装飾し、viewport 内可視用語の解説カードを左 `[data-annotation-panel]` に文書順で積み上げる。badge・「用語」ラベル等の余計な装飾は禁止（詳細は [content-patterns.md](references/content-patterns.md) § 専門用語・左注釈） |
@@ -132,7 +133,8 @@ node scripts/verify-review-delivery.mjs <html-file> [--frontend] \
 - [ ] 本文の長い括弧説明と左注釈の二重記載がない
 - [ ] パターン別必須度: プランニング/非コーディングは専門用語があるなら必須、業務フローは必須寄り、PR レビュー/手動インフラは任意推奨
 - [ ] 状態・リスク・カテゴリ等は badge + 薄背景 + 枠線 + テキストラベルで表現し、色だけに依存していない
-- [ ] 本文・補足・強調が 3 値タイポグラフィ（`text-base` / `text-[0.85rem]` / `text-[1.15rem]`）に従い、本文用途で `text-sm` / `text-lg` を使っていない
+- [ ] 本文・補足・強調が 3 値タイポグラフィ（`text-base` / `text-sm` / `text-lg`）に従い、任意値 rem を本文用途に使っていない
+- [ ] `[data-content-root]` 内の h1/h2/h3 が Notion 準拠のサイズ・装飾（h1 は暗背景 + 明色文字必須）に従っている
 - [ ] 薄背景上で黄色文字・薄グレー文字等の低コントラスト表現を使っていない（`mark[data-comment-id]` の黄色背景は例外、文字色は暗色）
 - [ ] 見出し階層 h1→h2→h3 を飛ばしていない。モバイル縦積み、表は横スクロールまたは行分割、文字拡大で切れない
 - [ ] バックエンド同期・認証を謳っていない
