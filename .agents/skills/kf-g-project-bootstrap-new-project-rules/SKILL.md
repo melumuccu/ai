@@ -7,7 +7,7 @@ description: Use this skill when starting a new project and defining baseline re
 
 この SKILL.md は**入口**。詳細は `references` 配下の該当ファイルを読む。
 
-**重要**: 新規 PJ のファイル作成・scaffold は、本 skill の [入口フロー](#入口フロー) を完了し、ユーザがルール適用表を承認するまで開始しない。
+**重要**: 新規 PJ の **scaffold と設定ファイル作成**は、本 skill の [入口フロー](#入口フロー) を完了し、ユーザがルール適用を承認するまで開始しない。入口フロー中は、`kf-g-html-document-universal-single-file` による `artifacts/` への**プランニング HTML** 作成と **R2 公開**を行う（これらは scaffold 禁止の例外）。
 
 ## この skill を使う場面
 
@@ -22,13 +22,23 @@ description: Use this skill when starting a new project and defining baseline re
 
 ## 入口フロー
 
-新規 PJ 立ち上げは、次の 4 フェーズを順に進める。フェーズ 4 の承認前に devcontainer 作成・scaffold・設定ファイル追加などの実 작業を始めない。
+新規 PJ 立ち上げは、次の手順を順に進める。フェーズ 4（scaffold）の承認前に devcontainer 作成・scaffold・設定ファイル追加などの実 작업を始めない。
 
-### フェーズ 1: PJ 概要の把握
+1. **issue を作成する**（まだ無ければ）。description には issue の最小サマリのみ載せる
+1. **PJ 概要を仮置きする**。プロンプトと [合理デフォルト](#合理デフォルト) を起点に不足分を埋め、不明点は「要確認」とする。**確認済み HTML URL を提示する前に AskQuestion しない**
+1. **`kf-g-html-document-universal-single-file` でプランニング HTML を生成する**（パターン C）。ルール適用表・要確認・推奨理由を HTML 本文に載せる（[planning-html-delivery.md](references/planning-html-delivery.md)）
+1. **R2 公開し、確認済み URL を issue の `## プランニング用資料` に載せる**
+1. **ユーザへ確認済み URL を先に提示する**。チャットは短いポインタと URL に留め、表全文を貼って質問攻めしない
+1. **ユーザが資料を見て判断・返信するまで待つ**
+1. **全ルールの適用 / 不適用が確定したら**フェーズ 4（scaffold）に進む
 
-ユーザから PJ 概要をヒアリングする。プロンプトに既に含まれていれば、それを起点に不足分だけ確認する。
+### フェーズ 1: PJ 概要の仮置き
 
-最低限、次を把握する（未記載なら選択肢から選択させる形でユーザに質問する）:
+プロンプトに含まれる情報を起点に PJ 概要を仮置きする。未記載項目は質問せず、[合理デフォルト](#合理デフォルト) を適用するか「要確認」とする。
+
+**確認済み HTML URL を提示する前に AskQuestion しない。**
+
+把握対象（仮置き用）:
 
 | 項目            | 例                                                        |
 | --------------- | --------------------------------------------------------- |
@@ -36,12 +46,24 @@ description: Use this skill when starting a new project and defining baseline re
 | リポジトリ種別  | 新規 / 既存空リポジトリ / monorepo 追加                   |
 | 提供形態        | Web UI / API のみ / CLI / ライブラリ / 複合               |
 | 主要言語・FW    | TypeScript, Go, Python など                               |
-| frontend の有無 | ブラウザ向け UI を提供するか                              |
-| frontend FW     | SvelteKit / React / なし など                             |
-| devcontainer    | 利用するか（**デフォルト: なし**）                        |
-| 開発環境        | CI 先（GitHub Actions 等）、ローカル runtime 管理方針   |
-| CI runner       | `ubuntu-latest` / Mac Studio self-hosted / 混在           |
+| frontend の有無 | ブラウザ向け UI を提供するか                                |
+| frontend FW     | SvelteKit / React / なし など                               |
+| devcontainer    | 利用するか（**デフォルト: なし**）                          |
+| 開発環境        | CI 先（GitHub Actions 等）、ローカル runtime 管理方針     |
+| CI runner       | `ubuntu-latest` / Mac Studio self-hosted / 混在             |
 | 特記事項        | monorepo 構成、既存 toolchain 継続、Vite+ 非採用理由 など |
+
+### 合理デフォルト
+
+プロンプトに未記載の項目は、次を起点に仮置きする。判断不能なものは「要確認」とする。
+
+- **devcontainer**: デフォルトは**不適用**（利用する明示が無ければ導入しない）
+- **frontend の有無**: 未記載なら**要確認**
+- **frontend FW**: frontend ありと仮定できる場合のみ推定。それ以外は**要確認**
+- **CI**: 未記載なら **GitHub Actions** を想定
+- **CI runner**: 未記載なら **`ubuntu-latest`** を想定
+- **mise 中心運用・gitleaks・pre-commit / pre-push**: 原則**適用**推奨（frontend なし PJ でも backend 向けに調整）
+- **pnpm / Vite+ / kiso.css 等 frontend 向けルール**: frontend ありと確定するまで**要確認**または不適用
 
 ### フェーズ 2: ルール適用表の作成
 
@@ -51,47 +73,26 @@ description: Use this skill when starting a new project and defining baseline re
 - **不適用**: 条件を満たさない、または PJ 方針上不要
 - **要確認**: 条件付きルールで、ユーザ判断が必要
 
-推奨を決めたら、次の形式で**ルール適用表**を提示する。
-
-```markdown
-## ルール適用表（確認用）
-
-| ルール        | 条件 | 推奨 | 理由               |
-| ------------- | ---- | ---- | ------------------ |
-| devcontainer  | オプション | 不適用 | デフォルトはローカル開発。必要時のみ導入 |
-| mise 中心運用 | 汎用 | 適用 | tools / tasks 集約 |
-| ...           | ...  | ...  | ...                |
-
-### 要確認項目
-
-- Vite+: frontend あり → 適用推奨。React 採用のため Svelte / SvelteKit は不適用でよいか
-```
-
-**要確認** がある場合は、適用表提示と同時にユーザへ質問する。回答を反映して表を更新する。
+**正本はプランニング HTML**（[planning-html-delivery.md](references/planning-html-delivery.md)）。ルール適用表・要確認・推奨理由を HTML 本文に載せる。チャットは短いポインタと確認済み URL のみ提示してよい。
 
 ### フェーズ 3: ユーザ確認・調整
 
-ルール適用表を提示し、次を求める。
+主手段はプランニング HTML と issue への返信とする。
 
-1. 推奨どおりでよいか
-2. **適用 / 不適用** を変更したいルールがあるか
-3. 表にない例外・追加要件があるか
+1. 確認済み HTML URL をユーザへ先に提示する
+1. ユーザが HTML を読み、推奨の承認・変更・追加要件を返信するまで待つ
+1. 返信を反映して HTML を改訂する場合は、新規 `v{N}` で R2 再公開し、issue の `## プランニング用資料` を更新する
+1. **全ルールについて適用 / 不適用が確定するまで**フェーズ 3 を繰り返す
 
-ユーザが変更を示したら表を更新し、再度提示する。**全ルールについて適用 / 不適用が確定するまでフェーズ 3 を繰り返す。**
-
-確認手段:
-
-- 表全体への明示的な承認（「この表で進めて」等）
-- 個別ルールの変更指示
-- 不明点があれば `AskQuestion` 等で構造化して確認してよい
+AskQuestion は、**確認済み HTML URL を提示したあと**かつ **HTML 本文の要確認では解消できないブロッカーのみ**に限る。**URL 提示前・提示と同ターンの AskQuestion は禁止**。
 
 ### フェーズ 4: 承認後に作成開始
 
-ユーザがルール適用表を承認したら、初めて実装作業に入る。
+ユーザがルール適用を承認したら、初めて scaffold と設定ファイル作成に入る。
 
 1. 承認済み表の **適用** 行に対応する参照ファイルを読み、実装する（[読み進め方](#読み進め方)）
-2. **不適用** とされたルールに該当するファイル・設定は作らない
-3. 完了前に [checklist.md](references/checklist.md) を、承認済みルールに合わせて確認する
+1. **不適用** とされたルールに該当するファイル・設定は作らない
+1. 完了前に [checklist.md](references/checklist.md) を、承認済みルールに合わせて確認する
 
 承認済み表は作業ログとして短く残す（どのルールを適用 / 不適用にしたか）。
 
@@ -143,11 +144,20 @@ frontend なし PJ では pnpm / Vite+ / kiso.css / Oxlint・Oxfmt 等 frontend 
 承認後の実装手順は `references` 側が正本。SKILL.md は入口とルール選定のみ担う。
 
 1. [入口フロー](#入口フロー) を完了する。
-2. [ルール一覧](#ルール一覧) で **適用** となった各行の「参照」列のファイルを読み、実装する。
-3. 完了前に [checklist.md](references/checklist.md) を、承認済みルールに合わせて確認する。
+1. [ルール一覧](#ルール一覧) で **適用** となった各行の「参照」列のファイルを読み、実装する。
+1. 完了前に [checklist.md](references/checklist.md) を、承認済みルールに合わせて確認する。
 
 ## 出力方針
 
-- 入口フロー完了前は、方針説明とルール適用表の提示に留める。ファイル作成は始めない。
+- 入口フロー完了前は、**scaffold と設定ファイルの作成**を始めない。プランニング HTML の生成と R2 公開は入口フロー中に**必須**とする。
+- 入口フロー中は、方針説明と確認済み HTML URL の提示に留める。ルール適用表の正本はプランニング HTML とする。
 - 承認後は方針説明だけで止めず、承認済みルールに対応するファイルを作る。
 - 承認済みルール適用表を短く残す。
+
+## 参照ファイル
+
+| ファイル | 読むタイミング |
+| --- | --- |
+| [planning-html-delivery.md](references/planning-html-delivery.md) | プランニング HTML 生成・R2 配布・AskQuestion 制限を確認するとき |
+| [checklist.md](references/checklist.md) | フェーズ 4 完了前の最終確認 |
+| ルール一覧の各参照 | フェーズ 4 で **適用** 行の実装 |
