@@ -26,7 +26,7 @@ description: Use this skill when starting a new project and defining baseline re
 
 1. **issue を作成する**（まだ無ければ）。description には issue の最小サマリのみ載せる
 1. **PJ 概要を仮置きする**。プロンプトと [合理デフォルト](#合理デフォルト) を起点に不足分を埋め、不明点は「要確認」とする。**確認済み HTML URL を提示する前に AskQuestion しない**
-1. **`kf-g-html-document-universal-single-file` でプランニング HTML を生成する**（パターン C）。ルール適用表・要確認・推奨理由を HTML 本文に載せる（[planning-html-delivery.md](references/planning-html-delivery.md)）
+1. **`kf-g-html-document-universal-single-file` でプランニング HTML を生成する**（パターン C）。ルール適用表・要確認・推奨理由を HTML 本文に載せる
 1. **R2 公開し、確認済み URL を issue の `## プランニング用資料` に載せる**
 1. **ユーザへ確認済み URL を先に提示する**。チャットは短いポインタと URL に留め、表全文を貼って質問攻めしない
 1. **ユーザが資料を見て判断・返信するまで待つ**
@@ -73,7 +73,7 @@ description: Use this skill when starting a new project and defining baseline re
 - **不適用**: 条件を満たさない、または PJ 方針上不要
 - **要確認**: 条件付きルールで、ユーザ判断が必要
 
-**正本はプランニング HTML**（[planning-html-delivery.md](references/planning-html-delivery.md)）。ルール適用表・要確認・推奨理由を HTML 本文に載せる。チャットは短いポインタと確認済み URL のみ提示してよい。
+**正本はプランニング HTML**。ルール適用表・要確認・推奨理由を HTML 本文に載せる。チャットは短いポインタと確認済み URL のみ提示してよい。
 
 ### フェーズ 3: ユーザ確認・調整
 
@@ -158,6 +158,5 @@ frontend なし PJ では pnpm / Vite+ / kiso.css / Oxlint・Oxfmt 等 frontend 
 
 | ファイル | 読むタイミング |
 | --- | --- |
-| [planning-html-delivery.md](references/planning-html-delivery.md) | プランニング HTML 生成・R2 配布・AskQuestion 制限を確認するとき |
 | [checklist.md](references/checklist.md) | フェーズ 4 完了前の最終確認 |
 | ルール一覧の各参照 | フェーズ 4 で **適用** 行の実装 |
