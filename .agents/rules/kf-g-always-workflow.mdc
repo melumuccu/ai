@@ -41,10 +41,10 @@ bot credential未設定またはpreflight失敗時はsetup手順を表示して�
 
 ## worktree の作成
 
-issue 着手時は repository 外の sibling directory に worktree を作る。
+issue 着手時は `~/projects/_worktrees/<repo-name>/` 配下に worktree を作る。
 
 - branch: `issue-<issue-number>-<slug>`
-- path: `../<repo-name>-issue-<issue-number>-<slug>`
+- path: `~/projects/_worktrees/<repo-name>/issue-<issue-number>-<slug>`
 
 ---
 
