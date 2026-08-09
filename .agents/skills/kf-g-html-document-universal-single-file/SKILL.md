@@ -57,14 +57,6 @@ description: Use this skill when creating or revising build-free, single-file in
 - 既存 workflow で PR comment が必要な項目（Summary、検証結果など）は comment に残す
 - **成果物の正本:** レビュー HTML は R2。Git には skill ソースのみ（[pr-review-delivery.md](references/pr-review-delivery.md)）
 
-## 新規 PJ bootstrap 併用
-
-**適用条件:** `kf-g-project-bootstrap-new-project-rules` と併用してプランニング HTML を出すときのみ本節に従う。
-
-- 計画詳細・ルール適用表・要確認は HTML 本文に書く（パターン C）
-- 確認済み R2 URL をユーザへ提示するまで AskQuestion しない
-- scaffold 禁止の例外として、本 skill による `artifacts/` HTML と R2 put は入口フロー中に実行する
-
 ## フロントエンド変更時の before/after スクリーンショット比較
 
 **適用条件:** PR レビュー用 HTML（[content-patterns.md](references/content-patterns.md) パターン A）かつフロントエンド変更を含むときのみ本節に従う。**撮影不能時の代替:** 説明・Mermaid・diff2html（slider は省略）。
