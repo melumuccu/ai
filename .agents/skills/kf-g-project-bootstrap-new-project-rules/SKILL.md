@@ -22,7 +22,7 @@ description: Use this skill when starting a new project and defining baseline re
 
 ## 入口フロー
 
-新規 PJ 立ち上げは、次の手順を順に進める。フェーズ 4（scaffold）の承認前に devcontainer 作成・scaffold・設定ファイル追加などの実 작업を始めない。
+新規 PJ 立ち上げは、次の手順を順に進める。フェーズ 4（scaffold）の承認前に devcontainer 作成・scaffold・設定ファイル追加などの実作業を始めない。
 
 1. **issue を作成する**（まだ無ければ）。description には issue の最小サマリのみ載せる
 1. **PJ 概要を仮置きする**。プロンプトと [合理デフォルト](#合理デフォルト) を起点に不足分を埋め、不明点は「要確認」とする。**確認済み HTML URL を提示する前に AskQuestion しない**
