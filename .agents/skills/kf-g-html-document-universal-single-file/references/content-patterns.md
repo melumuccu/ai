@@ -46,6 +46,13 @@
 | 状態・リスク・進捗 | badge + alert/card 背景 | テキストラベル必須 |
 | 長文詳細 | `collapse` | 上段に要約または表で要点を先出し |
 
+### Mermaid 図の向き
+
+flowchart で `TD` / `LR` を選べる場合は **`TD`（`flowchart TD`）を基本**とする。縦長の図は本文幅を保ちやすく、ページのスクロール方向とも揃う。
+
+- **既定:** `flowchart TD`
+- **LR を使う例:** ノードが少なく横一列の比較が本質である場合。シーケンス図・状態遷移図など、図種で向きが固定されている場合はその制約に従う
+
 ### 文字量ゲート
 
 | ブロック | 上限 | 超過時 |
@@ -189,7 +196,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 <div id="markmap" class="h-96"></div>
 ```
 
-**Mermaid 例:** `pre.mermaid` + `mermaid.run()`（テンプレート内コメント参照）
+**Mermaid 例:** `pre.mermaid` + `mermaid.run()`（テンプレート内コメント参照）。flowchart は `flowchart TD` を基本とする（[Mermaid 図の向き](#mermaid-図の向き)）
 
 ## パターン C: 非コーディング汎用ドキュメント
 
@@ -238,7 +245,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. デモ用見出し・段落を実内容に差し替えたか
 1. 使わない CDN の `<script>` / `<link>` を削除したか
 1. daisyUI CDN と `data-theme` を設定したか
-1. Mermaid 使用時はテキスト選択 CSS を入れたか
+1. Mermaid 使用時はテキスト選択 CSS を入れたか。flowchart は TD / LR を選べる場合 TD を基本としたか
 1. インフラ操作を含む依頼で「手動インフラ操作記録」パターンを満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離したか）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
 1. 積み順・論理分離・単一情報源・冗長エンコードを満たしたか
