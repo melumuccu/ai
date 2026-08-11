@@ -109,34 +109,97 @@
       font-weight: 700;
     }
 
+    /* --- 比較表ヘッダー不透明（正本）---
+     * daisyUI v5 は --color-base-* を使う。oklch(var(--b2)) は無効になり透明のままになる。
+     * サンプル表の th には bg-base-200 を付与し、clone も thead 複製で同クラスを継承する。 */
+    [data-sortable-table] thead tr {
+      background-color: var(--color-base-200, #e5e7eb);
+    }
+
+    [data-sortable-table] thead th {
+      background-color: var(--color-base-200, #e5e7eb);
+      background-clip: padding-box;
+      opacity: 1;
+    }
+
+    [data-sortable-table] thead th button {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      background-color: var(--color-base-200, #e5e7eb);
+    }
+
+    [data-sortable-table] thead th button:hover {
+      background-color: var(--color-base-300, #d1d5db);
+    }
+
     [data-sticky-header-clone] {
       position: fixed;
       z-index: 25;
-      display: none;
+      pointer-events: none;
       overflow: hidden;
-      pointer-events: auto;
-      background: oklch(var(--b1));
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.16);
+      visibility: hidden;
+      background-color: var(--color-base-100, #ffffff);
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.08);
+      border-bottom: 1px solid var(--color-base-300, #d1d5db);
+      isolation: isolate;
+    }
+
+    [data-sticky-header-clone]::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-base-100, #ffffff);
+      z-index: 0;
     }
 
     [data-sticky-header-clone].is-visible {
-      display: block;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateZ(0);
+    }
+
+    [data-sticky-header-viewport] {
+      overflow: hidden;
+      height: 100%;
+      position: relative;
+      z-index: 1;
     }
 
     [data-sticky-header-clone] table {
-      border-collapse: separate;
-      border-spacing: 0;
+      margin: 0;
+      border: none;
+      position: relative;
+      top: 0;
       table-layout: fixed;
+      border-collapse: collapse;
     }
 
-    [data-sticky-header-clone] th {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    [data-sticky-header-clone] thead tr {
+      background-color: var(--color-base-200, #e5e7eb);
     }
 
-    [data-sticky-header-clone] [data-source-column] {
+    [data-sticky-header-clone] thead th {
+      background-color: var(--color-base-200, #e5e7eb);
+      opacity: 1;
+    }
+
+    [data-sticky-header-clone] .header-clone-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      width: 100%;
       cursor: pointer;
+      user-select: text;
+      font: inherit;
+      text-align: left;
+      background-color: var(--color-base-200, #e5e7eb);
+      box-sizing: border-box;
+      padding: 0.5rem 0.75rem;
+    }
+
+    [data-sticky-header-clone] .header-clone-cell:hover {
+      background-color: var(--color-base-300, #d1d5db);
     }
 
     @media (max-width: 1023px) {
@@ -268,6 +331,14 @@
           比較表は、初期表示で最も重要な列を降順に並べ、見出しのボタンで比較軸を切り替えます。
           表示単位（% や点）はラベルに置き、ソート用の生データは <code class="text-xs">data-sort-value</code> に分離します。
         </p>
+        <div class="alert alert-info mb-4 text-sm">
+          <span>
+            <strong>ヘッダーは不透明必須。</strong>
+            縦スクロール時に行文字が透けないよう、サンプル表の <code class="text-xs">thead</code> / <code class="text-xs">th</code> に <code class="text-xs">bg-base-200</code> を付け、
+            上記スタイルブロック「比較表ヘッダー不透明（正本）」の <code class="text-xs">var(--color-base-200)</code> を併用します。
+            <code class="text-xs">oklch(var(--b2))</code> は daisyUI v5 では無効です。
+          </span>
+        </div>
         <div class="grid gap-3 md:grid-cols-2">
           <div class="card border border-success/40 bg-success/10 shadow-sm">
             <div class="card-body gap-2 py-3">
@@ -295,29 +366,29 @@
             <caption class="caption-bottom px-2 py-3 text-left text-sm text-base-content/70">
               初期状態は fit 降順。見出しを押すと同じ列の昇順・降順を切り替えます。
             </caption>
-            <thead>
+            <thead class="bg-base-200">
               <tr>
-                <th scope="col" data-sort-key="service" data-sort-type="text">
+                <th scope="col" class="bg-base-200" data-sort-key="service" data-sort-type="text">
                   <button type="button" data-sort-key="service" aria-label="サービス名で並べ替え">
                     <span data-sort-label>サービス</span><span data-sort-indicator aria-hidden="true">↕</span>
                   </button>
                 </th>
-                <th scope="col" data-sort-key="fit" data-sort-type="number">
+                <th scope="col" class="bg-base-200" data-sort-key="fit" data-sort-type="number">
                   <button type="button" data-sort-key="fit" aria-label="適合度で並べ替え">
                     <span data-sort-label>適合度</span><span data-sort-indicator aria-hidden="true">↕</span>
                   </button>
                 </th>
-                <th scope="col" data-sort-key="grade" data-sort-type="number">
+                <th scope="col" class="bg-base-200" data-sort-key="grade" data-sort-type="number">
                   <button type="button" data-sort-key="grade" aria-label="評価で並べ替え">
                     <span data-sort-label>評価</span><span data-sort-indicator aria-hidden="true">↕</span>
                   </button>
                 </th>
-                <th scope="col" data-sort-key="updated" data-sort-type="date">
+                <th scope="col" class="bg-base-200" data-sort-key="updated" data-sort-type="date">
                   <button type="button" data-sort-key="updated" aria-label="更新日で並べ替え">
                     <span data-sort-label>更新日</span><span data-sort-indicator aria-hidden="true">↕</span>
                   </button>
                 </th>
-                <th scope="col" data-sort-key="note" data-sort-type="number">
+                <th scope="col" class="bg-base-200" data-sort-key="note" data-sort-type="number">
                   <button type="button" data-sort-key="note" aria-label="確認状態で並べ替え">
                     <span data-sort-label>確認状態</span><span data-sort-indicator aria-hidden="true">↕</span>
                   </button>
@@ -374,19 +445,19 @@
             <caption class="caption-bottom px-2 py-3 text-left text-sm text-base-content/70">
               2つ目の表は priority 昇順。複数表をスクロールして固定 clone の対象切替を確認できます。
             </caption>
-            <thead>
+            <thead class="bg-base-200">
               <tr>
-                <th scope="col" data-sort-key="source" data-sort-type="text">
+                <th scope="col" class="bg-base-200" data-sort-key="source" data-sort-type="text">
                   <button type="button" data-sort-key="source" aria-label="情報源で並べ替え">
                     <span data-sort-label>情報源</span><span data-sort-indicator aria-hidden="true">↕</span>
                   </button>
                 </th>
-                <th scope="col" data-sort-key="priority" data-sort-type="number">
+                <th scope="col" class="bg-base-200" data-sort-key="priority" data-sort-type="number">
                   <button type="button" data-sort-key="priority" aria-label="優先度で並べ替え">
                     <span data-sort-label>優先度</span><span data-sort-indicator aria-hidden="true">↕</span>
                   </button>
                 </th>
-                <th scope="col" data-sort-key="status" data-sort-type="text">
+                <th scope="col" class="bg-base-200" data-sort-key="status" data-sort-type="text">
                   <button type="button" data-sort-key="status" aria-label="状態で並べ替え">
                     <span data-sort-label>状態</span><span data-sort-indicator aria-hidden="true">↕</span>
                   </button>
@@ -546,6 +617,8 @@
       const annotationMobileSection = document.getElementById('annotation-mobile-section');
       let stickyHeaderClone = null;
       let stickyHeaderTable = null;
+      let stickyHeaderHiddenThead = null;
+      let cloneBuiltForTable = null;
       let stickyHeaderRaf = null;
 
       /** @type {Map<string, { id: string, quote: string, comment: string, anchor: object, createdAt: string, card: HTMLElement|null, mark: HTMLElement|null, targetY: number }>} */
@@ -588,6 +661,19 @@
           if (indicator) indicator.textContent = isActive ? (direction === 'asc' ? '↑' : '↓') : '↕';
           header.setAttribute('aria-sort', isActive ? direction : 'none');
         }
+        if (cloneBuiltForTable === table) updateCloneSortIndicators();
+      }
+
+      function updateCloneSortIndicators() {
+        if (!stickyHeaderClone || !stickyHeaderTable) return;
+        const cloneTable = stickyHeaderClone.querySelector('table');
+        if (!cloneTable) return;
+        for (const header of getSortableHeaders(stickyHeaderTable)) {
+          const key = header.dataset.sortKey;
+          const sourceIndicator = header.querySelector('[data-sort-indicator]');
+          const cloneIndicator = cloneTable.querySelector('.header-clone-cell[data-sort-key="' + key + '"] [data-sort-indicator]');
+          if (cloneIndicator && sourceIndicator) cloneIndicator.textContent = sourceIndicator.textContent;
+        }
       }
 
       function applyTableSort(table, key, direction) {
@@ -622,14 +708,16 @@
         const root = document.createElement('div');
         root.dataset.stickyHeaderClone = '';
         root.setAttribute('aria-hidden', 'true');
-        root.innerHTML = '<table><thead><tr></tr></thead></table>';
-        root.addEventListener('click', (event) => {
-          const cell = event.target.closest('[data-source-column]');
+        const viewport = document.createElement('div');
+        viewport.dataset.stickyHeaderViewport = '';
+        const table = document.createElement('table');
+        viewport.appendChild(table);
+        root.appendChild(viewport);
+        table.addEventListener('click', (event) => {
+          const cell = event.target.closest('.header-clone-cell[data-sort-key]');
           if (!cell || !stickyHeaderTable) return;
-          event.preventDefault();
-          event.stopPropagation();
-          const source = stickyHeaderTable.tHead?.rows[0]?.cells[Number(cell.dataset.sourceColumn)];
-          source?.querySelector('button')?.click();
+          const sourceBtn = stickyHeaderTable.querySelector('button[data-sort-key="' + cell.dataset.sortKey + '"]');
+          if (sourceBtn) sourceBtn.click();
         });
         document.body.appendChild(root);
         return root;
@@ -638,6 +726,11 @@
       function hideStickyHeaderClone() {
         if (!stickyHeaderClone) return;
         stickyHeaderClone.classList.remove('is-visible');
+        stickyHeaderClone.setAttribute('aria-hidden', 'true');
+        if (stickyHeaderHiddenThead) {
+          stickyHeaderHiddenThead.style.visibility = '';
+          stickyHeaderHiddenThead = null;
+        }
         stickyHeaderTable = null;
       }
 
@@ -652,52 +745,64 @@
           if (!table || !thead) continue;
           const tableRect = table.getBoundingClientRect();
           const theadRect = thead.getBoundingClientRect();
-          if (theadRect.bottom <= navbarBottom && tableRect.bottom > navbarBottom) {
-            candidates.push({ table, distance: Math.abs(navbarBottom - theadRect.bottom) });
+          if (theadRect.top < navbarBottom && tableRect.bottom > navbarBottom) {
+            candidates.push({ table, distance: Math.abs(navbarBottom - theadRect.top) });
           }
         }
         candidates.sort((a, b) => a.distance - b.distance);
         return candidates[0]?.table || null;
       }
 
-      function renderStickyHeaderClone(table) {
+      function buildStickyHeaderClone(table) {
         if (!stickyHeaderClone) stickyHeaderClone = createStickyHeaderClone();
-        const wrapper = table.closest('.table-wrap');
-        const thead = table.tHead;
-        const navbar = document.querySelector('.navbar');
-        if (!wrapper || !thead || !navbar) {
-          hideStickyHeaderClone();
-          return;
-        }
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const tableRect = table.getBoundingClientRect();
-        const theadRect = thead.getBoundingClientRect();
-        const navbarBottom = navbar.getBoundingClientRect().bottom;
         const cloneTable = stickyHeaderClone.querySelector('table');
-        const cloneRow = stickyHeaderClone.querySelector('tr');
-        cloneRow.innerHTML = '';
-        for (const [index, source] of Array.from(thead.rows[0].cells).entries()) {
-          const cell = document.createElement(source.tagName.toLowerCase());
-          cell.className = source.className;
-          cell.dataset.sourceColumn = String(index);
-          cell.textContent = source.querySelector('[data-sort-label]')?.textContent || source.textContent.trim();
-          const indicator = document.createElement('span');
-          indicator.setAttribute('aria-hidden', 'true');
-          indicator.textContent = ' ' + (source.querySelector('[data-sort-indicator]')?.textContent || '↕');
-          cell.appendChild(indicator);
-          const width = source.getBoundingClientRect().width;
-          cell.style.width = width + 'px';
-          cell.removeAttribute('tabindex');
-          cloneRow.appendChild(cell);
-        }
-        cloneTable.style.width = tableRect.width + 'px';
-        cloneTable.style.transform = 'translateX(' + (-wrapper.scrollLeft) + 'px)';
-        stickyHeaderClone.style.left = wrapperRect.left + 'px';
-        stickyHeaderClone.style.top = navbarBottom + 'px';
-        stickyHeaderClone.style.width = wrapper.clientWidth + 'px';
-        stickyHeaderClone.style.height = theadRect.height + 'px';
-        stickyHeaderClone.classList.add('is-visible');
-        stickyHeaderTable = table;
+        const sourceColgroup = table.querySelector('colgroup');
+        cloneTable.className = table.className;
+        cloneTable.innerHTML = '';
+        if (sourceColgroup) cloneTable.appendChild(sourceColgroup.cloneNode(true));
+        const clonedThead = table.querySelector('thead').cloneNode(true);
+        clonedThead.querySelectorAll('button[data-sort-key]').forEach((btn) => {
+          const key = btn.dataset.sortKey;
+          const label = btn.querySelector('[data-sort-label]')?.textContent || '';
+          const indicator = btn.querySelector('[data-sort-indicator]');
+          const cell = document.createElement('div');
+          cell.className = 'header-clone-cell';
+          cell.dataset.sortKey = key;
+          const labelSpan = document.createElement('span');
+          labelSpan.textContent = label;
+          cell.appendChild(labelSpan);
+          if (indicator) {
+            const indicatorSpan = document.createElement('span');
+            indicatorSpan.dataset.sortIndicator = '';
+            indicatorSpan.setAttribute('aria-hidden', 'true');
+            indicatorSpan.textContent = indicator.textContent;
+            cell.appendChild(indicatorSpan);
+          }
+          btn.replaceWith(cell);
+        });
+        cloneTable.appendChild(clonedThead);
+        cloneBuiltForTable = table;
+      }
+
+      function syncStickyColumnWidths(table) {
+        const cloneTable = stickyHeaderClone?.querySelector('table');
+        if (!cloneTable) return;
+        const sourceCols = table.querySelectorAll('colgroup col');
+        const cloneCols = cloneTable.querySelectorAll('colgroup col');
+        const sourceThs = table.querySelectorAll('thead th');
+        const cloneThs = cloneTable.querySelectorAll('thead th');
+        sourceCols.forEach((col, index) => {
+          const width = col.getBoundingClientRect().width;
+          if (cloneCols[index]) cloneCols[index].style.width = width + 'px';
+        });
+        sourceThs.forEach((th, index) => {
+          const width = th.getBoundingClientRect().width;
+          if (cloneThs[index]) {
+            cloneThs[index].style.width = width + 'px';
+            cloneThs[index].style.minWidth = width + 'px';
+            cloneThs[index].style.maxWidth = width + 'px';
+          }
+        });
       }
 
       function syncStickyHeaderClone() {
@@ -706,7 +811,51 @@
           hideStickyHeaderClone();
           return;
         }
-        renderStickyHeaderClone(table);
+        const wrapper = table.closest('.table-wrap');
+        const thead = table.tHead;
+        const navbar = document.querySelector('.navbar');
+        if (!wrapper || !thead || !navbar) {
+          hideStickyHeaderClone();
+          return;
+        }
+        if (cloneBuiltForTable !== table) {
+          if (stickyHeaderHiddenThead) {
+            stickyHeaderHiddenThead.style.visibility = '';
+            stickyHeaderHiddenThead = null;
+          }
+          buildStickyHeaderClone(table);
+        }
+        const navbarBottom = navbar.getBoundingClientRect().bottom;
+        const theadRect = thead.getBoundingClientRect();
+        const wrapRect = wrapper.getBoundingClientRect();
+        const tableRect = table.getBoundingClientRect();
+        const shouldShow = theadRect.top < navbarBottom && tableRect.bottom > navbarBottom;
+        if (!shouldShow) {
+          hideStickyHeaderClone();
+          return;
+        }
+        if (stickyHeaderHiddenThead && stickyHeaderHiddenThead !== thead) {
+          stickyHeaderHiddenThead.style.visibility = '';
+        }
+        thead.style.visibility = 'hidden';
+        stickyHeaderHiddenThead = thead;
+        stickyHeaderTable = table;
+        syncStickyColumnWidths(table);
+        const theadHeight = theadRect.height;
+        const overlayHeight = Math.ceil(theadHeight) + 2;
+        const viewport = stickyHeaderClone.querySelector('[data-sticky-header-viewport]');
+        const cloneTable = stickyHeaderClone.querySelector('table');
+        stickyHeaderClone.style.top = navbarBottom + 'px';
+        stickyHeaderClone.style.left = wrapRect.left + 'px';
+        stickyHeaderClone.style.width = wrapRect.width + 'px';
+        stickyHeaderClone.style.height = overlayHeight + 'px';
+        viewport.style.height = theadHeight + 'px';
+        cloneTable.style.transform = 'translateX(-' + wrapper.scrollLeft + 'px)';
+        cloneTable.style.transformOrigin = 'left top';
+        cloneTable.style.width = table.getBoundingClientRect().width + 'px';
+        updateCloneSortIndicators();
+        stickyHeaderClone.classList.add('is-visible');
+        stickyHeaderClone.setAttribute('aria-hidden', 'true');
       }
 
       function scheduleStickyHeaderSync() {

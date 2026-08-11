@@ -46,7 +46,7 @@
 | 状態・リスク・進捗 | badge + alert/card 背景 | テキストラベル必須 |
 | 長文詳細 | `collapse` | 上段に要約または表で要点を先出し |
 
-比較表のソート、表示値とソート値の分離、意味のある列の初期ソート、固定ヘッダー（JS の fixed clone overlay）の実装例と説明は、[assets/universal-single-file-template.html](../assets/universal-single-file-template.html) を正本とする。
+比較表のソート、表示値とソート値の分離、意味のある列の初期ソート、固定ヘッダー（JS の fixed clone overlay）、表ヘッダーの不透明背景の実装例と説明は、[assets/universal-single-file-template.html](../assets/universal-single-file-template.html) を正本とする。
 
 ### Mermaid 図の向き
 
