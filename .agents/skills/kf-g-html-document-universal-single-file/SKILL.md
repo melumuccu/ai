@@ -24,6 +24,8 @@ description: Use this skill when creating or revising build-free, single-file in
 
 [content-patterns.md](references/content-patterns.md) の「視覚構造・可読性・情報エンコード」に従う。DOM・コメントコア・左注釈の実装細部は [assets/universal-single-file-template.html](assets/universal-single-file-template.html) と [core-contract.md](references/core-contract.md) を正本とする。
 
+比較表は template のソート可能表契約を使い、表示値とソート値を分離し、意味のある列を初期ソートする。固定ヘッダーは JS の fixed clone overlay とし、実装例と説明は template を正本とする。
+
 ## 生成ワークフロー
 
 1. 依頼内容からパターンを選ぶ（[content-patterns.md](references/content-patterns.md)）
@@ -79,6 +81,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 
 - [ ] **配布形式:** 単一 `.html` + 必要 CDN のみ
 - [ ] **コア契約:** [core-contract.md](references/core-contract.md) と [assets/universal-single-file-template.html](assets/universal-single-file-template.html) を満たす
+- [ ] **比較表:** template のソート可能表契約を満たす
 - [ ] **視覚構造:** [content-patterns.md](references/content-patterns.md) の積み順・論理分離・冗長エンコード・タイポグラフィ・見出し階層
 - [ ] **Mermaid 向き:** flowchart で TD / LR を選べる場合は TD を基本としたか（[content-patterns.md](references/content-patterns.md) § Mermaid 図の向き）
 - [ ] **専門用語・左注釈:** パターン別必須度を満たす（[content-patterns.md](references/content-patterns.md) § 専門用語・左注釈）

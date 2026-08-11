@@ -80,6 +80,65 @@
       outline-offset: 2px;
     }
 
+    .table-wrap {
+      position: relative;
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    [data-sortable-table] {
+      min-width: 44rem;
+    }
+
+    [data-sortable-table] th[data-sort-key] {
+      white-space: nowrap;
+    }
+
+    [data-sortable-table] th[data-sort-key] button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+
+    [data-sortable-table] [data-sort-indicator] {
+      min-width: 1.2em;
+      color: oklch(var(--color-primary));
+      font-weight: 700;
+    }
+
+    [data-sticky-header-clone] {
+      position: fixed;
+      z-index: 25;
+      display: none;
+      overflow: hidden;
+      pointer-events: auto;
+      background: oklch(var(--b1));
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.16);
+    }
+
+    [data-sticky-header-clone].is-visible {
+      display: block;
+    }
+
+    [data-sticky-header-clone] table {
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+
+    [data-sticky-header-clone] th {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    [data-sticky-header-clone] [data-source-column] {
+      cursor: pointer;
+    }
+
     @media (max-width: 1023px) {
       #comment-rail,
       #annotation-rail {
@@ -202,6 +261,169 @@
         表・steps で拾い切れない補足は、1段落1論点の短い段落にまとめる。
       </p>
 
+      <!-- 比較表ソートの実装例 -->
+      <section class="mb-6">
+        <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">比較表ソートの説明と実装例</h2>
+        <p class="mb-3">
+          比較表は、初期表示で最も重要な列を降順に並べ、見出しのボタンで比較軸を切り替えます。
+          表示単位（% や点）はラベルに置き、ソート用の生データは <code class="text-xs">data-sort-value</code> に分離します。
+        </p>
+        <div class="grid gap-3 md:grid-cols-2">
+          <div class="card border border-success/40 bg-success/10 shadow-sm">
+            <div class="card-body gap-2 py-3">
+              <span class="badge badge-success w-fit">良い例</span>
+              <p><code class="text-xs">fit</code> 列に <code class="text-xs">100</code>、<code class="text-xs">75</code> のような数値を持たせ、表示は「100%」「75%」にする。</p>
+              <p>「S」「A」や「十分」「要確認」は、順位を表す数値を <code class="text-xs">data-sort-value</code> に明示する。</p>
+            </div>
+          </div>
+          <div class="card border border-error/40 bg-error/10 shadow-sm">
+            <div class="card-body gap-2 py-3">
+              <span class="badge badge-error w-fit">悪い例</span>
+              <p>「100%」をそのまま文字列比較したり、「S」「A」を自然言語の順序だけに任せたりする。</p>
+              <p>表示文言・単位の変更で並び順が変わるため、比較軸の意味が壊れる。</p>
+            </div>
+          </div>
+        </div>
+        <div class="table-wrap mt-4" data-table-demo="sortable">
+          <table
+            class="table table-zebra w-full"
+            data-sortable-table
+            data-sticky-header-table
+            data-default-sort-key="fit"
+            data-default-sort-direction="desc"
+          >
+            <caption class="caption-bottom px-2 py-3 text-left text-sm text-base-content/70">
+              初期状態は fit 降順。見出しを押すと同じ列の昇順・降順を切り替えます。
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col" data-sort-key="service" data-sort-type="text">
+                  <button type="button" data-sort-key="service" aria-label="サービス名で並べ替え">
+                    <span data-sort-label>サービス</span><span data-sort-indicator aria-hidden="true">↕</span>
+                  </button>
+                </th>
+                <th scope="col" data-sort-key="fit" data-sort-type="number">
+                  <button type="button" data-sort-key="fit" aria-label="適合度で並べ替え">
+                    <span data-sort-label>適合度</span><span data-sort-indicator aria-hidden="true">↕</span>
+                  </button>
+                </th>
+                <th scope="col" data-sort-key="grade" data-sort-type="number">
+                  <button type="button" data-sort-key="grade" aria-label="評価で並べ替え">
+                    <span data-sort-label>評価</span><span data-sort-indicator aria-hidden="true">↕</span>
+                  </button>
+                </th>
+                <th scope="col" data-sort-key="updated" data-sort-type="date">
+                  <button type="button" data-sort-key="updated" aria-label="更新日で並べ替え">
+                    <span data-sort-label>更新日</span><span data-sort-indicator aria-hidden="true">↕</span>
+                  </button>
+                </th>
+                <th scope="col" data-sort-key="note" data-sort-type="number">
+                  <button type="button" data-sort-key="note" aria-label="確認状態で並べ替え">
+                    <span data-sort-label>確認状態</span><span data-sort-indicator aria-hidden="true">↕</span>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-sort-value="gBizINFO">gBizINFO</td>
+                <td data-sort-value="100">100%</td>
+                <td data-sort-value="3">S</td>
+                <td data-sort-value="2026-08-10">2026-08-10</td>
+                <td data-sort-value="3">確認済み</td>
+              </tr>
+              <tr>
+                <td data-sort-value="Bizloop">Bizloop</td>
+                <td data-sort-value="75">75%</td>
+                <td data-sort-value="2">A</td>
+                <td data-sort-value="2026-08-08">2026-08-08</td>
+                <td data-sort-value="1">要確認</td>
+              </tr>
+              <tr>
+                <td data-sort-value="Other A">その他 A</td>
+                <td data-sort-value="50">50%</td>
+                <td data-sort-value="1">B</td>
+                <td data-sort-value="2026-08-01">2026-08-01</td>
+                <td data-sort-value="0">未確認</td>
+              </tr>
+              <tr>
+                <td data-sort-value="Other B">その他 B</td>
+                <td data-sort-value="50">50%</td>
+                <td data-sort-value="1">B</td>
+                <td data-sort-value="2026-07-29">2026-07-29</td>
+                <td data-sort-value="0">未確認</td>
+              </tr>
+              <tr>
+                <td data-sort-value="Other C">その他 C</td>
+                <td data-sort-value="not-a-number">未算出</td>
+                <td data-sort-value="0">C</td>
+                <td data-sort-value="2026-07-20">2026-07-20</td>
+                <td data-sort-value="0">未確認</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap mt-6" data-table-demo="sortable-secondary">
+          <table
+            class="table table-zebra w-full"
+            data-sortable-table
+            data-sticky-header-table
+            data-default-sort-key="priority"
+            data-default-sort-direction="asc"
+          >
+            <caption class="caption-bottom px-2 py-3 text-left text-sm text-base-content/70">
+              2つ目の表は priority 昇順。複数表をスクロールして固定 clone の対象切替を確認できます。
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col" data-sort-key="source" data-sort-type="text">
+                  <button type="button" data-sort-key="source" aria-label="情報源で並べ替え">
+                    <span data-sort-label>情報源</span><span data-sort-indicator aria-hidden="true">↕</span>
+                  </button>
+                </th>
+                <th scope="col" data-sort-key="priority" data-sort-type="number">
+                  <button type="button" data-sort-key="priority" aria-label="優先度で並べ替え">
+                    <span data-sort-label>優先度</span><span data-sort-indicator aria-hidden="true">↕</span>
+                  </button>
+                </th>
+                <th scope="col" data-sort-key="status" data-sort-type="text">
+                  <button type="button" data-sort-key="status" aria-label="状態で並べ替え">
+                    <span data-sort-label>状態</span><span data-sort-indicator aria-hidden="true">↕</span>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-sort-value="Public registry">公開台帳</td>
+                <td data-sort-value="1">1</td>
+                <td data-sort-value="ready">確認済み</td>
+              </tr>
+              <tr>
+                <td data-sort-value="Business directory">事業者名鑑</td>
+                <td data-sort-value="2">2</td>
+                <td data-sort-value="review">レビュー中</td>
+              </tr>
+              <tr>
+                <td data-sort-value="Other source">その他資料</td>
+                <td data-sort-value="3">3</td>
+                <td data-sort-value="pending">未確認</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4 rounded-box border border-info/40 bg-info/10 p-4 text-sm">
+          <h3 class="mb-2 font-semibold">検証データと確認項目</h3>
+          <ul class="list-disc space-y-1 pl-5">
+            <li>初期順が gBizINFO（100%）→ Bizloop（75%）→ その他（50%）になり、同値のその他 A/B は元順を保つ。評価は S/A/B/C を 3/2/1/0 の意味順位で持つ。</li>
+            <li>数値・文字列・日付をそれぞれソートし、未定義値や NaN は末尾へ寄せる。</li>
+            <li>「未算出」は number 列の非数値データとして末尾に移動し、表示単位をソート値へ混ぜない。</li>
+            <li>2つの表をスクロールし、見出しボタン、横スクロール、navbar 下の固定 clone の対象切替を確認する。clone のセル押下は元ボタンを操作する。</li>
+            <li>表のソート操作でテキスト選択コメントが開かず、ソート後も既存コメントのレイアウトが再計算される。</li>
+          </ul>
+        </div>
+      </section>
+
       <div class="divider my-6">リスク表現例</div>
 
       <!-- リスク badge + 薄背景 + 枠線 -->
@@ -322,6 +544,9 @@
       const commentRail = document.getElementById('comment-rail');
       const annotationRail = document.getElementById('annotation-rail');
       const annotationMobileSection = document.getElementById('annotation-mobile-section');
+      let stickyHeaderClone = null;
+      let stickyHeaderTable = null;
+      let stickyHeaderRaf = null;
 
       /** @type {Map<string, { id: string, quote: string, comment: string, anchor: object, createdAt: string, card: HTMLElement|null, mark: HTMLElement|null, targetY: number }>} */
       const state = new Map();
@@ -335,6 +560,188 @@
       let termObserver = null;
       let pendingRange = null;
       let editModeId = null;
+
+      function getSortableHeaders(table) {
+        return Array.from(table.tHead?.rows[0]?.cells || []).filter((cell) => cell.dataset.sortKey);
+      }
+
+      function parseSortValue(cell, type) {
+        if (!cell || !Object.prototype.hasOwnProperty.call(cell.dataset, 'sortValue')) {
+          return { value: null, invalid: true };
+        }
+        const raw = cell.dataset.sortValue;
+        if (type === 'number') {
+          const value = Number(raw);
+          return { value, invalid: !Number.isFinite(value) };
+        }
+        if (type === 'date') {
+          const value = Date.parse(raw);
+          return { value, invalid: Number.isNaN(value) };
+        }
+        return { value: raw, invalid: false };
+      }
+
+      function updateSortIndicators(table, activeKey, direction) {
+        for (const header of getSortableHeaders(table)) {
+          const isActive = header.dataset.sortKey === activeKey;
+          const indicator = header.querySelector('[data-sort-indicator]');
+          if (indicator) indicator.textContent = isActive ? (direction === 'asc' ? '↑' : '↓') : '↕';
+          header.setAttribute('aria-sort', isActive ? direction : 'none');
+        }
+      }
+
+      function applyTableSort(table, key, direction) {
+        const header = getSortableHeaders(table).find((cell) => cell.dataset.sortKey === key);
+        const tbody = table.tBodies[0];
+        if (!header || !tbody) return;
+        const type = header.dataset.sortType || 'text';
+        const columnIndex = header.cellIndex;
+        const multiplier = direction === 'asc' ? 1 : -1;
+        const rows = Array.from(tbody.rows).map((row, index) => {
+          const parsed = parseSortValue(row.cells[columnIndex], type);
+          return { row, index, ...parsed };
+        });
+
+        rows.sort((a, b) => {
+          if (a.invalid || b.invalid) {
+            if (a.invalid !== b.invalid) return a.invalid ? 1 : -1;
+            return a.index - b.index;
+          }
+          let result = 0;
+          if (type === 'text') result = String(a.value).localeCompare(String(b.value));
+          else result = a.value - b.value;
+          return result * multiplier || a.index - b.index;
+        });
+        for (const item of rows) tbody.appendChild(item.row);
+        updateSortIndicators(table, key, direction);
+        layoutAll();
+        scheduleStickyHeaderSync();
+      }
+
+      function createStickyHeaderClone() {
+        const root = document.createElement('div');
+        root.dataset.stickyHeaderClone = '';
+        root.setAttribute('aria-hidden', 'true');
+        root.innerHTML = '<table><thead><tr></tr></thead></table>';
+        root.addEventListener('click', (event) => {
+          const cell = event.target.closest('[data-source-column]');
+          if (!cell || !stickyHeaderTable) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const source = stickyHeaderTable.tHead?.rows[0]?.cells[Number(cell.dataset.sourceColumn)];
+          source?.querySelector('button')?.click();
+        });
+        document.body.appendChild(root);
+        return root;
+      }
+
+      function hideStickyHeaderClone() {
+        if (!stickyHeaderClone) return;
+        stickyHeaderClone.classList.remove('is-visible');
+        stickyHeaderTable = null;
+      }
+
+      function findActiveStickyHeaderTable() {
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return null;
+        const navbarBottom = navbar.getBoundingClientRect().bottom;
+        const candidates = [];
+        for (const wrapper of document.querySelectorAll('.table-wrap')) {
+          const table = wrapper.querySelector('table[data-sticky-header-table]');
+          const thead = table?.tHead;
+          if (!table || !thead) continue;
+          const tableRect = table.getBoundingClientRect();
+          const theadRect = thead.getBoundingClientRect();
+          if (theadRect.bottom <= navbarBottom && tableRect.bottom > navbarBottom) {
+            candidates.push({ table, distance: Math.abs(navbarBottom - theadRect.bottom) });
+          }
+        }
+        candidates.sort((a, b) => a.distance - b.distance);
+        return candidates[0]?.table || null;
+      }
+
+      function renderStickyHeaderClone(table) {
+        if (!stickyHeaderClone) stickyHeaderClone = createStickyHeaderClone();
+        const wrapper = table.closest('.table-wrap');
+        const thead = table.tHead;
+        const navbar = document.querySelector('.navbar');
+        if (!wrapper || !thead || !navbar) {
+          hideStickyHeaderClone();
+          return;
+        }
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const tableRect = table.getBoundingClientRect();
+        const theadRect = thead.getBoundingClientRect();
+        const navbarBottom = navbar.getBoundingClientRect().bottom;
+        const cloneTable = stickyHeaderClone.querySelector('table');
+        const cloneRow = stickyHeaderClone.querySelector('tr');
+        cloneRow.innerHTML = '';
+        for (const [index, source] of Array.from(thead.rows[0].cells).entries()) {
+          const cell = document.createElement(source.tagName.toLowerCase());
+          cell.className = source.className;
+          cell.dataset.sourceColumn = String(index);
+          cell.textContent = source.querySelector('[data-sort-label]')?.textContent || source.textContent.trim();
+          const indicator = document.createElement('span');
+          indicator.setAttribute('aria-hidden', 'true');
+          indicator.textContent = ' ' + (source.querySelector('[data-sort-indicator]')?.textContent || '↕');
+          cell.appendChild(indicator);
+          const width = source.getBoundingClientRect().width;
+          cell.style.width = width + 'px';
+          cell.removeAttribute('tabindex');
+          cloneRow.appendChild(cell);
+        }
+        cloneTable.style.width = tableRect.width + 'px';
+        cloneTable.style.transform = 'translateX(' + (-wrapper.scrollLeft) + 'px)';
+        stickyHeaderClone.style.left = wrapperRect.left + 'px';
+        stickyHeaderClone.style.top = navbarBottom + 'px';
+        stickyHeaderClone.style.width = wrapper.clientWidth + 'px';
+        stickyHeaderClone.style.height = theadRect.height + 'px';
+        stickyHeaderClone.classList.add('is-visible');
+        stickyHeaderTable = table;
+      }
+
+      function syncStickyHeaderClone() {
+        const table = findActiveStickyHeaderTable();
+        if (!table) {
+          hideStickyHeaderClone();
+          return;
+        }
+        renderStickyHeaderClone(table);
+      }
+
+      function scheduleStickyHeaderSync() {
+        if (stickyHeaderRaf) return;
+        stickyHeaderRaf = requestAnimationFrame(() => {
+          stickyHeaderRaf = null;
+          syncStickyHeaderClone();
+        });
+      }
+
+      function initSortableTables() {
+        for (const table of document.querySelectorAll('[data-sortable-table]')) {
+          const defaultKey = table.dataset.defaultSortKey;
+          const defaultDirection = table.dataset.defaultSortDirection === 'asc' ? 'asc' : 'desc';
+          if (defaultKey) applyTableSort(table, defaultKey, defaultDirection);
+          for (const button of table.querySelectorAll('th[data-sort-key] button')) {
+            for (const eventName of ['pointerdown', 'mousedown', 'mouseup', 'click']) {
+              button.addEventListener(eventName, (event) => event.stopPropagation());
+            }
+            button.addEventListener('click', () => {
+              const header = button.closest('th[data-sort-key]');
+              if (!header) return;
+              const current = header.getAttribute('aria-sort');
+              applyTableSort(
+                table,
+                header.dataset.sortKey,
+                current === 'asc' ? 'desc' : 'asc'
+              );
+            });
+          }
+          const wrapper = table.closest('.table-wrap');
+          wrapper?.addEventListener('scroll', scheduleStickyHeaderSync, { passive: true });
+        }
+        scheduleStickyHeaderSync();
+      }
 
       function storageKey() {
         return STORAGE_PREFIX + location.pathname;
@@ -1079,7 +1486,10 @@
 
       window.addEventListener('scroll', scheduleLayout, { passive: true });
       window.addEventListener('resize', scheduleLayout);
+      window.addEventListener('scroll', scheduleStickyHeaderSync, { passive: true });
+      window.addEventListener('resize', scheduleStickyHeaderSync);
 
+      initSortableTables();
       loadTermAnnotations();
       loadPersisted();
     })();
