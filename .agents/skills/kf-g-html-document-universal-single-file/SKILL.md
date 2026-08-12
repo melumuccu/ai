@@ -18,11 +18,14 @@ description: Use this skill when creating or revising build-free, single-file in
 | [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較                                                                                      |
 | [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の成果物正本・完了手順・PR description 形式                                                                          |
 | [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh)               | スクリーンショット PNG → AVIF 固定変換                                                                                                      |
+| [references/skill-revision-guidance.md](references/skill-revision-guidance.md)               | skill 本体・reference・template を改修するとき。実装詳細の正本を template サンプル HTML に集約する判断に使う                                |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html)     | 実装の起点テンプレート                                                                                                                      |
 
 ## 視覚構造・可読性
 
 [content-patterns.md](references/content-patterns.md) の「視覚構造・可読性・情報エンコード」に従う。DOM・コメントコア・左注釈の実装細部は [assets/universal-single-file-template.html](assets/universal-single-file-template.html) と [core-contract.md](references/core-contract.md) を正本とする。
+
+比較表は template のソート可能表契約を使い、表示値とソート値を分離し、意味のある列を初期ソートする。固定ヘッダーは JS の fixed clone overlay とし、表ヘッダーは不透明背景を必須とする。実装例と説明は template を正本とする。
 
 ## 生成ワークフロー
 
@@ -79,6 +82,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 
 - [ ] **配布形式:** 単一 `.html` + 必要 CDN のみ
 - [ ] **コア契約:** [core-contract.md](references/core-contract.md) と [assets/universal-single-file-template.html](assets/universal-single-file-template.html) を満たす
+- [ ] **比較表:** template のソート可能表契約を満たす（ヘッダーは不透明背景で tbody が透過しない）
 - [ ] **視覚構造:** [content-patterns.md](references/content-patterns.md) の積み順・論理分離・冗長エンコード・タイポグラフィ・見出し階層
 - [ ] **Mermaid 向き:** flowchart で TD / LR を選べる場合は TD を基本としたか（[content-patterns.md](references/content-patterns.md) § Mermaid 図の向き）
 - [ ] **専門用語・左注釈:** パターン別必須度を満たす（[content-patterns.md](references/content-patterns.md) § 専門用語・左注釈）

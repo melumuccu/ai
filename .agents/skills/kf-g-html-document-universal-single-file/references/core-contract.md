@@ -21,6 +21,18 @@
 
 ---
 
+## 比較表
+
+比較表は [assets/universal-single-file-template.html](../assets/universal-single-file-template.html) のソート可能表契約を使う。
+
+- 表示値とソート値を分離する。
+- 意味のある列を初期ソートする。
+- 固定ヘッダーは JS の fixed clone overlay で実装する。
+- 表ヘッダー（元 `thead` と fixed clone）は不透明背景を必須とする。縦スクロール時に tbody の文字がヘッダー越しに見えないこと。具体スタイルは template の「比較表ヘッダー不透明（正本）」ブロックと、サンプル表の `bg-base-200` を正本とする（`oklch(var(--b2))` は daisyUI v5 では無効）。
+- 実装例と説明は template を正本とする。
+
+---
+
 ## 左注釈（専門用語）
 
 ### 役割と分離
