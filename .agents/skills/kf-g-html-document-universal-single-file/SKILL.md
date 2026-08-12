@@ -18,6 +18,7 @@ description: Use this skill when creating or revising build-free, single-file in
 | [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較                                                                                      |
 | [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の成果物正本・完了手順・PR description 形式                                                                          |
 | [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh)               | スクリーンショット PNG → AVIF 固定変換                                                                                                      |
+| [references/skill-revision-guidance.md](references/skill-revision-guidance.md)               | skill 本体・reference・template を改修するとき。実装詳細の正本を template サンプル HTML に集約する判断に使う                                |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html)     | 実装の起点テンプレート                                                                                                                      |
 
 ## 視覚構造・可読性
