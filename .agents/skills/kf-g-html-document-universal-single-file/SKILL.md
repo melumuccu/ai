@@ -84,6 +84,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 - [ ] **コア契約:** [core-contract.md](references/core-contract.md) と [assets/universal-single-file-template.html](assets/universal-single-file-template.html) を満たす
 - [ ] **比較表:** template のソート可能表契約を満たす（ヘッダーは不透明背景で tbody が透過しない）
 - [ ] **視覚構造:** [content-patterns.md](references/content-patterns.md) の積み順・論理分離・冗長エンコード・タイポグラフィ・見出し階層
+- [ ] **daisyUI steps:** template の steps 契約を満たす（[universal-single-file-template.html](assets/universal-single-file-template.html)）
 - [ ] **Mermaid 向き:** flowchart で TD / LR を選べる場合は TD を基本としたか（[content-patterns.md](references/content-patterns.md) § Mermaid 図の向き）
 - [ ] **専門用語・左注釈:** パターン別必須度を満たす（[content-patterns.md](references/content-patterns.md) § 専門用語・左注釈）
 - [ ] **出典リンク:** 外部根拠を `<a href>` でリンク化（[source-citations.md](references/source-citations.md)）

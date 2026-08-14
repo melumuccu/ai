@@ -15,6 +15,7 @@
 **daisyUI CDN タグと `data-theme`:** `assets/universal-single-file-template.html` の `<head>` / `<html>` を正本とする。
 
 - ページ chrome、カード、バッジ、アラート、折りたたみ、手順 UI は daisyUI コンポーネントクラス（`btn`, `card`, `alert`, `badge`, `collapse`, `steps` など）を使う
+- daisyUI `steps` のマークアップ契約は `assets/universal-single-file-template.html` のサンプル（コメントと DOM）を正本とする（[公式](https://daisyui.com/components/steps/?lang=ja)）
 - **コメントコア:** vanilla JS を維持。Alpine は小 UI のみ
 - daisyUI CDN モードで利用可能なバリアントのみ使う
 
@@ -40,7 +41,7 @@
 | 情報 | 推奨 | 条件 |
 | --- | --- | --- |
 | 2軸以上の比較 | `table` | 列見出しで軸を明示。3列以上の同一軸も table |
-| 3ステップ超の順序・分岐 | `steps` または Mermaid | 並列分岐は Mermaid flowchart |
+| 3ステップ超の順序・分岐 | `steps` または Mermaid | 並列分岐は Mermaid flowchart。`steps` のマークアップは template を正本とする |
 | 階層・ツリー | Markmap | 深いネストは collapse と併用 |
 | 並列 3〜7 項目 | 短い箇条書き | 1項目1文 |
 | 状態・リスク・進捗 | badge + alert/card 背景 | テキストラベル必須 |
@@ -247,6 +248,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. デモ用見出し・段落を実内容に差し替えたか
 1. 使わない CDN の `<script>` / `<link>` を削除したか
 1. daisyUI CDN と `data-theme` を設定したか
+1. daisyUI `steps` 使用時、template の steps 契約（コメントとサンプル DOM）を満たしたか
 1. Mermaid 使用時はテキスト選択 CSS を入れたか。flowchart は TD / LR を選べる場合 TD を基本としたか
 1. インフラ操作を含む依頼で「手動インフラ操作記録」パターンを満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離したか）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
