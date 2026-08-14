@@ -15,6 +15,7 @@
 **daisyUI CDN タグと `data-theme`:** `assets/universal-single-file-template.html` の `<head>` / `<html>` を正本とする。
 
 - ページ chrome、カード、バッジ、アラート、折りたたみ、手順 UI は daisyUI コンポーネントクラス（`btn`, `card`, `alert`, `badge`, `collapse`, `steps` など）を使う
+- daisyUI `steps` を使うときは、`.steps` に `steps-vertical` を必ず付ける（PC とスマホで共通）。`.steps` の直接子は `li.step` のみにする。各 `li.step` のラベルはプレーンテキストとし、コード相当は Markdown のインラインコード記法（バッククォート）でプレーンテキストとして書く。例: `<li class="step step-primary"> \`npx wrangler r2 object put\` を実行して R2 へ put する</li>`。複数の文を入れるときは、一文ごとに `<br>` で改行する。`li.step` 内の入れ子 HTML は、公式の `span.step-icon` と、複数文の改行に使う `<br>` のみとする（[公式](https://daisyui.com/components/steps/?lang=ja)）
 - **コメントコア:** vanilla JS を維持。Alpine は小 UI のみ
 - daisyUI CDN モードで利用可能なバリアントのみ使う
 
@@ -40,7 +41,7 @@
 | 情報 | 推奨 | 条件 |
 | --- | --- | --- |
 | 2軸以上の比較 | `table` | 列見出しで軸を明示。3列以上の同一軸も table |
-| 3ステップ超の順序・分岐 | `steps` または Mermaid | 並列分岐は Mermaid flowchart |
+| 3ステップ超の順序・分岐 | `steps` または Mermaid | 並列分岐は Mermaid flowchart。`steps` 使用時は `.steps` に `steps-vertical` を付け、直接子を `li.step` のみにし、ラベルはプレーンテキスト（コード相当は Markdown バッククォート）にする |
 | 階層・ツリー | Markmap | 深いネストは collapse と併用 |
 | 並列 3〜7 項目 | 短い箇条書き | 1項目1文 |
 | 状態・リスク・進捗 | badge + alert/card 背景 | テキストラベル必須 |
@@ -245,6 +246,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. デモ用見出し・段落を実内容に差し替えたか
 1. 使わない CDN の `<script>` / `<link>` を削除したか
 1. daisyUI CDN と `data-theme` を設定したか
+1. daisyUI `steps` 使用時、`.steps` に `steps-vertical` を付けたか。直接子が `li.step` のみか。ラベルはプレーンテキストか（コード相当は Markdown バッククォート）。複数文は `<br>` で改行したか。入れ子 HTML は `span.step-icon` と `<br>` のみか
 1. Mermaid 使用時はテキスト選択 CSS を入れたか。flowchart は TD / LR を選べる場合 TD を基本としたか
 1. インフラ操作を含む依頼で「手動インフラ操作記録」パターンを満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離したか）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
