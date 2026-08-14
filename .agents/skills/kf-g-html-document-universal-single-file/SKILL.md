@@ -80,7 +80,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 - [ ] **配布形式:** 単一 `.html` + 必要 CDN のみ
 - [ ] **コア契約:** [core-contract.md](references/core-contract.md) と [assets/universal-single-file-template.html](assets/universal-single-file-template.html) を満たす
 - [ ] **視覚構造:** [content-patterns.md](references/content-patterns.md) の積み順・論理分離・冗長エンコード・タイポグラフィ・見出し階層
-- [ ] **daisyUI steps:** `.steps` に `steps-vertical` を付ける。直接子は `li.step` のみ。ラベルはプレーンテキスト（コード相当は Markdown バッククォート）。複数文は `<br>`。入れ子 HTML は `span.step-icon` と `<br>` のみ（[content-patterns.md](references/content-patterns.md)）
+- [ ] **daisyUI steps:** template の steps 契約を満たす（[universal-single-file-template.html](assets/universal-single-file-template.html)）
 - [ ] **Mermaid 向き:** flowchart で TD / LR を選べる場合は TD を基本としたか（[content-patterns.md](references/content-patterns.md) § Mermaid 図の向き）
 - [ ] **専門用語・左注釈:** パターン別必須度を満たす（[content-patterns.md](references/content-patterns.md) § 専門用語・左注釈）
 - [ ] **出典リンク:** 外部根拠を `<a href>` でリンク化（[source-citations.md](references/source-citations.md)）
