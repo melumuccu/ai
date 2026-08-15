@@ -1,6 +1,6 @@
 ---
 name: kf-g-code-how-what-why-why-not-principles
-description: Use this index skill before writing or reviewing production code, test code, commit messages, or code comments in this repository. It maps the How/What/Why/Why not principles to their authoritative skills without duplicating detailed rules.
+description: Use this index skill before creating, editing, or reviewing production code, test code, commit messages or logs, or code comments in this repository. Apply it to map How/What/Why/Why not principles to their authoritative SoT skills without duplicating detailed rules.
 ---
 
 # How / What / Why / Why not — 責務マップ
