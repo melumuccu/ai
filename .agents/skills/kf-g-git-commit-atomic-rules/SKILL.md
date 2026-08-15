@@ -47,6 +47,7 @@ description: Enforce frequent atomic commits while doing coding work. Always use
 1. 失敗した検証があれば修正し、green な状態に戻す。
 1. 自分が変更した対象だけを stage する。ユーザーの既存変更を混ぜない。
 1. `git diff --cached --stat` と `git diff --cached --name-status` で commit 対象を確認する。
+1. [kf-g-git-commit-japanese-commit-message](../kf-g-git-commit-japanese-commit-message/SKILL.md) に従い commit メッセージを作成する。本文の `概要` は What、`Why` はなぜこのように実装・変更したか（判断理由）とする。
 1. 1つの関心事だけが staged になっている状態で `git commit` を実行する。
 
 ## 分離ルール
@@ -63,9 +64,10 @@ description: Enforce frequent atomic commits while doing coding work. Always use
 - CLI ツールによりコードベースに何かしらの変更が加えられた時 → 1 commit
   - commit メッセージ例:
      ```
-     feat_: `sv create` コマンド実行
+     feat_: CLI_sv create コマンド実行
 
-     {...(選択したオプションを詳細に記載)}
+     - 概要: `sv create` コマンドを実行し生成物を追加
+     - Why: 手動 scaffold よりテンプレート生成の方が初期構成のばらつきを抑えられるため
      ```
 
 - 機能変更と typo 修正が同時に見つかった時 → 2 commit
@@ -74,6 +76,16 @@ description: Enforce frequent atomic commits while doing coding work. Always use
 
 - 生成ファイルと元コード更新が同じ論理変更に属する時 → 1 commit
   - 変更元と生成先の差分が 1 つの対応関係なら、別 commit に分けない
+
+## commit message skill との関係
+
+| skill | 役割 |
+| --- | --- |
+| 本 skill（atomic-rules） | commit 粒度、検証タイミング、論理単位の分割 |
+| [kf-g-git-commit-staged-only-rules](../kf-g-git-commit-staged-only-rules/SKILL.md) | ユーザー commit 依頼時の staged 対象限定（What を stage する範囲） |
+| [kf-g-git-commit-japanese-commit-message](../kf-g-git-commit-japanese-commit-message/SKILL.md) | commit メッセージ形式と Why 記述（canonical） |
+
+通常 commit は上記 2 skill（staged-only + japanese-commit-message）を意図的に併用する。ユーザーが `/genshijin-commit` を明示した場合のみ外部 skill を優先する（優先順位は [kf-g-code-how-what-why-why-not-principles](../kf-g-code-how-what-why-why-not-principles/SKILL.md) を参照）。
 
 ## staged-only commit skill との関係
 
@@ -87,6 +99,7 @@ description: Enforce frequent atomic commits while doing coding work. Always use
 - unrelated change の混入。
 - refactor / format / typo fix と functional change / bug fix の混在。
 - ユーザーの既存変更を自分の commit に混ぜること。
+- subject / 概要 / diff の再述だけを Why に書く commit メッセージ。
 
 ## 完了報告
 

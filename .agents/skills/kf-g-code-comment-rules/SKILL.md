@@ -1,12 +1,12 @@
 ---
 name: kf-g-code-comment-rules
-description: Use this project skill whenever adding, editing, reviewing, or deciding whether to keep source-code comments in this repository. It is the authoritative rule set for code comments, including WHY-only content, official-doc URL breadcrumbs, and comment placement.
+description: Use this project skill whenever adding, editing, reviewing, or deciding whether to keep source-code comments in this repository. It is the authoritative rule set for code comments, including Why not content, official-doc URL breadcrumbs, and comment placement.
 ---
 
 # コードコメント規約
 
 この skill は、このリポジトリのコードコメント全般の入口。
-詳細は `references/why-only.md` と `references/official-doc-url.md` に分ける。
+詳細は `references/why-not.md` と `references/official-doc-url.md` に分ける。
 
 ## 使う場面
 
@@ -17,19 +17,20 @@ description: Use this project skill whenever adding, editing, reviewing, or deci
 
 ## 参照ファイル
 
-- `references/why-only.md`: WHY-only の基準、判断手順、例
+- `references/why-not.md`: Why not の基準、判断手順、例
 - `references/official-doc-url.md`: 公式ドキュメント URL の扱い、配置ルール、例
 
 ## 読み進め方
 
-1. `references/why-only.md` を読む
+1. `references/why-not.md` を読む
 1. `references/official-doc-url.md` を読む
 1. 必要なら周辺コードと関連ドキュメントを読む
-1. コメントは WHY と根拠だけに絞る
+1. コメントは Why not と判断根拠だけに絞る
 
 ## 最終チェック
 
-- コメントは WHY を説明しているか
+- コメントは Why not（別案の却下、単純化・削除不能の理由）を説明しているか
+- 採用理由の positive Why をコメントに書いていないか（commit log が担う）
 - 参照した公式ドキュメント URL を残しているか
 - ファイル全体向けか局所向けかで配置を分けているか
-- WHAT の説明になっていないか
+- What（処理内容）や How（実装手順）の説明になっていないか

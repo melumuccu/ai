@@ -18,6 +18,7 @@
         "./kf-g-agent-worker-common",
         "./kf-g-agent-orchestrator",
         "./kf-g-code-comment-rules",
+        "./kf-g-code-how-what-why-why-not-principles",
         "./kf-g-css-flex-grid",
         "./kf-g-css-spacing-gap-margin-rules",
         "./kf-g-css-tak-animations",
