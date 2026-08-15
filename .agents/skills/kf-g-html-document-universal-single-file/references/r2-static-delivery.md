@@ -32,12 +32,12 @@
 
 ## GitHub description へのリンク反映
 
-HTML 配布ありの issue / PR では、description は最小サマリと用途別 HTML リンクのみとする（詳細は [SKILL.md](../SKILL.md) の「GitHub 連携」参照）。
+HTML 配布ありの issue / PR では、description は最小サマリ、存在する場合のみユーザー対応タスク、用途別 HTML リンク、および任意の `Closes` に限定する（詳細は [SKILL.md](../SKILL.md) の「GitHub 連携」参照）。詳細な調査・検証・リスクは HTML に置く。
 
 1. 新バージョンを R2 へアップロードする
 1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
 1. オブジェクト名から版番号を抽出し、リンクラベルを `[v{N}]` にする（例: `..._v4.html` → `[v4](https://ai-html.hacksaw.work/..._v4.html)`）
-1. issue には `## プランニング用資料`、PR には `## レビュー用資料` の直下にリンクを置く
+1. issue には `## プランニング用資料`、PR には `## レビュー用資料` の直下にリンクを置く。PR にユーザー対応タスクがある場合は、実行順のチェックボックスを `## ユーザー対応タスク` に記載し、HTML 資料より前に置く。`Closes` を記載する場合は HTML 資料より後に置く
 1. URL または `v{N}` が未確定の間はリンクを置かない。確認後に description を更新する
 1. 新版アップロード時は、旧リンクと旧ラベルを新版へ差し替える
 
