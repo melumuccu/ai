@@ -32,8 +32,6 @@
 
 ## GitHub description へのリンク反映
 
-HTML 配布ありの issue / PR では、description は最小サマリと用途別 HTML リンクのみとする（詳細は [SKILL.md](../SKILL.md) の「GitHub 連携」参照）。
-
 1. 新バージョンを R2 へアップロードする
 1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
 1. オブジェクト名から版番号を抽出し、リンクラベルを `[v{N}]` にする（例: `..._v4.html` → `[v4](https://ai-html.hacksaw.work/..._v4.html)`）
