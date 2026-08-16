@@ -50,23 +50,8 @@ issue 着手時は `~/projects/_worktrees/<repo-name>/` 配下に worktree を�
 
 ## issue description
 
-### HTML 配布ありの場合
-
-`kf-g-html-document-universal-single-file` skill で HTML を生成し R2 へアップロードする場合、以下の issue description とする
-
-```markdown
-## 概要
-- <issue の最小サマリ>
-
-## プランニング用資料
-[v{N}](https://ai-html.hacksaw.work/<object-key>)
-```
-
-#### HTML 配布なし
-
-- HTML 配布がない通常の issue プランニングでは、実装着手前に issue description を更新する。
-- description にはプランニングで作成した Markdown をそのまま記載し、GitHub 投稿前のフットノート記法変換は `kf-g-agent-planning-structured-plan-output` に従う。
-- 既存 description がある場合は参考として読み、プランニングで作成した Markdown へ統合・上書きする。
+- issue プランニング用 HTML を R2 へ配布した場合は、`kf-g-html-document-universal-single-file` の [references/pr-review-delivery.md](.agents/skills/kf-g-html-document-universal-single-file/references/pr-review-delivery.md) の issue description 規約に従う。
+- HTML 配布なしの issue では、同 reference の HTML 配布なし規約に従う。
 
 ---
 

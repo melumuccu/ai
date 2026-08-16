@@ -25,17 +25,32 @@ issue または PR 向けに HTML を R2 配布するとき、次の順序で完
 1. 出典リンクを含む場合は [source-citations.md](source-citations.md) に従う
 1. 新規 `v{N}` として R2 へアップロードする（[r2-static-delivery.md](r2-static-delivery.md)）
 1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
-1. PR / issue description を更新する（issue: `## プランニング用資料`、PR: [PR description 規約](#pr-description-規約) に従う）
+1. PR / issue description を更新する（issue: [issue description 規約](#issue-description-規約)、PR: [PR description 規約](#pr-description-規約) に従う）
 1. description の URL がアップロード先 `v{N}` と一致することを目視確認する
 
-### issue description 形式
+## issue description 規約
 
-| 用途 | 見出し | リンク形式 |
-| --- | --- | --- |
-| issue プランニング | `## プランニング用資料` | `[v{N}](https://ai-html.hacksaw.work/<object-key>)` |
+### HTML 配布あり
 
+**適用条件:** issue プランニング用 HTML を R2 へ配布した場合。
+
+#### 必須
+
+- `## 概要` — issue の最小サマリ
+- `## プランニング用資料` — 確認済み R2 URL のみ `[v{N}](https://ai-html.hacksaw.work/<object-key>)`
 - 版ラベル `v{N}` は R2 オブジェクトキーの版番号と一致させる
 - 確認済み公開 URL のみ記載する（未確認 URL は載せない）
+
+#### 順序
+
+1. `## 概要`
+1. `## プランニング用資料`
+
+### HTML 配布なし
+
+- HTML 配布がない通常の issue プランニングでは、実装着手前に issue description を更新する
+- description にはプランニングで作成した Markdown をそのまま記載し、GitHub 投稿前のフットノート記法変換は `kf-g-agent-planning-structured-plan-output` に従う
+- 既存 description がある場合は参考として読み、プランニングで作成した Markdown へ統合・上書きする
 
 ## PR description 規約
 
