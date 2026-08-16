@@ -16,7 +16,9 @@ description: Use this skill when creating or revising build-free, single-file in
 | [references/source-citations.md](references/source-citations.md)                             | 外部資料を根拠に `[data-content-root]` 本文を書く／出典リンクをリンク化するとき                                                             |
 | [references/r2-static-delivery.md](references/r2-static-delivery.md)                         | R2 公開前提・Wrangler OAuth・版管理の確認                                                                                                   |
 | [references/frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) | PR レビュー + フロントエンド変更時の before/after 比較                                                                                      |
-| [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の成果物正本・完了手順・PR description 規約                                                                          |
+| [references/pr-review-delivery.md](references/pr-review-delivery.md)                         | issue / PR 向け R2 配布の成果物正本・完了手順                                                                                               |
+| [references/issue-description.md](references/issue-description.md)                           | issue description 規約（HTML 配布あり / なし）                                                                                              |
+| [references/pr-description.md](references/pr-description.md)                                 | PR description 規約                                                                                                                         |
 | [scripts/convert-screenshot-to-avif.sh](scripts/convert-screenshot-to-avif.sh)               | スクリーンショット PNG → AVIF 固定変換                                                                                                      |
 | [references/skill-revision-guidance.md](references/skill-revision-guidance.md)               | skill 本体・reference・template を改修するとき。実装詳細の正本を template サンプル HTML に集約する判断に使う                                |
 | [assets/universal-single-file-template.html](assets/universal-single-file-template.html)     | 実装の起点テンプレート                                                                                                                      |
@@ -89,7 +91,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 - [ ] **専門用語・左注釈:** パターン別必須度を満たす（[content-patterns.md](references/content-patterns.md) § 専門用語・左注釈）
 - [ ] **出典リンク:** 外部根拠を `<a href>` でリンク化（[source-citations.md](references/source-citations.md)）
 - [ ] **版管理:** 改訂ごとに新規 `v{N}` で put。既存版は保持（[r2-static-delivery.md](references/r2-static-delivery.md)）
-- [ ] **R2 配布:** issue / PR description に用途別見出しと確認済み `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載（[pr-review-delivery.md](references/pr-review-delivery.md)）
+- [ ] **R2 配布:** issue / PR description に用途別見出しと確認済み `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載（issue: [issue-description.md](references/issue-description.md)、PR: [pr-description.md](references/pr-description.md)）
 - [ ] **before/after:** 適用条件を満たす場合は [frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) に従う
 - [ ] **手動インフラ:** 該当依頼では [content-patterns.md](references/content-patterns.md) パターン D を満たす
 - [ ] validator 合格
