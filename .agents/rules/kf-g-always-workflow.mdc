@@ -21,7 +21,7 @@
 
 - コミュ用HTML の作成・公開は `kf-g-html-document-universal-single-file` skill を参照する。
 - プランニングはすべてコミュ用HTMLにし、issue description には確認済みの R2 URL をリンクする。したがって、プランニング時は先に issue を作成する。
-- PRを作成する場合は、PRレビュー用のコミュ用HTMLをPR作成前に作成し、確認済みの R2 URL を PR description にリンクする。
+- PRを作成する場合は、PRレビュー用のコミュ用HTMLをPR作成前に作成し、PR description の形式は `.agents/skills/kf-g-html-document-universal-single-file/references/pr-review-delivery.md` に従う。
 - HTMLを配布するだけでファイル変更差分がない場合は、R2公開を完了条件とし、PRを作成しない。
 
 ---
@@ -72,22 +72,8 @@ issue 着手時は `~/projects/_worktrees/<repo-name>/` 配下に worktree を�
 
 ## PR description
 
-### HTML 配布ありの場合
-
-`kf-g-html-document-universal-single-file` skill で HTML を生成し R2 へアップロードする場合、以下の PR description とする
-
-```markdown
-## 概要
-- <PR の最小サマリ>
-
-## プランニング用資料
-[v{N}](https://ai-html.hacksaw.work/<object-key>)
-
----
-Closes #<issue-number>
-```
-
-### HTML 配布なしの場合
-
-- PR description にはissue側で完成させたMarkdownをそのまま記載する。
+- PR を作成する場合は description を書く。
+- `## 概要` は必須とする。
+- PR レビュー用 HTML を R2 へ配布した場合は、`kf-g-html-document-universal-single-file` の [references/pr-review-delivery.md](.agents/skills/kf-g-html-document-universal-single-file/references/pr-review-delivery.md) の PR description 規約に従う（issue 起点かどうかにかかわらず）。
+- HTML 配布なしの PR では、issue 側で完成させた Markdown をそのまま description に記載する。
 

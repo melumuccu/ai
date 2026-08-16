@@ -25,15 +25,40 @@ issue または PR 向けに HTML を R2 配布するとき、次の順序で完
 1. 出典リンクを含む場合は [source-citations.md](source-citations.md) に従う
 1. 新規 `v{N}` として R2 へアップロードする（[r2-static-delivery.md](r2-static-delivery.md)）
 1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
-1. PR / issue description を更新する（issue: `## プランニング用資料`、PR: `## レビュー用資料` 配下に `[v{N}](確認済みURL)` のみ）
+1. PR / issue description を更新する（issue: `## プランニング用資料`、PR: [PR description 規約](#pr-description-規約) に従う）
 1. description の URL がアップロード先 `v{N}` と一致することを目視確認する
 
-### PR description 形式
+### issue description 形式
 
 | 用途 | 見出し | リンク形式 |
 | --- | --- | --- |
 | issue プランニング | `## プランニング用資料` | `[v{N}](https://ai-html.hacksaw.work/<object-key>)` |
-| PR レビュー | `## レビュー用資料` | `[v{N}](https://ai-html.hacksaw.work/<object-key>)` |
+
+- 版ラベル `v{N}` は R2 オブジェクトキーの版番号と一致させる
+- 確認済み公開 URL のみ記載する（未確認 URL は載せない）
+
+## PR description 規約
+
+**適用条件:** PR レビュー用 HTML を R2 へ配布した場合（issue 起点かどうかにかかわらず）。
+
+### 必須
+
+- `## 概要` — PR の最小サマリ
+- `## レビュー用資料` — 確認済み R2 URL のみ `[v{N}](https://ai-html.hacksaw.work/<object-key>)`
+
+### 任意
+
+- issue を閉じる意図がある場合のみ、末尾に `Closes #<issue-number>` を追加する
+
+### テンプレート
+
+```markdown
+## 概要
+- <PR の最小サマリ>
+
+## レビュー用資料
+[v{N}](https://ai-html.hacksaw.work/<object-key>)
+```
 
 - 版ラベル `v{N}` は R2 オブジェクトキーの版番号と一致させる
 - 確認済み公開 URL のみ記載する（未確認 URL は載せない）
