@@ -25,17 +25,10 @@ issue または PR 向けに HTML を R2 配布するとき、次の順序で完
 1. 出典リンクを含む場合は [source-citations.md](source-citations.md) に従う
 1. 新規 `v{N}` として R2 へアップロードする（[r2-static-delivery.md](r2-static-delivery.md)）
 1. **`https://ai-html.hacksaw.work/<object-key>`** をブラウザまたは HTTP で確認する
-1. PR / issue description を更新する（issue: `## プランニング用資料`、PR: `## レビュー用資料` 配下に `[v{N}](確認済みURL)` のみ）
+1. PR / issue description を更新する（issue: [issue-description.md](issue-description.md)、PR: [pr-description.md](pr-description.md) に従う）
 1. description の URL がアップロード先 `v{N}` と一致することを目視確認する
 
-### PR description 形式
+## description 規約
 
-| 用途 | 見出し | リンク形式 |
-| --- | --- | --- |
-| issue プランニング | `## プランニング用資料` | `[v{N}](https://ai-html.hacksaw.work/<object-key>)` |
-| PR レビュー | `## レビュー用資料` | `[v{N}](https://ai-html.hacksaw.work/<object-key>)` |
-
-- 版ラベル `v{N}` は R2 オブジェクトキーの版番号と一致させる
-- 確認済み公開 URL のみ記載する（未確認 URL は載せない）
-- ユーザーが対応すべきタスクがある場合だけ、`## ユーザー対応タスク` を置く。タスクは実行順のチェックボックスで記載し、各チェックボックス項目を親としてその配下に Bullet List で詳細かつ具体的な操作手順を書く。Web UI を見て操作するときに迷わないよう、画面名・ボタン名・入力欄などを具体的に書く
-- PR description の順序は、最小サマリ、`## レビュー用資料`、条件付きの `## ユーザー対応タスク`、任意の `Closes #<issue-number>` とする。ユーザー対応タスクは HTML 資料の直後かつ close 対象 issue の直前に置く
+- issue: [issue-description.md](issue-description.md)
+- PR: [pr-description.md](pr-description.md)
