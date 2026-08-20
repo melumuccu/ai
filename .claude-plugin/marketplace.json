@@ -65,10 +65,7 @@
     {
       "description": "TEST: genshijin",
       "name": "genshijin",
-      "skills": [
-        "./interfacex-co-jp/genshijin"
-      ],
-      "source": "./.agents/skills",
+      "source": "./.agents/skills/genshijin/interfacex-co-jp",
       "strict": false
     },
     {
