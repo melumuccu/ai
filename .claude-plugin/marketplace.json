@@ -63,6 +63,27 @@
       "strict": false
     },
     {
+      "description": "TEST: genshijin",
+      "name": "genshijin",
+      "skills": [
+        "./genshijin",
+        "./genshijin-commit",
+        "./genshijin-compress",
+        "./genshijin-crew",
+        "./genshijin-help",
+        "./genshijin-review",
+        "./genshijin-stats"
+      ],
+      "source": "./.agents/skills/interfacex-co-jp/genshijin",
+      "strict": false
+    },
+    {
+      "description": "TEST: svelte",
+      "name": "svelte",
+      "source": "./.agents/skills/sveltejs/ai-tools",
+      "strict": false
+    },
+    {
       "description": "Repository-local skills whose names start with kf-pj-",
       "name": "kf-pj-skills",
       "skills": [
@@ -79,18 +100,9 @@
         "./daisyui",
         "./docker-expert",
         "./find-skills",
-        "./genshijin",
-        "./genshijin-commit",
-        "./genshijin-compress",
-        "./genshijin-crew",
-        "./genshijin-help",
-        "./genshijin-review",
-        "./genshijin-stats",
         "./gh",
         "./prompt-builder",
         "./skill-creator",
-        "./svelte-code-writer",
-        "./svelte-core-bestpractices",
         "./tdd"
       ],
       "source": "./.agents/skills",
