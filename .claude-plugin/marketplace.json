@@ -69,6 +69,12 @@
       "strict": false
     },
     {
+      "description": "TEST: svelte",
+      "name": "svelte",
+      "source": "./.agents/skills/sveltejs/ai-tools",
+      "strict": false
+    },
+    {
       "description": "Repository-local skills whose names start with kf-pj-",
       "name": "kf-pj-skills",
       "skills": [
@@ -88,8 +94,6 @@
         "./gh",
         "./prompt-builder",
         "./skill-creator",
-        "./svelte-code-writer",
-        "./svelte-core-bestpractices",
         "./tdd"
       ],
       "source": "./.agents/skills",
