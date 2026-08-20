@@ -63,6 +63,15 @@
       "strict": false
     },
     {
+      "description": "TEST: genshijin",
+      "name": "genshijin",
+      "skills": [
+        "./interfacex-co-jp/genshijin"
+      ],
+      "source": "./.agents/skills",
+      "strict": false
+    },
+    {
       "description": "Repository-local skills whose names start with kf-pj-",
       "name": "kf-pj-skills",
       "skills": [
@@ -79,13 +88,6 @@
         "./daisyui",
         "./docker-expert",
         "./find-skills",
-        "./genshijin",
-        "./genshijin-commit",
-        "./genshijin-compress",
-        "./genshijin-crew",
-        "./genshijin-help",
-        "./genshijin-review",
-        "./genshijin-stats",
         "./gh",
         "./prompt-builder",
         "./skill-creator",
