@@ -16,7 +16,7 @@ const ALLOWED_COMMIT_PREFIXES = [
 ];
 
 const COMMIT_SUBJECT_PATTERN = new RegExp(
-  `^(${ALLOWED_COMMIT_PREFIXES.join("|")}):\\s\\S+_\\S+`,
+  `^(${ALLOWED_COMMIT_PREFIXES.join("|")}):\\s\\S+ > \\S+`,
 );
 
 /** @param {string} cwd */
@@ -196,7 +196,7 @@ export function runCommitLint(config, message) {
     diagnostics.push({
       ruleId: "commit/japanese-prefix-format",
       message:
-        "Problem: commit subject does not match required format. Why: fixed prefix and category enable machine tracking. Fix: use '<type_>: <category>_<subject>' (e.g. fix__: skills_lint導入).",
+        "Problem: commit subject does not match required format. Why: fixed prefix and category enable machine tracking. Fix: use '<type_>: <category> > <subject>' (e.g. fix__: skills > lint導入).",
       severity,
       filePath: "COMMIT_EDITMSG",
       line: 1,

@@ -69,17 +69,18 @@ test("markdown structure warnings", () => {
 });
 
 test("commit message format", () => {
-  const goodFix = "fix__: skills_lint導入\n\n- 概要: CLI追加\n- Why: 規約を機械検証\n";
-  const goodChore = "chore: deps_依存更新\n\n- 概要: 更新\n- Why: セキュリティ\n";
-  const goodStyle = "style: kf-lint_フォーマット\n\n- 概要: 整形\n- Why: 可読性\n";
-  const goodCrlf = "fix__: skills_lint導入\r\n\r\n- 概要: CLI追加\n";
-  const goodBlankSecondLine = "fix__: skills_lint導入\n \n- 概要: CLI追加\n";
+  const goodFix = "fix__: skills > lint導入\n\n- 概要: CLI追加\n- Why: 規約を機械検証\n";
+  const goodChore = "chore: deps > 依存更新\n\n- 概要: 更新\n- Why: セキュリティ\n";
+  const goodStyle = "style: kf-lint > フォーマット\n\n- 概要: 整形\n- Why: 可読性\n";
+  const goodCrlf = "fix__: skills > lint導入\r\n\r\n- 概要: CLI追加\n";
+  const goodBlankSecondLine = "fix__: skills > lint導入\n \n- 概要: CLI追加\n";
   const badSubject = "fix skills\n\nbody\n";
   const badUnpaddedFix = "fix: skills_lint導入\n\n- 概要: CLI追加\n";
   const badChoreUnderscore = "chore_: deps_依存更新\n\n- 概要: 更新\n";
+  const badLegacyUnderscore = "chore: deps_依存更新\n\n- 概要: 更新\n";
   const badNoCategory = "chore: 依存更新\n\n- 概要: 更新\n";
-  const badNoBlankLine = "fix__: skills_lint導入\n- 概要: CLI追加\n";
-  const badSecondLine = "fix__: skills_lint導入\nnot blank\n- 概要: CLI追加\n";
+  const badNoBlankLine = "fix__: skills > lint導入\n- 概要: CLI追加\n";
+  const badSecondLine = "fix__: skills > lint導入\nnot blank\n- 概要: CLI追加\n";
 
   for (const message of [goodFix, goodChore, goodStyle, goodCrlf, goodBlankSecondLine]) {
     assert.equal(runCommitLint(config, message).length, 0, message);
@@ -88,6 +89,7 @@ test("commit message format", () => {
     badSubject,
     badUnpaddedFix,
     badChoreUnderscore,
+    badLegacyUnderscore,
     badNoCategory,
     badNoBlankLine,
     badSecondLine,
