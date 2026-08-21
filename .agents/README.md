@@ -10,21 +10,8 @@
 
 ```
 .agents/
+├── custom/ ... 外部 skills 向けカスタマイズの正本
 ├── rules/ ... ルールの設定ファイル
 ├── skills/ ... スキルの設定ファイル
 └── \*.md ... エージェントの設定ファイル
-```
-
----
-
-（以下、 .agents ディレクトリ直下 = agents 設定ファイルに関する説明）
-
-## agents 設定の sync 方法
-
-### Cursor
-
-以下を実行 -> ~/.cursor/.agents ディレクトリに sync される
-
-```
-scripts/sync-agents-for-cursor.sh
 ```

@@ -21,7 +21,7 @@
 
 - コミュ用HTML の作成・公開は `kf-g-html-document-universal-single-file` skill を参照する。
 - プランニングはすべてコミュ用HTMLにし、issue description には確認済みの R2 URL をリンクする。したがって、プランニング時は先に issue を作成する。
-- PRを作成する場合は、PRレビュー用のコミュ用HTMLをPR作成前に作成し、確認済みの R2 URL を PR description にリンクする。
+- PRを作成する場合は、PRレビュー用のコミュ用HTMLをPR作成前に作成し、PR description の形式は `.agents/skills/kf-g-html-document-universal-single-file/references/pr-description.md` に従う。
 - HTMLを配布するだけでファイル変更差分がない場合は、R2公開を完了条件とし、PRを作成しない。
 
 ---
@@ -50,44 +50,13 @@ issue 着手時は `~/projects/_worktrees/<repo-name>/` 配下に worktree を�
 
 ## issue description
 
-### HTML 配布ありの場合
-
-`kf-g-html-document-universal-single-file` skill で HTML を生成し R2 へアップロードする場合、以下の issue description とする
-
-```markdown
-## 概要
-- <issue の最小サマリ>
-
-## プランニング用資料
-[v{N}](https://ai-html.hacksaw.work/<object-key>)
-```
-
-#### HTML 配布なし
-
-- HTML 配布がない通常の issue プランニングでは、実装着手前に issue description を更新する。
-- description にはプランニングで作成した Markdown をそのまま記載し、GitHub 投稿前のフットノート記法変換は `kf-g-agent-planning-structured-plan-output` に従う。
-- 既存 description がある場合は参考として読み、プランニングで作成した Markdown へ統合・上書きする。
+- issue プランニング用 HTML を R2 へ配布した場合は、`kf-g-html-document-universal-single-file` の [references/issue-description.md](.agents/skills/kf-g-html-document-universal-single-file/references/issue-description.md) に従う。
+- HTML 配布なしの issue では、同 reference の HTML 配布なし規約に従う。
 
 ---
 
 ## PR description
 
-### HTML 配布ありの場合
-
-`kf-g-html-document-universal-single-file` skill で HTML を生成し R2 へアップロードする場合、以下の PR description とする
-
-```markdown
-## 概要
-- <PR の最小サマリ>
-
-## プランニング用資料
-[v{N}](https://ai-html.hacksaw.work/<object-key>)
-
----
-Closes #<issue-number>
-```
-
-### HTML 配布なしの場合
-
-- PR description にはissue側で完成させたMarkdownをそのまま記載する。
+- PR レビュー用 HTML を R2 へ配布した場合は、`kf-g-html-document-universal-single-file` の [references/pr-description.md](.agents/skills/kf-g-html-document-universal-single-file/references/pr-description.md) に従う（issue 起点かどうかにかかわらず）。
+- HTML 配布なしの PR では、issue 側で完成させた Markdown をそのまま description に記載する。
 

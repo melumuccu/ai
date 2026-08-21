@@ -18,3 +18,12 @@ mise install
 pre-commit validate-config
 pre-commit run --hook-stage pre-push
 '''
+[tasks.sync-external-skills]
+description = "lock キーの external skill を配信用ディレクトリへ同期し marketplace を直す"
+run = "node scripts/sync-external-skills.mjs --apply"
+[tasks.sync-external-skills-check]
+description = "lock キーと配信用ディレクトリと marketplace 列挙の一致を検証する"
+run = "node scripts/sync-external-skills.mjs --check"
+[tasks.test-sync-external-skills]
+description = "external skill 同期スクリプトのテストを実行する"
+run = "node --test scripts/sync-external-skills.test.mjs"
