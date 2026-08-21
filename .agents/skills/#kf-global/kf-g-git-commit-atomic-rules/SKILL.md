@@ -64,7 +64,7 @@ description: Enforce frequent atomic commits while doing coding work. Always use
 - CLI ツールによりコードベースに何かしらの変更が加えられた時 → 1 commit
   - commit メッセージ例:
      ```
-     feat_: CLI_sv create コマンド実行
+     feat_: CLI > sv create コマンド実行
 
      - 概要: `sv create` コマンドを実行し生成物を追加
      - Why: 手動 scaffold よりテンプレート生成の方が初期構成のばらつきを抑えられるため

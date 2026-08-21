@@ -18,14 +18,14 @@ README の install または upgrade コマンドは、毎回 README から取�
 
 `packages/kf-lint/package.json` の `version` を上げる commit では、1行目のカテゴリを **`kf-lint@{version}`** 形式にします。
 
-- 形式: `<type_>: kf-lint@{version}_<subject>`
+- 形式: `<type_>: kf-lint@{version} > <subject>`
 - `{version}` は bump 後の `package.json` の `version` と一致させる
-- `kf-lint` だけ、`kf-lint_` だけ、バージョンなしの表記は使わない
+- `kf-lint` だけ、バージョンなしの表記は使わない
 
 ### 例
 
 ```text
-fix__: kf-lint@0.1.4_commit prefix検証を5文字固定に厳密化
+fix__: kf-lint@0.1.4 > commit prefix検証を5文字固定に厳密化
 
 - 概要:
   - 許可 prefix 一覧で commit lint を検証
@@ -34,4 +34,4 @@ fix__: kf-lint@0.1.4_commit prefix検証を5文字固定に厳密化
   - 0.1.2 の _+ 正規表現が chore: を誤拒否していた
 ```
 
-version bump を含まない `packages/kf-lint` 変更（version 据え置きの修正のみ）では、この `kf-lint@{version}` 形式は不要です。通常のカテゴリ（例: `kf-lint_`）を使います。
+version bump を含まない `packages/kf-lint` 変更（version 据え置きの修正のみ）では、この `kf-lint@{version}` 形式は不要です。通常のカテゴリ（例: `kf-lint`）を使います。
