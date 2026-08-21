@@ -7,7 +7,9 @@ skill 修正依頼を受けたら、必ずこのリポジトリの `.agents/skil
 
 ## 必須手順
 
-1. 修正対象 skill のディレクトリを `.agents/skills/<skill-name>/` で特定する
+1. 対象 skill のバケット（`kf-global` / `kf-global-commands` / `external` / `kf-local`）を特定する（[repository-layout.md](repository-layout.md) 参照）
+1. 修正対象 skill のディレクトリを `.agents/skills/<bucket>/<skill-name>/` で特定する
+1. 必須 meta が欠けている → 当該 SKILL.md の frontmatter を [repository-layout.md](repository-layout.md) のルールどおり直す
 1. 対象が `skills-lock.json` 管理の外部 skill か確認する
 1. 外部 skill の場合 → upstream 直接変更はせず、自作 skill で補完する方針を取る（`kf-g-skill-naming-creation-organization-rules` を参照）
 1. 自作 skill の場合 → 当該ディレクトリ内の `SKILL.md` と `references/` を編集する
@@ -23,5 +25,6 @@ skill 修正依頼を受けたら、必ずこのリポジトリの `.agents/skil
 ## 完了判定
 
 1. 編集したファイルがすべて `.agents/skills/` 配下である
+1. 対象 skill のバケットを特定し、必須 meta を満たしている
 1. marketplace 更新が必要な変更であれば反映済みである
 1. ホームディレクトリ skill に書き込みを行っていない

@@ -4,6 +4,7 @@
 
 1. **編集対象はこのリポジトリ**: skill の修正・追加・削除は `.agents/skills/` 配下で行う
 1. **ホームディレクトリは触らない**: `~/.agent/skills` および `~/.agents/skills` 配下の skill 本体は変更しない
+1. **インストール前提**: `kf-local` 以外は `npx skills` でグローバルへインストールする。`kf-local` はリポジトリ専用（[repository-layout.md](repository-layout.md) 参照）
 1. **同期はユーザー側の作業**: main マージ後、ユーザーが [vercel-labs/skills](https://github.com/vercel-labs/skills) でホームディレクトリへ配置する
 1. **差分は当然**: リポジトリとホームディレクトリ間で内容が異なることは正常な状態として扱う
 
@@ -11,6 +12,7 @@
 
 - このリポジトリ（`melumuccu/ai`）の skill 編集・追加・削除
 - skill 修正依頼の編集先判断
+- ディレクトリバケットと meta 情報の確認
 - main マージ後の同期前提の説明
 
 ## 適用外
