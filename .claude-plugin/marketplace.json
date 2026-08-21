@@ -9,14 +9,13 @@
   "plugins": [
     {
       "description": "Repository-local skills whose names start with kf-",
-      "name": "kf-skills",
+      "name": "kf-global",
       "skills": [
-        "./kf-g-agent-planning-structured-plan-output",
+        "./kf-g-agent-orchestrator",
         "./kf-g-agent-research-report-only-unless-approved",
         "./kf-g-agent-review-adversarial-evaluation",
         "./kf-g-agent-review-post-implementation-two-stage",
         "./kf-g-agent-worker-common",
-        "./kf-g-agent-orchestrator",
         "./kf-g-code-comment-rules",
         "./kf-g-code-how-what-why-why-not-principles",
         "./kf-g-css-flex-grid",
@@ -34,9 +33,7 @@
         "./kf-g-git-hooks-fix-verify-layering",
         "./kf-g-github-actions-self-hosted-ci-cache",
         "./kf-g-github-actions-self-hosted-runner-label",
-        "./kf-g-github-issue-worktree-management",
         "./kf-g-github-operations-bot-workflow",
-        "./kf-g-github-pr-review-workflow",
         "./kf-g-html-document-universal-single-file",
         "./kf-g-project-bootstrap-new-project-rules",
         "./kf-g-skill-authoring-body-structure-rules",
@@ -47,65 +44,52 @@
         "./kf-g-writing-japanese-concise-structured-response",
         "./kf-g-writing-japanese-tech"
       ],
-      "source": "./.agents/skills",
+      "source": "./.agents/skills/kf-global",
       "strict": false
     },
     {
       "description": "Repository-local commands whose names start with kf-command-",
-      "name": "kf-commands",
+      "name": "kf-global-commands",
       "skills": [
         "./kf-g-command-do-issue-planning",
         "./kf-g-command-do-manual-fix-to-skill",
         "./kf-g-command-do-pr-rev-comment",
         "./kf-g-command-no-orchestrator"
       ],
-      "source": "./.agents/skills",
+      "source": "./.agents/skills/kf-global-commands",
       "strict": false
     },
     {
-      "description": "TEST: genshijin",
-      "name": "genshijin",
+      "description": "Repository-local skills whose names start with kf-pj-",
+      "name": "kf-local",
       "skills": [
+        "./kf-pj-kf-lint-version-upgrade",
+        "./kf-pj-skill-agent-handling-rules"
+      ],
+      "source": "./.agents/skills/kf-local",
+      "strict": false
+    },
+    {
+      "description": "Repository skills that from external sources",
+      "name": "external",
+      "skills": [
+        "./daisyui",
+        "./docker-expert",
+        "./find-skills",
         "./genshijin",
         "./genshijin-commit",
         "./genshijin-compress",
         "./genshijin-crew",
         "./genshijin-help",
         "./genshijin-review",
-        "./genshijin-stats"
-      ],
-      "source": "./.agents/skills/interfacex-co-jp/genshijin",
-      "strict": false
-    },
-    {
-      "description": "TEST: svelte",
-      "name": "svelte",
-      "source": "./.agents/skills/sveltejs/ai-tools",
-      "strict": false
-    },
-    {
-      "description": "Repository-local skills whose names start with kf-pj-",
-      "name": "kf-pj-skills",
-      "skills": [
-        "./kf-pj-kf-lint-version-upgrade",
-        "./kf-pj-skill-agent-handling-rules"
-      ],
-      "source": "./.agents/skills",
-      "strict": false
-    },
-    {
-      "description": "Repository skills that from external sources",
-      "name": "external-skills",
-      "skills": [
-        "./daisyui",
-        "./docker-expert",
-        "./find-skills",
+        "./genshijin-stats",
         "./gh",
-        "./prompt-builder",
         "./skill-creator",
+        "./svelte-code-writer",
+        "./svelte-core-bestpractices",
         "./tdd"
       ],
-      "source": "./.agents/skills",
+      "source": "./.agents/skills/external",
       "strict": false
     }
   ]
