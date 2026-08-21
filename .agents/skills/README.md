@@ -13,7 +13,8 @@ latest CLI はエージェント用ディレクトリ配下の lock 済み skill
 一覧に載せる実体を、このディレクトリの外へ置く必要がある。
 symlink は CLI の walk がディレクトリだけを見るため使えない。
 
-編集はここ（原本）。
+外部 skill の本文は直接変更しない。
+更新は upstream 取り込み、不足は自作 skill で補完する。
 配信用の skill ディレクトリは `scripts/sync-external-skills.mjs` がコピーする。
 配信用直下の `README.md` は同期で消えない。ディレクトリ単位の差し替えのみ。
 
