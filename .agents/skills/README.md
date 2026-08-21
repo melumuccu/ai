@@ -2,12 +2,12 @@
 
 エージェント作業と `skills update` の原本。
 
-[vercel-labs/skills](https://github.com/vercel-labs/skills) で global install する対象のうち、lock 追跡スキルの発見経路は [`.agents-external-skills`](../../.agents-external-skills/README.md) 側。
-このディレクトリ配下かつ `skills-lock.json` に載る skill は、latest `skills add` の発見時に捨てられる。
+## 外部 skills の原本と配信用コピー
 
-## 配信用コピーとの関係
+[vercel-labs/skills](https://github.com/vercel-labs/skills) で global install する対象のうち、lock 追跡の外部 skill の発見経路は [`.agents-external-skills`](../../.agents-external-skills/README.md) 側。
+このディレクトリ配下かつ `skills-lock.json` に載る外部 skill は、latest `skills add` の発見時に捨てられる。
 
-`.agents-external-skills/<name>` に、lock 追跡スキルの実体コピーがある。
+`.agents-external-skills/<name>` に、lock 追跡の外部 skill の実体コピーがある。
 
 latest CLI はエージェント用ディレクトリ配下の lock 済み skill を add 一覧から外す。
 一覧に載せる実体を、このディレクトリの外へ置く必要がある。
