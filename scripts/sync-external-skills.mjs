@@ -237,6 +237,7 @@ export async function applySync(cwd, lockNames) {
   const publishRoot = path.join(cwd, PUBLISH_SKILLS_RELATIVE_DIR);
   const sourceRoot = path.join(cwd, SOURCE_SKILLS_RELATIVE_DIR);
   await mkdir(publishRoot, { recursive: true });
+  // 配信用ルートごと rm しない。直下 README.md が消える。
 
   for (const name of lockNames) {
     const sourceDir = path.join(sourceRoot, name);

@@ -108,6 +108,22 @@ test("check は lock に無い A ディレクトリを失敗にする", async ()
   }
 });
 
+test("apply は配信用直下の README.md を消さない", async () => {
+  const cwd = await makeFixture();
+  try {
+    const readmePath = path.join(cwd, ".agents-external-skills/README.md");
+    await mkdir(path.dirname(readmePath), { recursive: true });
+    await writeFile(readmePath, "keep\n");
+    const lockNames = await readLockSkillNames(cwd);
+    await applySync(cwd, lockNames);
+    assert.equal(await readFile(readmePath, "utf8"), "keep\n");
+    const failures = await collectCheckFailures(cwd, lockNames);
+    assert.deepEqual(failures, []);
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
+});
+
 test("apply は lock から外れた A ディレクトリを削除する", async () => {
   const cwd = await makeFixture();
   try {
