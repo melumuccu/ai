@@ -1,6 +1,21 @@
-# .agents/skills ディレクトリ
+# `.agents/skills` ディレクトリ
 
-[vercel-labs/skills](https://github.com/vercel-labs/skills) を用いることで、このディレクトリの skills を local machine に global install 可能。
+エージェント作業と `skills update` の原本。
+
+[vercel-labs/skills](https://github.com/vercel-labs/skills) で global install する対象のうち、lock 追跡スキルの発見経路は [`.agents-external-skills`](../../.agents-external-skills/README.md) 側。
+このディレクトリ配下かつ `skills-lock.json` に載る skill は、latest `skills add` の発見時に捨てられる。
+
+## 配信用コピーとの関係
+
+`.agents-external-skills/<name>` に、lock 追跡スキルの実体コピーがある。
+
+latest CLI はエージェント用ディレクトリ配下の lock 済み skill を add 一覧から外す。
+一覧に載せる実体を、このディレクトリの外へ置く必要がある。
+symlink は CLI の walk がディレクトリだけを見るため使えない。
+
+編集はここ（原本）。
+配信用の skill ディレクトリは `scripts/sync-external-skills.mjs` がコピーする。
+配信用直下の `README.md` は同期で消えない。ディレクトリ単位の差し替えのみ。
 
 ## ディレクトリ構成
 
