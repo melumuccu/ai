@@ -138,7 +138,7 @@
         "./tdd",
         "./video"
       ],
-      "source": "./.agents/skills",
+      "source": "./.agents-external-skills",
       "strict": false
     }
   ]
