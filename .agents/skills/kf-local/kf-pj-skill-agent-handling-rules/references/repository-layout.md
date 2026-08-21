@@ -47,18 +47,3 @@ disable-model-invocation: true
 
 1. `kf-global-commands` では必須
 1. 他バケットでは自動発火させない skill に限って付与してよい
-
-## 根拠
-
-1. [vercel-labs/skills](https://github.com/vercel-labs/skills)
-1. [Cursor Skills ドキュメント](https://cursor.com/docs/context/skills)
-
-## 編集時のバケット特定手順
-
-1. 対象 skill の SKILL.md パスを確認する
-1. パスが `.agents/skills/kf-global/` で始まる → `kf-global` バケット
-1. パスが `.agents/skills/kf-global-commands/` で始まる → `kf-global-commands` バケット
-1. パスが `.agents/skills/external/` で始まる → `external` バケット
-1. パスが `.agents/skills/kf-local/` で始まる → `kf-local` バケット
-1. 特定したバケットの必須 meta を frontmatter で確認する
-1. 必須 meta が欠けている → 当該 SKILL.md の frontmatter を上記ルールどおり直す
