@@ -1,6 +1,7 @@
 repos:
   - repo: local
     hooks:
+      # gitleaks より先に同期する。後だと今回 stage した配信用コピーが secret scan から外れる。
       - id: sync-external-skills
         name: Sync lock-tracked skills to publish dir
         entry: node scripts/sync-external-skills.mjs --apply --stage
