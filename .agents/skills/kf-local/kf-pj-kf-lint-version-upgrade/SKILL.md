@@ -1,6 +1,8 @@
 ---
 name: kf-pj-kf-lint-version-upgrade
 description: Use this skill whenever adding, editing, or deleting any file under packages/kf-lint. At the start, verify the package version; before completion, increment the SemVer patch version by one, read the README for the current install or upgrade command, prompt the user to run that command, and format commit messages with kf-lint@{ver} in the category.
+metadata:
+  internal: true
 ---
 
 # @kf/lint のバージョン更新手順
