@@ -4,7 +4,7 @@ issue または PR 向けに HTML を R2 配布するときの成果物の正本
 
 ## 成果物の正本
 
-issue / PR 向けに生成する **レビュー用 HTML** と **before/after スクリーンショット**（PNG・AVIF 等）は、コミュニケーション・レビュー配布用の成果物。**成果物の正本:** レビュー HTML は R2。Git には skill ソースのみ。
+issue / PR 向けに生成する **レビュー用 HTML** と **before/after スクリーンショット**（PNG・AVIF 等）は、コミュニケーション・レビュー配布用の成果物。レビュー用 HTML は作業セッションの artifacts の一つである。**成果物の正本:** レビュー HTML は R2。Git には skill ソースのみ。
 
 | 区分 | 扱い |
 | --- | --- |
