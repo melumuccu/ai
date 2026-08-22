@@ -1,6 +1,6 @@
 ---
 name: kf-g-html-document-universal-single-file
-description: Use this skill when creating or revising build-free, single-file interactive HTML documents—for example PR or issue review HTML, annotated guides, walkthroughs, or shareable static explanation pages. Apply it whenever the user wants one-page interactive documentation or a shareable HTML explanation, even if they do not say "single-file HTML".
+description: Use this skill when creating or revising build-free, single-file interactive HTML documents—for example PR or issue review HTML, annotated guides, walkthroughs, or shareable static explanation pages. Apply it whenever the user wants one-page interactive documentation or a shareable HTML explanation, even if they do not say "single-file HTML". The generated HTML is one of the artifacts produced in the work session.
 ---
 
 # 単一 HTML インタラクティブドキュメント
@@ -32,6 +32,7 @@ description: Use this skill when creating or revising build-free, single-file in
 ## 生成ワークフロー
 
 1. 依頼内容からパターンを選ぶ（[content-patterns.md](references/content-patterns.md)）
+1. 生成した HTML は作業セッションの artifacts の一つとして扱う
 1. **次版 HTML の作成方針**（改訂・R2 配布時）:
    - **通常**: 直前版をコピーし、依頼された変更のみを加える
    - **例外**: 全文書き直し、構造再設計、直前版が不適切な場合はテンプレートまたは独立作成してよい。理由を生成 HTML 本文または操作記録に記載する
@@ -82,6 +83,7 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 
 ## 出力チェックリスト
 
+- [ ] **artifacts:** 生成 HTML を作業セッションの artifacts の一つとして扱った
 - [ ] **配布形式:** 単一 `.html` + 必要 CDN のみ
 - [ ] **コア契約:** [core-contract.md](references/core-contract.md) と [assets/universal-single-file-template.html](assets/universal-single-file-template.html) を満たす
 - [ ] **比較表:** template のソート可能表契約を満たす（ヘッダーは不透明背景で tbody が透過しない）
