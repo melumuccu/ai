@@ -88,7 +88,6 @@ orchestrator が worker へ渡す skill を選定し、委譲指示に列挙す�
 1. 委譲指示 `skills` に **必ず** `kf-g-agent-worker-common` を含める（特例で `none` のみ可）
 1. 各 skill は `{name} — {path}` で列挙する（path 必須）
 1. タスクに必要な skill のみ列挙する
-1. ユーザー向け artifacts を生成または改訂する委譲では `kf-g-agent-sanitize-artifacts` を skills に列挙する。単一 HTML インタラクティブドキュメント（issue / PR レビュー、説明ページ等）は artifacts に含まれる
 1. worker は列挙された skill のみ参照する
 
 追加 skill が必要と worker から `needs-escalation` された場合、orchestrator が再選定して再委譲する。
