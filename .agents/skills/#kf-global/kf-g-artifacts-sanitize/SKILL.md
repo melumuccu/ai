@@ -1,6 +1,6 @@
 ---
 name: kf-g-artifacts-sanitize
-description: Inspect and revise generated artifacts so they read as natural, standalone deliverables, without leaking prompt instructions, conversation history, implementation constraints, or production process artifacts into user-facing content.
+description: Use this skill when creating artifacts. Apply it to revise those artifacts so they read as natural, standalone deliverables and do not leak prompt instructions, conversation history, implementation constraints, or production-process traces.
 ---
 
 # kf-g-artifacts-sanitize
