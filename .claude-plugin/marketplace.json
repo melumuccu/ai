@@ -15,6 +15,7 @@
         "./kf-g-agent-research-report-only-unless-approved",
         "./kf-g-agent-review-adversarial-evaluation",
         "./kf-g-agent-review-post-implementation-two-stage",
+        "./kf-g-agent-sanitize-artifacts",
         "./kf-g-agent-worker-common",
         "./kf-g-code-comment-rules",
         "./kf-g-code-how-what-why-why-not-principles",
