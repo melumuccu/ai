@@ -1,5 +1,21 @@
 # グループごとの commit・reply 順序
 
+## Bot 書き込み必須
+
+GitHub への comment / reply / resolve は、bot preflight 成功後に bot helper script のみ使う。
+bot 資格情報が未設定または preflight が失敗した場合は、`kf-g-github-operations-bot-workflow` の setup 手順を表示して停止する。
+人間 `gh` 認証や `GH_TOKEN` への fallback は禁止。
+
+参照:
+
+- `kf-g-github-operations-bot-workflow` — preflight / write gate
+
+reply:
+
+```sh
+node ~/.agents/credentials/github/scripts/github-agent-reply.mjs OWNER/REPO PR_NUMBER COMMENT_ID BODY_FILE
+```
+
 ## 全体フロー
 
 ```mermaid
@@ -12,16 +28,16 @@ flowchart TD
   F --> G[グループ修正のみ実装]
   G --> H[検証]
   H --> I[stage・commit]
-  I --> Z[PR 外ファイルへの横展開候補を確認・記憶]
-  Z --> D
+  I --> D
   D -->|No| J[push]
   J --> K[グループごとに個別 reply]
   K --> L[対応表を報告]
-  L --> N{PR 外ファイルへの横展開候補がある?}
-  N -->|No| O[完了]
-  N -->|Yes| P[現 PR 対応か別 PR 対応かをユーザーに確認]
-  P --> Q[選択確定まで PR 外変更の実装・commit・push を保留]
+  L --> M{PR 外横展開候補あり?}
+  M -->|Yes| N[collect-and-propagate の PR 外横展開手順へ]
+  M -->|No| O[完了]
 ```
+
+PR 外横展開の詳細は [collect-and-propagate.md](collect-and-propagate.md) を読む。
 
 ## 1 グループあたりの手順
 
@@ -35,6 +51,7 @@ flowchart TD
 1. 1 つの関心事だけが staged なら commit する
 1. commit message は `kf-g-git-commit-japanese-commit-message` に従う
 1. commit message には変更理由を書く。レビュー件数は書かない
+1. commit 後、次のグループへ進む
 
 ## commit message の書き方
 
@@ -48,20 +65,16 @@ flowchart TD
 
 1. すべてのグループの commit が完了するまで push しない
 1. `git push` で remote に反映する
+1. push 前に thread へ reply しない
 1. push 後、グループ G{n} ごとに次を実行する
+   1. reply 前に bot preflight を成功させ、上記 bot helper script を使う
+   1. bot preflight 失敗時は setup 手順を表示して停止し、人間 `gh` 認証や `GH_TOKEN` へ fallback しない
    1. G{n} に対応する thread へ個別 reply する
    1. reply 本文は変更概要から始め、続けて commit リンクを書く
+   1. 説明のみ・保留の thread は reply 本文をその旨から始める
    1. resolve はユーザーが行う。エージェントは resolve しない
 1. すべてのグループの個別 reply が完了したら、対応表を報告する
-1. 対応表の報告後、PR 外ファイルへの横展開候補を報告する
-1. PR 外の候補がある場合は、横展開した変更を「現 PR へ含める」か「別 PR に分ける」かをユーザーに確認する
-1. ユーザーの選択が確定するまで、PR 外ファイルの変更を実装・commit・push しない
-
-## 横展開の許可範囲
-
-1. 今回の PR で対応した全ファイルへの横展開は、ユーザーの許可を待たず、各グループの修正前に実施する
-1. PR 外ファイルへの横展開は、全グループの commit、push、個別 reply、対応表の報告が完了した後に候補を報告する
-1. PR 外ファイルについては、現 PR 対応か別 PR 対応かのユーザー確認が完了するまで、実装・commit・push を行わない
+1. PR 外ファイルへの横展開候補がある場合は [collect-and-propagate.md](collect-and-propagate.md) の PR 外横展開手順に従う
 
 ## reply 本文の最低項目
 
@@ -72,6 +85,7 @@ flowchart TD
 ## reply 本文の文体
 
 1. reply 本文は変更概要・commit リンク・説明理由から始める
+1. 複数 thread を 1 つの reply にまとめない
 1. 受領クッション前置きを書かない（`ご指摘ありがとうございます`、`ご質問ありがとうございます` など、必須でない受領表現はすべて禁止）
 1. 挨拶・お礼・謝罪などの前置きを書かない
 1. `genshijin 丁寧` のクッション言葉・過度な前置き削除と整合させる
