@@ -28,6 +28,8 @@ flowchart TD
 1. G{n} の変更ファイルだけを stage する
 1. `git diff --cached --stat` と `git diff --cached --name-status` を確認する
 1. 1 つの関心事だけが staged なら commit する
+1. G{n} の commit 後、PR の変更ファイル一覧と横展開対象を再照合し、PR 外ファイルへの横展開要否を判断する。必要な場合は、横展開した変更を「現 PR へ含める」か「別 PR に分ける」かをユーザーに確認する
+1. ユーザーの選択が確定するまで、PR 外ファイルの変更を実装・commit・push しない
 1. commit message は `kf-g-git-commit-japanese-commit-message` に従う
 1. commit message には変更理由を書く。レビュー件数は書かない
 
