@@ -28,34 +28,15 @@ standalone の gitleaks（および同等の verify CI）では、`on:` に `pul
 
 default branch への直 push も CI したい場合だけ、`push.branches` を default branch に限定して追加する。
 
-`on:` の正本は本節の完全 workflow サンプルとする。
+`on:` の正本は [`sample-files/.github/workflows/gitleaks.yml`](../../kf-g-project-bootstrap-new-project-rules/references/sample-files/.github/workflows/gitleaks.yml) とする。
 
-## gitleaks workflow 完全サンプル
+## gitleaks workflow の構成
 
-label + cache bootstrap + `mise run secrets:scan` を含む standalone 正本:
-
-```yaml
-on:
-  pull_request:
-
-jobs:
-  scan:
-    runs-on: [self-hosted, <repo-slug>]
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - name: Configure cache directories
-        run: |
-          echo "MISE_DATA_DIR=$RUNNER_TOOL_CACHE/mise" >> "$GITHUB_ENV"
-          mkdir -p "$RUNNER_TOOL_CACHE/mise"
-      - uses: jdx/mise-action@v4
-        with:
-          cache: false
-      - run: mise run secrets:scan
-```
+standalone gitleaks は self-hosted label、`MISE_DATA_DIR` の bootstrap、`mise-action` の `cache: false`、`mise run secrets:scan` を含む構成とする。
 
 PJ へコピーする成果物は [`kf-g-project-bootstrap-new-project-rules` の `sample-files/.github/workflows/gitleaks.yml`](../../kf-g-project-bootstrap-new-project-rules/references/sample-files/.github/workflows/gitleaks.yml) を参照する。
+
+gitleaks workflow の正本は上記 sample-files の 1 ファイルである。
 
 ## reusable workflow
 
@@ -82,4 +63,4 @@ runs-on: macOS         # GitHub hosted と混同しやすい
 
 `runs-on` / label は本 skill の担当。step 構成（`RUNNER_TOOL_CACHE` bootstrap、`mise-action` 等）は sibling skill [`kf-g-github-actions-self-hosted-ci-cache`](../../kf-g-github-actions-self-hosted-ci-cache/SKILL.md) を参照する。
 
-gitleaks の step 構成は上記「gitleaks workflow 完全サンプル」を正本とする。
+gitleaks の step 構成の正本も [`sample-files/.github/workflows/gitleaks.yml`](../../kf-g-project-bootstrap-new-project-rules/references/sample-files/.github/workflows/gitleaks.yml) とする。

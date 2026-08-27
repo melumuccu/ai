@@ -10,8 +10,8 @@
 
 CI runner = Mac Studio self-hosted を **適用** とした場合、`.github/workflows/gitleaks.yml` 等の self-hosted job は `runs-on: [self-hosted, <repo-slug>]` に固定する。`<repo-slug>` は GitHub リポジトリ名と同一。
 
-- `on:` の正本: [kf-g-github-actions-self-hosted-runner-label](../../kf-g-github-actions-self-hosted-runner-label/references/workflow-runs-on-label.md) の完全 workflow サンプル
-- コピー可能な成果物: [`sample-files/.github/workflows/gitleaks.yml`](sample-files/.github/workflows/gitleaks.yml)
+- 完全 workflow サンプルの正本: [`sample-files/.github/workflows/gitleaks.yml`](sample-files/.github/workflows/gitleaks.yml)
+- `on:` の MUST（`pull_request` を置き、feature branch へのフィルタなし `push` は置かない）: [workflow-runs-on-label.md](../../kf-g-github-actions-self-hosted-runner-label/references/workflow-runs-on-label.md) の standalone gitleaks workflow の `on:` 節
 - 規約詳細: [kf-g-github-actions-self-hosted-runner-label](../../kf-g-github-actions-self-hosted-runner-label/SKILL.md) の [workflow-runs-on-label.md](../../kf-g-github-actions-self-hosted-runner-label/references/workflow-runs-on-label.md)
 - 参照実装: [gitdoc-v2 PR #64](https://github.com/melumuccu/gitdoc-v2/pull/64)
 - host runner 未登録のまま workflow を merge しない（merge 前確認は上記 skill の [runner-prerequisites.md](../../kf-g-github-actions-self-hosted-runner-label/references/runner-prerequisites.md)）
