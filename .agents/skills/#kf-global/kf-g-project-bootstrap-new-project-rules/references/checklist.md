@@ -7,7 +7,8 @@
 - `mise.toml` が tools / env / tasks の中心になっているか。
 - `mise.toml` の `[tools]` に `pre-commit` と `gitleaks` を載せているか。
 - `references/sample-files/` の該当サンプルを確認したか。
-- `.github/workflows/gitleaks.yml` で公式 gitleaks action を設定したか。
+- `.github/workflows/gitleaks.yml` で self-hosted + mise なら `mise run secrets:scan` の workflow を置いたか。
+- `.github/workflows/gitleaks.yml` の `on:` が `pull_request` のみであるか（`push` を使う場合は default branch 限定であるか）。
 - `.pre-commit-config.yaml` で `pre-commit` 用 hook と `pre-push` 用 hook の `stages` を明示したか。
 - `mise run hooks-install` で `pre-commit install` と `pre-commit install --hook-type pre-push` の両方を実行できるか。
 - `pre-commit validate-config` と `pre-commit run --hook-stage pre-push` で hook 設定を検証したか。

@@ -18,11 +18,31 @@ runs-on: [self-hosted, <repo-slug>]
 |----------|-----|
 | `.github/workflows/deploy.yml` | `cloudflare-workers` |
 | `.github/workflows/preview.yml` | `deploy`, `cleanup` |
-| `.github/workflows/gitleaks.yml` | `scan`（reusable。caller から呼ばれる側） |
+| `.github/workflows/gitleaks.yml` | `scan`（standalone。`on: pull_request` が正本） |
+
+## standalone gitleaks workflow の `on:`
+
+standalone の gitleaks（および同等の verify CI）では、`on:` に `pull_request` を置く。
+
+`on:` には `pull_request` を置き、feature branch へのフィルタなし `push` は置かない。`push` と `pull_request` をフィルタなしで並べない。
+
+default branch への直 push も CI したい場合だけ、`push.branches` を default branch に限定して追加する。
+
+`on:` の正本は [`sample-files/.github/workflows/gitleaks.yml`](../../kf-g-project-bootstrap-new-project-rules/references/sample-files/.github/workflows/gitleaks.yml) とする。
+
+## gitleaks workflow の構成
+
+standalone gitleaks は self-hosted label、`MISE_DATA_DIR` の bootstrap、`mise-action` の `cache: false`、`mise run secrets:scan` を含む構成とする。
+
+PJ へコピーする成果物は [`kf-g-project-bootstrap-new-project-rules` の `sample-files/.github/workflows/gitleaks.yml`](../../kf-g-project-bootstrap-new-project-rules/references/sample-files/.github/workflows/gitleaks.yml) を参照する。
+
+gitleaks workflow の正本は上記 sample-files の 1 ファイルである。
 
 ## reusable workflow
 
-`workflow_call` で呼ばれる側（例: gitleaks `scan` job）も caller 側と同じ label 規約を守る。caller が `ubuntu-latest` でも、callee が self-hosted なら label 必須。
+`workflow_call` で呼ばれる側（gitleaks 以外の reusable job）も caller 側と同じ label 規約を守る。caller が `ubuntu-latest` でも、callee が self-hosted なら label 必須。
+
+gitleaks の standalone workflow（`on: pull_request` 付き完全ファイル）が正本である。gitleaks を `workflow_call` として再利用する構成は本 skill の推奨対象外とする。
 
 ## 非推奨
 
@@ -43,22 +63,4 @@ runs-on: macOS         # GitHub hosted と混同しやすい
 
 `runs-on` / label は本 skill の担当。step 構成（`RUNNER_TOOL_CACHE` bootstrap、`mise-action` 等）は sibling skill [`kf-g-github-actions-self-hosted-ci-cache`](../../kf-g-github-actions-self-hosted-ci-cache/SKILL.md) を参照する。
 
-gitleaks job の最小骨子（label + cache bootstrap）:
-
-```yaml
-jobs:
-  scan:
-    runs-on: [self-hosted, <repo-slug>]
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - name: Configure cache directories
-        run: |
-          echo "MISE_DATA_DIR=$RUNNER_TOOL_CACHE/mise" >> "$GITHUB_ENV"
-          mkdir -p "$RUNNER_TOOL_CACHE/mise"
-      - uses: jdx/mise-action@v4
-        with:
-          cache: false
-      - run: mise run secrets:scan
-```
+gitleaks の step 構成の正本も [`sample-files/.github/workflows/gitleaks.yml`](../../kf-g-project-bootstrap-new-project-rules/references/sample-files/.github/workflows/gitleaks.yml) とする。
