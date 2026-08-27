@@ -5,7 +5,7 @@
 - push 前に PJ 内の全テストを実行する。
 - 1 件でも失敗したら push を止める（hook が非ゼロ終了）。
 - pre-commit framework の `pre-push` stage で実行する。`.pre-commit-config.yaml` に `stages: [pre-push]` の hook として載せる。
-- gitleaks は `stages: [pre-commit]` のみに置く（[gitleaks-pre-commit.md](gitleaks-pre-commit.md)）。pre-push には test 用 hook を置く。
+- pre-push では gitleaks hook（[gitleaks-pre-commit.md](gitleaks-pre-commit.md)）と test hook の両方を置く。
 
 ## 前提
 
@@ -16,7 +16,7 @@
 ## `.pre-commit-config.yaml`
 
 - `stages: [pre-push]` の local hook を追加する。
-- gitleaks hook（`stages: [pre-commit]`）と同じ `.pre-commit-config.yaml` に共存してよい。stage が異なるため、pre-push では test hook のみが走る。
+- gitleaks pre-push hook と test hook は同じ `.pre-commit-config.yaml` に共存する。pre-push stage では gitleaks と test の両方が走る。
 - hook 例:
 
 ```yaml

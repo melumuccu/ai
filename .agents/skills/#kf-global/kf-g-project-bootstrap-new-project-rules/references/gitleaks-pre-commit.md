@@ -19,16 +19,18 @@ CI runner = Mac Studio self-hosted を **適用** とした場合、`.github/wor
 
 ## local hook と Actions event の区別
 
-local pre-commit framework の stage 二重（`pre-commit` と `pre-push` に同じ gitleaks）と、GitHub Actions の event 二重（フィルタなし `push` と `pull_request`）は別物である。それぞれ独立に整理する。
+local では commit 前と push 前の両方で gitleaks を走らせる。
+GitHub Actions では event 二重（フィルタなし `push` と `pull_request`）を置かない。
+この 2 つは別物であり、それぞれ独立に整理する。
 
 ## pre-commit framework の運用
 
-- commit 前の検査と push 前の検査は分ける。
-- `.pre-commit-config.yaml` では、gitleaks hook を `pre-commit` 専用にする。
-- push 前に実行する hook は `pre-push` 専用にする。
-- 各 hook の `stages` を明示し、`pre-push` で同じ gitleaks が 2 回走らないようにする。
-- gitleaks hook は `stages: [pre-commit]` のみとする。`pre-push` に gitleaks を置かない。
-- push 用 hook（gitleaks 以外）は `stages: [pre-push]` を基本にする。
+- commit 前と push 前で hook の stage を分ける。
+- `.pre-commit-config.yaml` では、gitleaks を `pre-commit` stage と `pre-push` stage の両方に置く。
+- commit 前の gitleaks は `stages: [pre-commit]` の hook とする（`gitleaks git --pre-commit --staged`）。
+- push 前の gitleaks は `stages: [pre-push]` の別 hook とする（`gitleaks git --redact --verbose`）。
+- push 前の test 等は `stages: [pre-push]` の hook とする。
+- 各 hook の `stages` を明示する。
 - local hook の導入は、`pre-commit install` と `pre-commit install --hook-type pre-push` の両方を実行する。
 - hook 導入手順は `mise run hooks-install` にまとめる。
 - hook 設定の検証は `pre-commit validate-config` と `pre-commit run --hook-stage pre-push` で行う。

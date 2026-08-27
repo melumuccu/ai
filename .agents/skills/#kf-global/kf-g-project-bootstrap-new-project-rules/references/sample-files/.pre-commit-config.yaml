@@ -13,6 +13,14 @@ repos:
         always_run: true
         stages:
           - pre-commit
+      - id: gitleaks-pre-push
+        name: Detect hardcoded secrets before push
+        entry: mise exec -- gitleaks git --redact --verbose
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages:
+          - pre-push
       - id: test-pre-push
         name: Run all tests before push
         entry: mise run test
