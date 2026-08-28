@@ -8,7 +8,7 @@
   - issue を起点にする場合は 1 issue = 1 branch = 1 worktree とする。
   - main branch で直接変更しない。
 1. **commit**: 変更を論理単位へ分割し、検証後に atomic commit する。
-  - 粒度と手順は `.agents/skills/kf-g-git-commit-atomic-rules/SKILL.md` に従う。
+  - 粒度と手順は `kf-g-git-commit-atomic-rules` skill に従う。
 1. **PR**: コード・skill・ruleなどファイル変更差分がある作業は PR を作成する。
   - issue を起点にする場合は対応する issue と PR を紐づけ、PR URL を issue に記録する。
   - ファイル変更差分がないHTML報告のR2配布だけは PR を作成しない。
@@ -21,7 +21,7 @@
 
 - コミュ用HTML の作成・公開は `kf-g-html-document-universal-single-file` skill を参照する。
 - プランニングはすべてコミュ用HTMLにし、issue description には確認済みの R2 URL をリンクする。したがって、プランニング時は先に issue を作成する。
-- PRを作成する場合は、PRレビュー用のコミュ用HTMLをPR作成前に作成し、PR description の形式は `.agents/skills/kf-g-html-document-universal-single-file/references/pr-description.md` に従う。
+- PRを作成する場合は、PRレビュー用のコミュ用HTMLをPR作成前に作成し、PR description の形式は `kf-g-html-document-universal-single-file` skill の `references/pr-description.md` に従う。
 - HTMLを配布するだけでファイル変更差分がない場合は、R2公開を完了条件とし、PRを作成しない。
 
 ---

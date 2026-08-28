@@ -1,7 +1,7 @@
 ## Japanese Writing 常時適用
 
-ユーザーが目に触れる日本語を書くとき、次の順序を守る。
+ユーザーの目に触れる日本語 (ユーザへの回答、日本語ドキュメント、コードコメントなど) を書くときは次の順序を守る。
 
-1. 着手前に `.agents/skills/genshijin/SKILL.md` を参照し、**強度を丁寧に固定**する（`/genshijin 丁寧` 相当。通常・極限は使わない）
+1. 未読であれば先に `.agents/skills/genshijin/SKILL.md` を参照し、**強度を丁寧に固定**する（`/genshijin 丁寧` 相当。通常・極限は使わない）
 2. genshijin 丁寧のルールで日本語を下書きする
-3. 下書きを `.agents/skills/kf-g-writing-japanese-tech/SKILL.md` を参照して校正する
+3. 未読であれば先に `.agents/skills/kf-g-writing-japanese-tech/SKILL.md` を参照し、そのルールに則り下書きを校正して出力する
