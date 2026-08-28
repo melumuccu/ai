@@ -221,7 +221,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 **適用条件:** 依頼の主題がインフラ操作であるとき `[data-content-root]` に含める。概念説明・PR/issue の計画・調査・レビュー HTML では、主題がインフラ操作でない限り省略する。
 
-**本文に置く操作記録:** 読者が再現・検証する対象システムの操作だけを書く。当該 HTML ファイルの put・object-key・公開 URL 確認は [r2-static-delivery.md](r2-static-delivery.md) と issue / PR description で扱う。
+**本文に置く操作記録:** 読者が再現・検証する対象システムの操作だけを書く。当該 HTML ファイルの put・object-key・公開 URL 確認は [r2-static-delivery.md](r2-static-delivery.md) の内部ワークフローとして実行し、HTML・issue・PR・comment へ転記しない。
 
 **構成（上から）:**
 
@@ -242,7 +242,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 **UI 推奨:** daisyUI `card`, `collapse`, `alert`, `badge`, `steps` で手順を折りたたみ可能にする。Dashboard ラベルは変更されうる旨を `alert` で明記する。
 
-**runbook 参照:** 依頼主題が R2/Wrangler 運用そのものであるとき、対象システムの操作要点を本文へ載せる。詳細 runbook は [r2-static-delivery.md](r2-static-delivery.md) を参照する。当該 HTML 自身の公開手順（put・object-key・公開 URL 確認）は issue / PR description 側に置く。
+**runbook 参照:** 依頼主題が R2/Wrangler 運用そのものであるとき、対象システムの操作要点を本文へ載せる。詳細 runbook は [r2-static-delivery.md](r2-static-delivery.md) を参照する。当該 HTML 自身の公開手順（put・object-key・公開 URL 確認）は [r2-static-delivery.md](r2-static-delivery.md) の内部ワークフローとして実行し、読者向け成果物へ転記しない。
 
 ## 生成時チェック
 
@@ -252,7 +252,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. daisyUI CDN と `data-theme` を設定したか
 1. daisyUI `steps` 使用時、template の steps 契約（コメントとサンプル DOM）を満たしたか
 1. Mermaid 使用時はテキスト選択 CSS を入れたか。flowchart は TD / LR を選べる場合 TD を基本としたか
-1. 依頼主題がインフラ操作のとき「手動インフラ操作記録」パターン D を満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離し、当該 HTML の put 結果は description 側か）
+1. 依頼主題がインフラ操作のとき「手動インフラ操作記録」パターン D を満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離し、当該 HTML の公開手順は内部ワークフローとして実行し読者向け成果物へ転記していないか）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
 1. 積み順・論理分離・単一情報源・冗長エンコードを満たしたか
 1. 本文・補足・強調が 3 値タイポグラフィスケール（`text-base` / `text-sm` / `text-lg`）に従い、任意値 rem（`text-[0.85rem]` / `text-[1.15rem]` 等）を本文用途に使っていないか

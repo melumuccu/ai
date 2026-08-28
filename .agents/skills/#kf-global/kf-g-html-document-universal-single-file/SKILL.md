@@ -45,7 +45,7 @@ description: Use this skill when creating or revising build-free, single-file in
 1. `<html>` に `data-theme` を設定し、ページ chrome は daisyUI コンポーネントクラスを使う。**コメントコア:** vanilla JS を維持。Alpine は小 UI のみ
 1. コメントコア契約を満たす DOM ID・属性を維持する（[core-contract.md](references/core-contract.md)）
 1. 依頼の主題がインフラ操作（ホスト構築、mount、Access、当該プロジェクトのオブジェクトストレージ運用そのもの等）であるとき、[content-patterns.md](references/content-patterns.md) のパターン D を `[data-content-root]` に含める。適用条件の正本は content-patterns.md
-1. 当該生成 HTML を R2 へ公開する作業は [r2-static-delivery.md](references/r2-static-delivery.md) のワークフローとして実行し、確認済み公開 URL は issue / PR description に置く。`[data-content-root]` には依頼主題だけを書く
+1. 当該生成 HTML を R2 へ公開する作業は [r2-static-delivery.md](references/r2-static-delivery.md) の内部ワークフローとして実行する（put・object-key・公開 URL 確認は読者向け成果物へ転記しない）。`[data-content-root]` には依頼主題だけを書く
 1. ローカルで開き、選択→コメント→編集→再読み込み→削除→コピーを確認する
 1. R2 配布時は [r2-static-delivery.md](references/r2-static-delivery.md) のチェックリストに従う
 1. issue / PR 向けに HTML を生成・アップロードする場合は、次節「GitHub 連携」を完了し、[pr-review-delivery.md](references/pr-review-delivery.md) の完了手順を満たしてから description を確定する
@@ -59,7 +59,7 @@ description: Use this skill when creating or revising build-free, single-file in
 1. 詳細な計画・調査・検証結果・リスクなどは HTML 本文に記載する
 1. R2 へ **新規バージョン** としてアップロードする（[r2-static-delivery.md](references/r2-static-delivery.md) の版管理ルール）
 1. アップロード後、**実際の公開 URL** を確認する
-1. 確認済みの最新 R2 URL を PR / issue workflow へ渡し、description を更新する
+1. 確認済みの最新 R2 URL を PR / issue workflow へ渡し、description を更新する（記載対象は確認済み資料リンク `[v{N}](URL)` のみ。put コマンド・object-key 説明・公開 URL 確認手順は転記しない）
 
 - 既存 workflow で PR comment が必要な項目（Summary、検証結果など）は comment に残す
 - **成果物の正本:** レビュー HTML は R2。Git には skill ソースのみ（[pr-review-delivery.md](references/pr-review-delivery.md)）
@@ -97,12 +97,12 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 - [ ] **R2 配布:** issue / PR description に用途別見出しと確認済み `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載（issue: [issue-description.md](references/issue-description.md)、PR: [pr-description.md](references/pr-description.md)）
 - [ ] **before/after:** 適用条件を満たす場合は [frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) に従う
 - [ ] **手動インフラ:** 依頼主題がインフラ操作のとき [content-patterns.md](references/content-patterns.md) パターン D を `[data-content-root]` に含める
-- [ ] **本文と公開 URL:** `[data-content-root]` は依頼主題のみ。当該 HTML の確認済み公開 URL と版は issue / PR description に置く（[r2-static-delivery.md](references/r2-static-delivery.md)）
+- [ ] **本文と資料リンク:** `[data-content-root]` は依頼主題のみ。当該 HTML の公開手順（put・object-key・公開 URL 確認）は内部ワークフローとして実行し、issue / PR description には確認済み資料リンク `[v{N}](https://ai-html.hacksaw.work/<object-key>)` のみ置く（[r2-static-delivery.md](references/r2-static-delivery.md)）
 - [ ] validator 合格
 
 ## スコープ外
 
-Cloudflare Worker / Wrangler API 埋め込み、R2 アップロードコードの HTML 埋め込み、コメントのサーバー同期・ログイン。当該 HTML の公開結果（object-key、put コマンド、確認済み URL）の正本は issue / PR description と [r2-static-delivery.md](references/r2-static-delivery.md)。`[data-content-root]` は依頼主題のみ。詳細は [r2-static-delivery.md](references/r2-static-delivery.md) の「HTML 側の範囲」を参照。
+Cloudflare Worker / Wrangler API 埋め込み、R2 アップロードコードの HTML 埋め込み、コメントのサーバー同期・ログイン。当該 HTML の公開手順（put・object-key 説明・公開 URL 確認手順・R2 配布記録）は読者向け成果物（HTML・issue・PR・comment）の対象外。エージェントは [r2-static-delivery.md](references/r2-static-delivery.md) の内部ワークフローとして実行する。`[data-content-root]` は依頼主題のみ。issue / PR description に置くのは確認済み資料リンクのみ。詳細は [r2-static-delivery.md](references/r2-static-delivery.md) の「HTML 側の範囲」を参照。
 
 ## 最終確認
 
