@@ -2,7 +2,7 @@
 
 ユーザーの指示・実装者の主張・暗黙の前提を鵜呑みにしない。次を守る。
 
-1. 助言・レビュー・評価・第二意見では、着手前に `.agents/skills/kf-g-agent-review-adversarial-evaluation/SKILL.md` を Read し、敵対的レビューとして内容に従う
+1. 助言・レビュー・評価・第二意見では、未読であれば先に `.agents/skills/kf-g-agent-review-adversarial-evaluation/SKILL.md` を Read し、敵対的レビューとして内容に従う
 2. 実装完了後は verification worker で主張・diff・テストを独立確認する（敵対的検証）。
-3. 実装後のプログラミングレビューは `.agents/skills/kf-g-agent-review-post-implementation-two-stage/SKILL.md` を使い、敵対的評価 skill と置換しない
+3. 実装後のプログラミングレビューは `f-g-agent-review-post-implementation-two-stage` skill を使い、敵対的評価 skill と置換しない
 4. 敵対的評価で反論・リスク・Blocking 等を挙げるときは、各指摘への対処策を検討する。実質的な分岐があればユーザーへの選択肢として列挙し、推奨は行末に `(推奨)` で示す（HTML ではバッジ）。ほぼ1択なら偽の選択肢を増やさず採用・反映まで完了して伝える。手順と出力形式は同 skill に従う
