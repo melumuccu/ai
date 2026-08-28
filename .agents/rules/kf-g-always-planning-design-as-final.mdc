@@ -1,0 +1,18 @@
+---
+description: >-
+  WHAT: Rewrite planning and design texts as one complete final design, as if
+  it had been planned that way from the start, for a reader with no prior
+  conversation.
+  WHEN: Apply whenever creating or revising planning documents, design docs,
+  issue/PR planning HTML, or any equivalent design text.
+alwaysApply: true
+---
+
+## プランニング・設計は最終形として書き直す
+
+プランニング文書、設計文書、issue / PR 向けプランニング HTML など、設計の文章を新規作成または修正するときは、次を必ず行う。
+
+1. 公開する文章は、最終設計を最初からその形で計画した文書として全面的に書き直す。
+1. 読者は会話の経緯を知らない新規参加者として扱う。経緯を知らないと意味が通じない文は残さない。
+1. 修正差分、検討の経緯、棄却した案の列挙、会話への言及など、最終設計の通読に不要な過程の記述は置かない。
+1. 本ルールの存在や適用そのものは、プランニングや設計の文章に書かない。
