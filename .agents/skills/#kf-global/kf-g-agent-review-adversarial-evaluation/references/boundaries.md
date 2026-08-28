@@ -2,6 +2,9 @@
 
 ## 置換・統合しない skill
 
+- **`kf-g-agent-review-adversarial-after-primary-response` と統合しない**
+  - 設計または実装を終え、一次回答したあとの検証起動はそちら
+  - 本 skill はユーザー依頼そのものが助言、レビュー、評価、第二意見であるときに使う
 - **`kf-g-agent-review-post-implementation-two-stage` と置換しない**
   - 実装後 2 段階レビュー、plan 盲検（第1段階で plan 非共有）はそちらの責務
 - **`kf-g-agent-research-report-only-unless-approved` と統合しない**
