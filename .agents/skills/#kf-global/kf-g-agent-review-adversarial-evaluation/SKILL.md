@@ -1,6 +1,6 @@
 ---
 name: kf-g-agent-review-adversarial-evaluation
-description: 'Use this skill when the user asks for advice, review, critique, evaluation, feedback, or a second opinion on a design, plan, proposal, document, approach, or similar artifact. Do not use for post-implementation two-stage programming reviews (use kf-g-agent-review-post-implementation-two-stage) or as the edit-approval gate (use kf-g-agent-research-report-only-unless-approved).'
+description: 'Use this skill when the user asks for advice, review, critique, evaluation, feedback, or a second opinion on a design, plan, proposal, document, approach, or similar artifact. Do not use after finishing design or implementation and after the primary user response (use kf-g-agent-review-adversarial-after-primary-response), for post-implementation two-stage programming reviews (use kf-g-agent-review-post-implementation-two-stage), or as the edit-approval gate (use kf-g-agent-research-report-only-unless-approved).'
 ---
 
 # 敵対的評価レビュー

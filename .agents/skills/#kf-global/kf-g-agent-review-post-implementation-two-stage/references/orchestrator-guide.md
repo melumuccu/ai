@@ -10,7 +10,8 @@
 
 ```mermaid
 flowchart LR
-  A[実装完了] --> B[第1段階: 差分単独レビュー]
+  A[実装完了] --> P[一次回答]
+  P --> B[第1段階: 差分単独レビュー]
   B --> C{停止条件}
   C -->|completed| D[第2段階: plan 照合]
   C -->|needs-escalation / blocked| E[報告して stage1 再起動]
@@ -26,7 +27,7 @@ flowchart LR
 
 ## 起動要約
 
-**着手前**: [SKILL.md](../SKILL.md) frontmatter `description` の適用条件を確認し、対象条件を満たす場合のみ本 skill を使う。非対象では通常レビューへ。
+**着手前**: [SKILL.md](../SKILL.md) frontmatter `description` の適用条件を確認し、対象条件を満たす場合のみ本 skill を使う。一次回答前には起動しない。非対象では通常レビューへ。
 
 ### 第1段階委譲
 

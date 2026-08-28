@@ -1,6 +1,6 @@
 ---
 name: kf-g-agent-review-post-implementation-two-stage
-description: Use this skill for programming design and implementation reviews after completion, including code, configuration, tests, and CI/CD changes. Start with a diff-first review, then resume the same reviewer for plan alignment. Route documentation-only, business-planning, general-research, and nontechnical work through the appropriate single-stage review process.
+description: Use this skill for programming design and implementation reviews after completion and after giving the user the primary response, including code, configuration, tests, and CI/CD changes. Start with a diff-first review, then resume the same reviewer for plan alignment; route documentation-only, business-planning, general-research, and nontechnical work through the appropriate single-stage review process.
 ---
 
 # AI agent 実装後レビュー（2段階）
@@ -12,6 +12,7 @@ frontmatter `description` の対象条件を満たす場合のみ本 skill お�
 ## 最小実行順
 
 1. frontmatter `description` の適用条件を確認し、対象条件を満たす場合のみ本 skill を使う
+1. 一次回答済みであることを確認する。未回答なら先に一次回答する
 1. **orchestrator 役割**の場合: [orchestrator-guide.md](references/orchestrator-guide.md) を読み、レビュー worker 起動・第1/第2段階委譲指示作成・結果統合・最終チェックに進む
 1. 第1段階: plan 非共有で diff 単独レビュー → [stage-procedures.md](references/stage-procedures.md)
 1. 停止条件を確認。第1段階が `completed` のときのみ第2段階へ進む
