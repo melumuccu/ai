@@ -47,10 +47,6 @@ description: Use this index skill before creating, editing, or reviewing product
 1. 本 skill で Why not の責務を確認する
 1. [kf-g-code-comment-rules](../kf-g-code-comment-rules/SKILL.md) を Read する
 
-## orchestrator 向け
-
-implementation worker などへ委譲するとき、委譲指示 `skills` に `kf-g-code-how-what-why-why-not-principles` を列挙する。
-
 ## 最終チェック
 
 1. 各成果物が対応する原則（How / What / Why / Why not）に沿っている
