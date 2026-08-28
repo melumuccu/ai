@@ -1,10 +1,6 @@
 ---
 name: kf-g-agent-planning-design-as-final
-description: >
-  Use this skill whenever creating or revising planning documents, design docs,
-  issue/PR planning HTML, or any equivalent design text. Rewrite the published
-  text as one complete final design, as if it had been planned that way from
-  the start, for a reader with no prior conversation.
+description: Use this skill whenever creating or revising planning documents, design docs, issue/PR planning HTML, or any equivalent design text. Rewrite the published text as one complete final design, as if it had been planned that way from the start, for a reader with no prior conversation.
 ---
 
 # プランニング・設計は最終形として書き直す
