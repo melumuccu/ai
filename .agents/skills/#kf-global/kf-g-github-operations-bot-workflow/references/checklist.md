@@ -8,4 +8,5 @@
 - bot preflight 失敗時に人間 `gh` や `GH_TOKEN` へ fallback していないか。
 - token / secret を出力していないか。
 - gitleaks 失敗を回避していないか。
+- description、comment、reply に書いた issue や commit などの URL をリンク形式にしたか。
 - GitHub comment / review URL をユーザへ報告したか。

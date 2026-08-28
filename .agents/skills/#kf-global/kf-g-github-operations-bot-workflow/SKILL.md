@@ -1,6 +1,6 @@
 ---
 name: kf-g-github-operations-bot-workflow
-description: Use this skill whenever working with GitHub issues, pull requests, comments, reviews, repository metadata, or agent-authored GitHub activity. Always use it before posting GitHub comments or reviews, checking remote repository context, or deciding whether GitHub App bot credentials are available.
+description: Use this skill whenever working with GitHub issues, pull requests, comments, reviews, repository metadata, or agent-authored GitHub activity. Always use it before posting GitHub comments or reviews, writing or updating PR or issue descriptions, turning URLs into Markdown links in those texts, checking remote repository context, or deciding whether GitHub App bot credentials are available.
 ---
 
 # GitHub 操作と AI agent bot 投稿
@@ -31,6 +31,7 @@ session ID 未設定時は各書き込みで完全 preflight を実行する。p
 1. GitHub 操作先を確認するなら [repository-context.md](references/repository-context.md) を読む。
 1. GitHub App credential の setup や有無を確認するなら [github-app-credentials.md](references/github-app-credentials.md) を読む。
 1. Issue / PR comment または PR review を投稿するなら [bot-comment-review.md](references/bot-comment-review.md) を読む。
+1. description、comment、reply に URL を書くなら [description-comment-links.md](references/description-comment-links.md) を読む。
 1. gitleaks 検知を扱うなら [gitleaks.md](references/gitleaks.md) を読む。
 1. 作業完了前に [checklist.md](references/checklist.md) を確認する。
 
@@ -41,6 +42,7 @@ session ID 未設定時は各書き込みで完全 preflight を実行する。p
 - [repository-context.md](references/repository-context.md): 操作先 remote 確認
 - [github-app-credentials.md](references/github-app-credentials.md): GitHub App credential の setup とユーザ残作業
 - [bot-comment-review.md](references/bot-comment-review.md): bot comment / review script の使い方
+- [description-comment-links.md](references/description-comment-links.md): description と comment の URL をリンク形式にする手順
 - [rollout.md](references/rollout.md): ローカル / CI への段階導入手順
 - [gitleaks.md](references/gitleaks.md): gitleaks 検知時の禁止事項と対応
 - [checklist.md](references/checklist.md): 作業完了前の確認項目

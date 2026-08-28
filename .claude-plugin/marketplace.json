@@ -11,6 +11,7 @@
       "description": "Repository-local skills whose names start with kf-",
       "name": "kf-global",
       "skills": [
+        "./kf-g-agent-coding-workflow",
         "./kf-g-agent-planning-design-as-final",
         "./kf-g-agent-research-report-only-unless-approved",
         "./kf-g-agent-review-adversarial-evaluation",
