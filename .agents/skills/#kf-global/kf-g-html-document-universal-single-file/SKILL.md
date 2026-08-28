@@ -35,7 +35,7 @@ description: Use this skill when creating or revising build-free, single-file in
 1. 生成した HTML は作業セッションの artifacts の一つとして扱う
 1. **次版 HTML の作成方針**（改訂・R2 配布時）:
    - **通常**: 直前版をコピーし、依頼された変更のみを加える
-   - **例外**: 全文書き直し、構造再設計、直前版が不適切な場合はテンプレートまたは独立作成してよい。理由を生成 HTML 本文または操作記録に記載する
+   - **例外**: 全文書き直し、構造再設計、直前版が不適切な場合はテンプレートまたは独立作成してよい。理由を生成 HTML 本文または依頼主題のインフラ操作記録（[content-patterns.md](references/content-patterns.md) パターン D）に記載する
    - **版管理:** 改訂ごとに新規 `v{N}` で put。既存版は保持（[r2-static-delivery.md](references/r2-static-delivery.md)）
    - アップロード前にコピー元版とアップロード先版を確認し、HTML の版ラベルとファイル名が `v{N}` と一致することを確認する
 1. 初版または例外時はテンプレート HTML をコピーし、改訂時は直前版をコピーする。タイトルと `[data-content-root]` 内本文を差し替える
@@ -44,7 +44,8 @@ description: Use this skill when creating or revising build-free, single-file in
 1. **配布形式:** 単一 `.html` + 必要 CDN のみ（daisyUI v5 + `@tailwindcss/browser@4` は常時。Mermaid / Markmap / diff2html / Alpine.js / `img-comparison-slider` は内容に応じて）
 1. `<html>` に `data-theme` を設定し、ページ chrome は daisyUI コンポーネントクラスを使う。**コメントコア:** vanilla JS を維持。Alpine は小 UI のみ
 1. コメントコア契約を満たす DOM ID・属性を維持する（[core-contract.md](references/core-contract.md)）
-1. 手動インフラ構築または CLI 配布を含む依頼では、[content-patterns.md](references/content-patterns.md) の「手動インフラ操作記録」を本文に含める
+1. 依頼の主題がインフラ操作（ホスト構築、mount、Access、当該プロジェクトのオブジェクトストレージ運用そのもの等）であるとき、[content-patterns.md](references/content-patterns.md) のパターン D を `[data-content-root]` に含める。適用条件の正本は content-patterns.md
+1. 当該生成 HTML を R2 へ公開する作業は [r2-static-delivery.md](references/r2-static-delivery.md) のワークフローとして実行し、確認済み公開 URL は issue / PR description に置く。`[data-content-root]` には依頼主題だけを書く
 1. ローカルで開き、選択→コメント→編集→再読み込み→削除→コピーを確認する
 1. R2 配布時は [r2-static-delivery.md](references/r2-static-delivery.md) のチェックリストに従う
 1. issue / PR 向けに HTML を生成・アップロードする場合は、次節「GitHub 連携」を完了し、[pr-review-delivery.md](references/pr-review-delivery.md) の完了手順を満たしてから description を確定する
@@ -95,12 +96,13 @@ issue / PR 向け R2 配布時は、出力チェックリストと [pr-review-de
 - [ ] **版管理:** 改訂ごとに新規 `v{N}` で put。既存版は保持（[r2-static-delivery.md](references/r2-static-delivery.md)）
 - [ ] **R2 配布:** issue / PR description に用途別見出しと確認済み `[v{N}](https://ai-html.hacksaw.work/<object-key>)` を記載（issue: [issue-description.md](references/issue-description.md)、PR: [pr-description.md](references/pr-description.md)）
 - [ ] **before/after:** 適用条件を満たす場合は [frontend-screenshot-comparison.md](references/frontend-screenshot-comparison.md) に従う
-- [ ] **手動インフラ:** 該当依頼では [content-patterns.md](references/content-patterns.md) パターン D を満たす
+- [ ] **手動インフラ:** 依頼主題がインフラ操作のとき [content-patterns.md](references/content-patterns.md) パターン D を `[data-content-root]` に含める
+- [ ] **本文と公開 URL:** `[data-content-root]` は依頼主題のみ。当該 HTML の確認済み公開 URL と版は issue / PR description に置く（[r2-static-delivery.md](references/r2-static-delivery.md)）
 - [ ] validator 合格
 
 ## スコープ外
 
-Cloudflare Worker / Wrangler API 埋め込み、R2 アップロードコードの HTML 埋め込み、コメントのサーバー同期・ログイン。詳細は [r2-static-delivery.md](references/r2-static-delivery.md) の「HTML 側の範囲」を参照。
+Cloudflare Worker / Wrangler API 埋め込み、R2 アップロードコードの HTML 埋め込み、コメントのサーバー同期・ログイン。当該 HTML の公開結果（object-key、put コマンド、確認済み URL）の正本は issue / PR description と [r2-static-delivery.md](references/r2-static-delivery.md)。`[data-content-root]` は依頼主題のみ。詳細は [r2-static-delivery.md](references/r2-static-delivery.md) の「HTML 側の範囲」を参照。
 
 ## 最終確認
 

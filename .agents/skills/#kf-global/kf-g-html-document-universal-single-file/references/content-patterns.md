@@ -215,11 +215,13 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 
 **CDN:** daisyUI + Tailwind browser のみが基本。図がなくても成立することを優先。
 
-## パターン D: 手動インフラ操作記録（必須）
+## パターン D: 手動インフラ操作記録
 
-**向いている依頼:** Cloudflare Zero Trust / R2 構築、Wrangler CLI 配布、Access 検証、GCP OAuth 設定など、ブラウザ・ダッシュボード・CLI を伴うインフラ作業
+**向いている依頼:** 依頼の主題がインフラ操作そのものであるとき（Cloudflare Zero Trust / R2 構築、ホスト mount、Access 検証、GCP OAuth 設定など、ブラウザ・ダッシュボード・CLI を伴うインフラ作業）
 
-**適用条件:** インフラ操作を含む依頼でのみ必須とする。通常の概念説明ページでは本パターンは省略する。
+**適用条件:** 依頼の主題がインフラ操作であるとき `[data-content-root]` に含める。概念説明・PR/issue の計画・調査・レビュー HTML では、主題がインフラ操作でない限り省略する。
+
+**本文に置く操作記録:** 読者が再現・検証する対象システムの操作だけを書く。当該 HTML ファイルの put・object-key・公開 URL 確認は [r2-static-delivery.md](r2-static-delivery.md) と issue / PR description で扱う。
 
 **構成（上から）:**
 
@@ -233,14 +235,14 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
    - カスタムドメイン Active、Access ログイン、対象 HTML URL 読み込み
    - DevTools Network で `Content-Type: text/html`
    - テキスト選択・コメント作成・編集保存・個別/全件コピー形式・再読み込み永続化
-1. **ターミナルコマンド** — Wrangler OAuth と `r2 object put`（**公開経路:** Wrangler CLI（`--remote`）のみ）
+1. **ターミナルコマンド** — 依頼主題のインフラを操作する CLI（例: mount、Access 設定、対象プロジェクトの R2/Wrangler 運用そのもの）。当該 HTML を公開する put は [r2-static-delivery.md](r2-static-delivery.md) のワークフローで扱う
 1. **失敗復旧** — 404、302 リダイレクト、キャッシュ、認証失敗、版重複など
 1. **セキュリティ注意** — シークレット非貼付、Access 維持、旧版非改変
 1. **操作ステータス** — 版、pending / 完了、タイムスタンプを `badge` 等で表示
 
 **UI 推奨:** daisyUI `card`, `collapse`, `alert`, `badge`, `steps` で手順を折りたたみ可能にする。Dashboard ラベルは変更されうる旨を `alert` で明記する。
 
-**R2 配布の詳細手順:** [r2-static-delivery.md](r2-static-delivery.md) のリポジトリ固有 runbook を参照し、本文にもクリックレベル手順を反映する。
+**runbook 参照:** 依頼主題が R2/Wrangler 運用そのものであるとき、対象システムの操作要点を本文へ載せる。詳細 runbook は [r2-static-delivery.md](r2-static-delivery.md) を参照する。当該 HTML 自身の公開手順（put・object-key・公開 URL 確認）は issue / PR description 側に置く。
 
 ## 生成時チェック
 
@@ -250,7 +252,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. daisyUI CDN と `data-theme` を設定したか
 1. daisyUI `steps` 使用時、template の steps 契約（コメントとサンプル DOM）を満たしたか
 1. Mermaid 使用時はテキスト選択 CSS を入れたか。flowchart は TD / LR を選べる場合 TD を基本としたか
-1. インフラ操作を含む依頼で「手動インフラ操作記録」パターンを満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離したか）
+1. 依頼主題がインフラ操作のとき「手動インフラ操作記録」パターン D を満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離し、当該 HTML の put 結果は description 側か）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
 1. 積み順・論理分離・単一情報源・冗長エンコードを満たしたか
 1. 本文・補足・強調が 3 値タイポグラフィスケール（`text-base` / `text-sm` / `text-lg`）に従い、任意値 rem（`text-[0.85rem]` / `text-[1.15rem]` 等）を本文用途に使っていないか
