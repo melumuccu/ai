@@ -1,6 +1,7 @@
 ---
 name: kf-g-html-document-universal-single-file
-description: Use this skill when creating or revising build-free, single-file interactive HTML documents—for example PR or issue review HTML, annotated guides, walkthroughs, or shareable static explanation pages. Apply it whenever the user wants one-page interactive documentation or a shareable HTML explanation, even if they do not say "single-file HTML". The generated HTML is one of the artifacts produced in the work session.
+description: ユーザとのコミュニケーション用HTMLドキュメントを作成または改訂する際に使用。例えばPRや課題レビューHTML、注釈付きガイドなど。artifact (成果物) の一つとして扱われる。
+disable-model-invocation: true
 ---
 
 # 単一 HTML インタラクティブドキュメント
