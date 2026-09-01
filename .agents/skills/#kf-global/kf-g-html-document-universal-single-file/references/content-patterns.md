@@ -14,8 +14,8 @@
 
 **daisyUI CDN タグと `data-theme`:** `assets/universal-single-file-template.html` の `<head>` / `<html>` を正本とする。
 
-- ページ chrome、カード、バッジ、アラート、折りたたみ、手順 UI は daisyUI コンポーネントクラス（`btn`, `card`, `alert`, `badge`, `collapse`, `steps` など）を使う
-- daisyUI `steps` のマークアップ契約は `assets/universal-single-file-template.html` のサンプル（コメントと DOM）を正本とする（[公式](https://daisyui.com/components/steps/?lang=ja)）
+- ページ chrome、カード、バッジ、アラート、折りたたみは daisyUI コンポーネントクラス（`btn`, `card`, `alert`, `badge`, `collapse` など）を使う
+- **手順 UI:** daisyUI `steps` コンポーネントは使用禁止（UI が壊れやすいため）。順番のある内容は、記載内容に沿ったシンプルな自作 UI（番号付き `card` 等）を使う。凝った UI にする必要はない。実装例は `assets/universal-single-file-template.html` の手順 UI サンプルを正本とする
 - **コメントコア:** vanilla JS を維持。Alpine は小 UI のみ
 - daisyUI CDN モードで利用可能なバリアントのみ使う
 
@@ -30,7 +30,7 @@
 | 順序 | 要素 | 用途 |
 | --- | --- | --- |
 | 1 | 要約カード | 結論・目的（3行以内） |
-| 2 | 表 / 図 / steps | 比較・手順・状態の索引 |
+| 2 | 表 / 図 / 手順 UI | 比較・手順・状態の索引 |
 | 3 | 短段落 | 1論点の補足（表・図と重複しない追加のみ） |
 | 4 | collapse | 詳細・根拠・全文 |
 
@@ -41,7 +41,7 @@
 | 情報 | 推奨 | 条件 |
 | --- | --- | --- |
 | 2軸以上の比較 | `table` | 列見出しで軸を明示。3列以上の同一軸も table |
-| 3ステップ超の順序・分岐 | `steps` または Mermaid | 並列分岐は Mermaid flowchart。`steps` のマークアップは template を正本とする |
+| 3ステップ超の順序・分岐 | 自作手順 UI または Mermaid | 並列分岐は Mermaid flowchart。手順 UI のマークアップは template を正本とする（daisyUI `steps` は使用禁止） |
 | 階層・ツリー | Markmap | 深いネストは collapse と併用 |
 | 並列 3〜7 項目 | 短い箇条書き | 1項目1文 |
 | 状態・リスク・進捗 | badge + alert/card 背景 | テキストラベル必須 |
@@ -60,13 +60,13 @@ flowchart で `TD` / `LR` を選べる場合は **`TD`（`flowchart TD`）を基
 
 | ブロック | 上限 | 超過時 |
 | --- | --- | --- |
-| 結論カード | 3行 | 表または steps へ分割 |
+| 結論カード | 3行 | 表または手順 UI へ分割 |
 | 段落 | 3〜4文 | リストまたは表へ |
 | リスト項目 | 1文 | 子リストまたは collapse |
 
 ### 単一情報源
 
-- **単一情報源:** 表・図・steps に載せた事実は段落で繰り返さず、詳細のみ追加する
+- **単一情報源:** 表・図・手順 UI に載せた事実は段落で繰り返さず、詳細のみ追加する
 - collapse は詳細専用。上段の表/図は索引・対応表に限定
 - チェック: 同じ数値・固有名・手順が段落と表の両方にある → 片方を削除
 
@@ -231,7 +231,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
    - **今回の構築内容（ユーザー申告を含む）** — 実際に行われた事実（クリック履歴が不明な項目はその旨を明記）
    - **再現用クリック手順** — 履歴が取れない操作は一般的な再構築手順として記述（**確認済み値のみ書く**。メール・client ID・シークレット・redirect URI を捏造しない）
    - 各ステップ: **画面操作** / **入力値** / **期待結果** / **失敗時**
-1. **目視確認手順** — 番号付きカードまたは `steps` コンポーネント。公開後のブラウザ検証に限定する:
+1. **目視確認手順** — 番号付き `card` 等の自作手順 UI（daisyUI `steps` は使用禁止）。公開後のブラウザ検証に限定する:
    - カスタムドメイン Active、Access ログイン、対象 HTML URL 読み込み
    - DevTools Network で `Content-Type: text/html`
    - テキスト選択・コメント作成・編集保存・個別/全件コピー形式・再読み込み永続化
@@ -240,7 +240,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. **セキュリティ注意** — シークレット非貼付、Access 維持、旧版非改変
 1. **操作ステータス** — 版、pending / 完了、タイムスタンプを `badge` 等で表示
 
-**UI 推奨:** daisyUI `card`, `collapse`, `alert`, `badge`, `steps` で手順を折りたたみ可能にする。Dashboard ラベルは変更されうる旨を `alert` で明記する。
+**UI 推奨:** daisyUI `card`, `collapse`, `alert`, `badge` で手順を折りたたみ可能にする（手順の順序表示は自作 UI。`steps` は使用禁止）。Dashboard ラベルは変更されうる旨を `alert` で明記する。
 
 **runbook 参照:** 依頼主題が R2/Wrangler 運用そのものであるとき、対象システムの操作要点を本文へ載せる。詳細 runbook は [r2-static-delivery.md](r2-static-delivery.md) を参照する。当該 HTML 自身の公開手順（put・object-key・公開 URL 確認）は [r2-static-delivery.md](r2-static-delivery.md) の内部ワークフローとして実行し、読者向け成果物へ転記しない。
 
@@ -250,7 +250,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. デモ用見出し・段落を実内容に差し替えたか
 1. 使わない CDN の `<script>` / `<link>` を削除したか
 1. daisyUI CDN と `data-theme` を設定したか
-1. daisyUI `steps` 使用時、template の steps 契約（コメントとサンプル DOM）を満たしたか
+1. daisyUI `steps` を使っていないか。順番のある内容は template の手順 UI パターン（自作 UI）に従っているか
 1. Mermaid 使用時はテキスト選択 CSS を入れたか。flowchart は TD / LR を選べる場合 TD を基本としたか
 1. 依頼主題がインフラ操作のとき「手動インフラ操作記録」パターン D を満たしたか（**手動インフラ構築手順** と **目視確認手順** を分離し、当該 HTML の公開手順は内部ワークフローとして実行し読者向け成果物へ転記していないか）
 1. コメントコア契約（[core-contract.md](core-contract.md)）を満たす ID/属性があるか
@@ -258,7 +258,7 @@ DOM・属性・レイアウトの詳細は [core-contract.md](core-contract.md) 
 1. 本文・補足・強調が 3 値タイポグラフィスケール（`text-base` / `text-sm` / `text-lg`）に従い、任意値 rem（`text-[0.85rem]` / `text-[1.15rem]` 等）を本文用途に使っていないか
 1. `[data-content-root]` 内の h1/h2/h3 が Notion 準拠のサイズ・装飾（h1 明色文字必須）に従っているか
 1. 薄背景上で薄いグレー文字・黄色文字等、低コントラスト表現を使っていないか（`mark[data-comment-id]` の黄色背景は例外）
-1. 表・図・steps と同内容の段落がないか
+1. 表・図・手順 UI と同内容の段落がないか
 1. 専門用語の初出が `mark[data-term-id]` でマークされ、左注釈（`[data-annotation-panel]` / `#term-annotations`）と対応しているか（パターン別必須度を満たすこと）
 1. 括弧内の長い説明と左注釈が重複していないか
 1. 外部資料を根拠にした主張を `<a href="...">` でリンク化し、fragment 優先 URL を使っているか（[source-citations.md](source-citations.md)、パターン別必須度を確認）

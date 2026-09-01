@@ -278,7 +278,7 @@
           通常の説明文は <code class="text-xs">text-base</code> を使います。読者が流し読みしやすいよう、1段落1論点を心がけてください。
         </p>
         <p class="mb-4 text-sm">
-          補足や注釈は <code class="text-xs">text-sm</code> で書きます。表や steps に載せた内容を段落で繰り返さないでください。
+          補足や注釈は <code class="text-xs">text-sm</code> で書きます。表や手順 UI に載せた内容を段落で繰り返さないでください。
         </p>
         <h3 class="text-lg text-[rgb(34,135,189)] mt-4 mb-2 pb-[10px]">強調が必要なとき</h3>
         <p class="mb-4 text-lg font-medium">
@@ -307,27 +307,40 @@
       </p>
 
       <p class="mb-4 text-sm">
-        要約の次は、比較なら <code class="text-xs">table</code>、手順なら <code class="text-xs">steps</code> や Mermaid で構造化する。表・図に載せた事実は段落で繰り返さない。
+        要約の次は、比較なら <code class="text-xs">table</code>、手順なら自作手順 UI や Mermaid で構造化する。表・図に載せた事実は段落で繰り返さない。
       </p>
 
-      <!-- daisyUI steps 契約: .steps に steps-vertical を必ず付ける（PC とスマホで共通）。
-           直接子は li.step のみ。各 li.step のラベルはプレーンテキスト（コード相当は Markdown バッククォート）。
-           複数文は一文ごとに <br> で改行する。入れ子 HTML は span.step-icon と <br> のみ。
-           良い例: <li class="step step-primary"> `npx wrangler r2 object put` を実行して R2 へ put する</li>
-           良い例（複数文）: <li class="step step-primary">上記 ol.steps の直接子は li.step のみである。<br>バッククォート内は識別子のプレーンテキスト表記であり、HTML の code タグではない。</li>
-           悪い例: li 内に <code>…</code> を置く。.steps 内で li の直後に <p><code>…</code></p> を置く。 -->
-      <!-- 使い方（steps） -->
+      <!-- 手順 UI（正本）: daisyUI steps は使用禁止（UI が壊れやすいため）。
+           順番のある内容は、記載内容に沿ったシンプルな自作 UI を使う。凝った UI にする必要はない。
+           良い例: 番号付き card の縦積み（下記サンプル）。
+           悪い例: ol.steps / li.step など daisyUI steps コンポーネントの使用。 -->
+      <!-- 使い方（手順 UI サンプル） -->
       <section class="mb-6">
         <h2 class="text-2xl pb-1 mt-12 mb-4 border-b-4 border-[rgb(20,58,78)]">使い方</h2>
-        <ol class="steps steps-vertical w-full [&_.step]:text-start">
-          <li class="step step-primary">説明したい箇所をドラッグして選択する</li>
-          <li class="step step-primary">表示される入力欄にコメントを書いて追加する</li>
-          <li class="step">ハイライトまたはカードから個別コピー・編集・削除ができる<br>再読み込み後も同じ URL 上でコメントが復元される</li>
+        <ol class="list-none space-y-3 p-0 m-0">
+          <li class="card border border-base-300 bg-base-100 shadow-sm">
+            <div class="card-body flex-row items-start gap-3 py-3">
+              <span class="badge badge-primary badge-lg shrink-0 font-mono">1</span>
+              <p class="m-0 text-base">説明したい箇所をドラッグして選択する</p>
+            </div>
+          </li>
+          <li class="card border border-base-300 bg-base-100 shadow-sm">
+            <div class="card-body flex-row items-start gap-3 py-3">
+              <span class="badge badge-primary badge-lg shrink-0 font-mono">2</span>
+              <p class="m-0 text-base">表示される入力欄にコメントを書いて追加する</p>
+            </div>
+          </li>
+          <li class="card border border-base-300 bg-base-100 shadow-sm">
+            <div class="card-body flex-row items-start gap-3 py-3">
+              <span class="badge badge-lg shrink-0 font-mono">3</span>
+              <p class="m-0 text-base">ハイライトまたはカードから個別コピー・編集・削除ができる。再読み込み後も同じ URL 上でコメントが復元される</p>
+            </div>
+          </li>
         </ol>
       </section>
 
       <p class="mb-4 text-sm">
-        表・steps で拾い切れない補足は、1段落1論点の短い段落にまとめる。
+        表・手順 UI で拾い切れない補足は、1段落1論点の短い段落にまとめる。
       </p>
 
       <!-- 比較表ソートの実装例 -->

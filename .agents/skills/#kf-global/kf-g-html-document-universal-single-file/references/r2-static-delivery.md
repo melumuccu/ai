@@ -1,6 +1,6 @@
 # R2 静的配信ベースライン
 
-生成物は **単一 HTML ファイル** を Cloudflare R2 に置き、ビルドなしで公開する。
+[delivery-policy.md](delivery-policy.md) で **R2 配布モード** を選択したときに適用する。単一 HTML ファイルを Cloudflare R2 に置き、ビルドなしで公開する。
 
 ## 配信前提
 
@@ -276,7 +276,7 @@ npx wrangler@latest r2 object put ai-html/2026-08-03_今回の対応概要_v4.ht
 
 1. ファイルをローカルで `file://` または簡易 HTTP で開き、コメント追加・編集・再読み込み・削除・コピーを確認
 1. daisyUI / Mermaid 等、使用 CDN がネットワーク到達可能か確認
-1. **R2 upload 前** に [SKILL.md](../SKILL.md) の出力チェックリストを満たす（HTML コア契約・daisyUI・版ラベル一致など）。before/after 画像は AVIF 必須・命名規則・容量推奨（1 画像 2 MiB / 合計 5 MiB）を目視確認する
+1. **R2 upload 前** に [checklist.md](checklist.md) の常時必須と R2 配布時を満たす（HTML コア契約・daisyUI・版ラベル一致など）。before/after 画像は AVIF 必須・命名規則・容量推奨（1 画像 2 MiB / 合計 5 MiB）を目視確認する
 1. 出典リンクを含む場合は [source-citations.md](source-citations.md) に従う
 1. **新規 `v{N}` として** CLI でアップロードし、既存オブジェクトを保持していることを確認
 1. アップロード後、**`https://ai-html.hacksaw.work/<object-key>`** で Access 認証後に目視確認手順を実施
