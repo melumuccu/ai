@@ -1,15 +1,15 @@
 ---
-name: kf-g-agent-coding-workflow
+name: kf-g-agent-git-managed-workflow
 description: >
-  Use this skill when performing coding work on git-managed files in a repository.
+  Use this skill when changing any git-managed files in a repository.
   Always apply it before creating issues, dedicated worktrees, commits, or pull requests
-  for coding tasks; covers issue-first planning, worktree path and branch naming,
+  for such changes; covers issue-first planning, worktree path and branch naming,
   atomic commits, PR creation, and stopping on hook failures without --no-verify.
 ---
 
-# コーディング業務の手順
+# git 管理ファイルの作業手順
 
-git 管理ファイルのコーディングでは、issue、worktree、commit、PR をこの順で進める。
+git 管理ファイルの変更では、issue、worktree、commit、PR をこの順で進める。
 
 ## 参照ファイル
 
