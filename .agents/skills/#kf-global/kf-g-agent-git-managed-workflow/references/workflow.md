@@ -17,7 +17,7 @@
    コード、skill、rule などファイル変更差分がある作業は PR を作成する。
    issue 起点なら対応する issue と PR を紐づけ、PR URL を issue に記録する。
    ファイル変更差分がない HTML 報告の R2 配布だけは PR を作成しない。
-1. <span id="step-git-ops"></span>**通常実装の git 操作**
-   通常実装では、必要な変更を stage、commit、push し、PR を作成してよい。
+1. <span id="step-git-ops"></span>**通常作業の git 操作**
+   通常作業では、必要な変更を stage、commit、push し、PR を作成してよい。
 1. <span id="step-safety"></span>**安全確認**
    commit または push 前に gitleaks などの hook が失敗した場合は、`--no-verify` で回避せず停止する。
