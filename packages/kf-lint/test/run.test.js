@@ -96,6 +96,10 @@ test("commit message format", () => {
   ]) {
     assert.ok(runCommitLint(config, message).length > 0, message);
   }
+
+  const badDiagnostics = runCommitLint(config, badSubject);
+  assert.match(badDiagnostics[0].message, /Hint:/);
+  assert.match(badDiagnostics[0].message, /fix__: skills > lint導入/);
 });
 
 test("errors produce non-zero exit code", async () => {
