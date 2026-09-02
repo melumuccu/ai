@@ -34,8 +34,8 @@ export function commitMessageFormatHint() {
 /** @returns {string} */
 export function commitInvocationHint() {
   return [
-    "Write the message to a file outside the repo (e.g. /tmp/commit-msg.txt), then run:",
-    "  git commit -F /tmp/commit-msg.txt",
+    "Write the message under the gitignored artifacts/ directory (e.g. artifacts/git/commit-msg.txt), then run:",
+    "  git commit -F artifacts/git/commit-msg.txt",
     "",
     "Do not use heredoc (<<), $(), backticks, or -F -.",
     "",
