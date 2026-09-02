@@ -2,6 +2,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { resolveSeverity } from "../diagnostics.js";
 import { parseFrontmatter } from "../config.js";
+import { formatCommitDiagnosticMessage } from "./commit-hints.js";
 
 /** 許可された commit prefix（コロン前5文字固定）。 */
 const ALLOWED_COMMIT_PREFIXES = [
@@ -195,8 +196,12 @@ export function runCommitLint(config, message) {
   if (!COMMIT_SUBJECT_PATTERN.test(subject)) {
     diagnostics.push({
       ruleId: "commit/japanese-prefix-format",
-      message:
-        "Problem: commit subject does not match required format. Why: fixed prefix and category enable machine tracking. Fix: use '<type_>: <category> > <subject>' (e.g. fix__: skills > lint導入).",
+      message: formatCommitDiagnosticMessage(
+        "commit subject does not match required format",
+        "fixed prefix and category enable machine tracking",
+        "use '<type_>: <category> > <subject>' on line 1 (e.g. fix__: skills > lint導入)",
+        "message-format",
+      ),
       severity,
       filePath: "COMMIT_EDITMSG",
       line: 1,
@@ -208,8 +213,12 @@ export function runCommitLint(config, message) {
     // 2行目空行は subject と本文を分離し、git log --oneline 表示を安定させる。
     diagnostics.push({
       ruleId: "commit/japanese-prefix-format",
-      message:
-        "Problem: second commit message line is not blank. Why: blank line separates subject from body and stabilizes git log output. Fix: leave line 2 empty.",
+      message: formatCommitDiagnosticMessage(
+        "second commit message line is not blank",
+        "blank line separates subject from body and stabilizes git log output",
+        "leave line 2 empty",
+        "message-blank-line",
+      ),
       severity,
       filePath: "COMMIT_EDITMSG",
       line: 2,

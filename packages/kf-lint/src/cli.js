@@ -11,6 +11,7 @@ import {
   runMarkdownLint,
   runSkillLint,
 } from "./rules/runners.js";
+import { commitInvocationHint, commitMessageFormatHint } from "./rules/commit-hints.js";
 import { runUrlReachableLint } from "./rules/url-reachable.js";
 
 /** @param {string[]} args */
@@ -37,6 +38,19 @@ export async function runCli(args) {
     const diagnostics = runCommitLint(config, message);
     printDiagnostics(diagnostics, "pretty");
     process.exit(exitCodeFor(diagnostics));
+  }
+
+  if (command === "commit-hint") {
+    const kind = rest[0] ?? "message-format";
+    if (kind === "invocation") {
+      console.log(commitInvocationHint());
+      return;
+    }
+    if (kind === "message-format") {
+      console.log(commitMessageFormatHint());
+      return;
+    }
+    throw new Error(`Unknown commit-hint kind: ${kind}`);
   }
 
   if (command !== "verify" && command !== "lint") {
