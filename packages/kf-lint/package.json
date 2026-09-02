@@ -1,6 +1,6 @@
 {
   "name": "@kf/lint",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Lint rules derived from kf-g-* agent skills",
   "type": "module",
   "bin": {
