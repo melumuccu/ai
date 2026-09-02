@@ -10,6 +10,7 @@ import {
   RULE_ID,
   cleanRawUrl,
   extractUrlMatches,
+  isExemptFromProbe,
   normalizeProbeUrl,
   runUrlReachableLint,
   shouldProbeUrl,
@@ -25,6 +26,16 @@ test("shouldProbeUrl excludes non-http schemes and relative paths", () => {
   assert.equal(shouldProbeUrl("#section"), null);
   assert.equal(shouldProbeUrl("/relative/path"), null);
   assert.equal(shouldProbeUrl("https://example.com"), "https://example.com");
+});
+
+test("isExemptFromProbe skips melumuccu GitHub URLs", () => {
+  assert.equal(isExemptFromProbe("https://github.com/melumuccu"), true);
+  assert.equal(isExemptFromProbe("https://github.com/melumuccu/"), true);
+  assert.equal(isExemptFromProbe("https://github.com/melumuccu/ai"), true);
+  assert.equal(isExemptFromProbe("https://github.com/melumuccu/ai/tree/main"), true);
+  assert.equal(isExemptFromProbe("https://github.com/melumuccu-other/repo"), false);
+  assert.equal(isExemptFromProbe("https://github.com/other/melumuccu"), false);
+  assert.equal(shouldProbeUrl("https://github.com/melumuccu/ai"), null);
 });
 
 test("cleanRawUrl strips trailing markdown punctuation", () => {
@@ -55,6 +66,20 @@ test("extractUrlMatches finds urls in markdown and html", () => {
     "https://c.example/html",
     "https://d.example/fenced",
   ]);
+});
+
+test("runUrlReachableLint skips melumuccu GitHub URLs even when probe fails", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "kf-lint-url-melumuccu-"));
+  const file = join(dir, "private.md");
+  writeFileSync(
+    file,
+    "# test\n\nhttps://github.com/melumuccu/private-repo\n",
+    "utf8",
+  );
+
+  const probe = async () => ({ ok: false, reason: "HTTP 404" });
+  const diagnostics = await runUrlReachableLint(config, [file], { probe });
+  assert.equal(diagnostics.length, 0);
 });
 
 test("runUrlReachableLint warns on unreachable urls with mock probe", async () => {

@@ -7,9 +7,17 @@ const URL_PATTERN = /https?:\/\/[^\s<>"')\]]+/gi;
 
 const EXCLUDED_SCHEME = /^(?:mailto|javascript|data):/i;
 
+/** Private repos may return 404 to unauthenticated probes. */
+const EXCLUDED_PROBE_PREFIX = /^https:\/\/github\.com\/melumuccu(?:\/|$)/i;
+
 /** @param {string} raw */
 export function cleanRawUrl(raw) {
   return raw.replace(/[.,;:!?)>\]]+$/, "");
+}
+
+/** @param {string} url */
+export function isExemptFromProbe(url) {
+  return EXCLUDED_PROBE_PREFIX.test(url);
 }
 
 /** @param {string} raw */
@@ -17,6 +25,7 @@ export function shouldProbeUrl(raw) {
   const url = cleanRawUrl(raw);
   if (!url || url.startsWith("#") || EXCLUDED_SCHEME.test(url)) return null;
   if (!/^https?:\/\//i.test(url)) return null;
+  if (isExemptFromProbe(url)) return null;
   return url;
 }
 
