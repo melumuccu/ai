@@ -67,6 +67,12 @@
       "skillPath": "skills/gh/SKILL.md",
       "computedHash": "1a427b5ebbee4133e4627d5b5eedb383ac57cc5e868cf209bb13e151959e4d67"
     },
+    "gh-stack": {
+      "source": "github/gh-stack",
+      "sourceType": "github",
+      "skillPath": "skills/gh-stack/SKILL.md",
+      "computedHash": "28d42250d52f33424b807add6fbdec75736e835f98752311db321ab51733fea6"
+    },
     "skill-creator": {
       "source": "anthropics/skills",
       "sourceType": "github",

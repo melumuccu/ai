@@ -85,6 +85,7 @@
         "./genshijin-review",
         "./genshijin-stats",
         "./gh",
+        "./gh-stack",
         "./skill-creator",
         "./svelte-code-writer",
         "./svelte-core-bestpractices",
