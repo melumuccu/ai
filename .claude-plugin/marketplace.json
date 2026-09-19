@@ -33,6 +33,7 @@
         "./kf-g-git-commit-japanese-commit-message",
         "./kf-g-git-commit-staged-only-rules",
         "./kf-g-git-hooks-fix-verify-layering",
+        "./kf-g-git-pr-red-green-stacked-pr",
         "./kf-g-github-actions-self-hosted-ci-cache",
         "./kf-g-github-actions-self-hosted-runner-label",
         "./kf-g-github-operations-bot-workflow",
