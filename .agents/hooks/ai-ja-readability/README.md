@@ -10,7 +10,7 @@ Cursor エージェントの日本語出力を、`kf-g-writing-japanese-tech` �
 
 | Hook | 動作 |
 | --- | --- |
-| `afterAgentResponse` | 最終メッセージを校正し、変更があれば `{CURSOR_PROJECT_DIR}/artifacts/ja-reply/` に Markdown を保存 |
+| `afterAgentResponse` | 最終メッセージを校正し、変更があれば `{CURSOR_PROJECT_DIR}/artifacts/ja-reply/` に Markdown を保存して、そのファイルを現在のウィンドウで開く |
 | `afterFileEdit` / `afterTabFileEdit` | 編集後ファイルの Markdown 地の文、または `#` / `//` 行コメントを校正して書き戻し |
 
 チャット吹き出しの置き換えはできません（observe-only）。`stop` / `followup_message` は使いません。
