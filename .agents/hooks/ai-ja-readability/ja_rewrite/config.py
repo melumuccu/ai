@@ -36,4 +36,3 @@ SKIP_BASENAMES = frozenset({".env", ".env.local", ".env.production"})
 JA_REPLY_DIR = Path("artifacts") / "ja-reply"
 
 SKILL_KF_G = Path.home() / ".agents" / "skills" / "kf-g-writing-japanese-tech" / "SKILL.md"
-SKILL_GENSHIJIN = Path.home() / ".agents" / "skills" / "genshijin" / "SKILL.md"
