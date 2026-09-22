@@ -6,16 +6,32 @@ DEST_ROOT="${HOME}/.cursor/hooks/ai-ja-readability"
 DEST_HOOKS_JSON="${HOME}/.cursor/hooks.json"
 
 mkdir -p "${HOME}/.cursor/hooks"
-rm -rf "${DEST_ROOT}"
-cp -a "${SCRIPT_DIR}" "${DEST_ROOT}"
-chmod +x "${DEST_ROOT}/ja-rewrite.py"
 
 ENV_EXAMPLE="${SCRIPT_DIR}/ai-ja-readability.env.example"
-ENV_DEST="${HOME}/.cursor/ai-ja-readability.env"
-if [[ ! -e "${ENV_DEST}" ]]; then
-  cp "${ENV_EXAMPLE}" "${ENV_DEST}"
-  chmod 600 "${ENV_DEST}"
+ENV_DEST="${DEST_ROOT}/ai-ja-readability.env"
+LEGACY_ENV="${HOME}/.cursor/ai-ja-readability.env"
+LEGACY_SCRIPT="${HOME}/.cursor/ai-ja-readability-session-env.py"
+ENV_BACKUP=""
+if [[ -e "${ENV_DEST}" ]]; then
+  ENV_BACKUP="$(mktemp)"
+  cp "${ENV_DEST}" "${ENV_BACKUP}"
+elif [[ -e "${LEGACY_ENV}" ]]; then
+  ENV_BACKUP="$(mktemp)"
+  cp "${LEGACY_ENV}" "${ENV_BACKUP}"
 fi
+
+rm -rf "${DEST_ROOT}"
+cp -a "${SCRIPT_DIR}" "${DEST_ROOT}"
+chmod +x "${DEST_ROOT}/ja-rewrite.py" "${DEST_ROOT}/ai-ja-readability-session-env.py"
+
+if [[ -n "${ENV_BACKUP}" ]]; then
+  cp "${ENV_BACKUP}" "${ENV_DEST}"
+  rm -f "${ENV_BACKUP}"
+else
+  cp "${ENV_EXAMPLE}" "${ENV_DEST}"
+fi
+chmod 600 "${ENV_DEST}"
+rm -f "${LEGACY_ENV}" "${LEGACY_SCRIPT}"
 
 echo "Installed hook implementation to ${DEST_ROOT}"
 echo ""
