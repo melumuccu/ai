@@ -1,6 +1,11 @@
 {
   "version": 1,
   "hooks": {
+    "sessionStart": [
+      {
+        "command": "python3 ./hooks/ai-ja-readability/ai-ja-readability-session-env.py"
+      }
+    ],
     "afterAgentResponse": [
       {
         "command": "./hooks/ai-ja-readability/ja-rewrite.py",
