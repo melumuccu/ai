@@ -22,8 +22,11 @@ Cursor エージェントの日本語出力を、`kf-g-writing-japanese-tech` �
 ```
 
 `~/.cursor/hooks.json` に `hooks.json.example` と同じエントリを追加します。コマンドパスは `~/.cursor/` からの相対パスです。
+`install-to-cursor.sh` は `ai-ja-readability.env.example` を `~/.cursor/ai-ja-readability.env` にコピーします。コピー先が既にあるときは上書きしません。
 
 ## 環境変数
+
+値は `~/.cursor/ai-ja-readability.env` に書きます。
 
 | 変数 | 用途 |
 | --- | --- |
