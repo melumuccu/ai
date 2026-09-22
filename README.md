@@ -38,6 +38,10 @@ pnpm --dir packages/kf-lint test
 scripts/sync-agents-for-cursor.sh
 ```
 
+## Cursor hooks
+
+日本語校正 hook の手順は [.agents/hooks/ai-ja-readability/README.md](.agents/hooks/ai-ja-readability/README.md) にある。
+
 ## (PJ ごとに要対応) marketingskills カスタマイズ
 
 グローバル skills として入れた coreyhaines31/marketingskills 向け。
