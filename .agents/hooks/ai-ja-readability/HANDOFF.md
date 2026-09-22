@@ -52,6 +52,7 @@ New Project 用 Origin リポジトリは移行用スナップショットであ
 
 - **入力:** Cursor 共通フィールド + `text`（最終可視メッセージ）。`conversation_id` / `generation_id` を利用。
 - **出力:** hook からチャット本文は**返せない**（observe-only）。
+- **表示:** 保存に成功したファイルを `cursor --reuse-window --goto <path>` で現在のウィンドウに開く。`--wait` は付けない。`cursor` が無い、起動失敗、時間切れのときはログのみで、ファイルは残し exit 0。
 - **保存:** 校正後テキストが原文と**異なるときだけ**、次のパスに Markdown を新規作成。
   - 相対: `artifacts/ja-reply/{YYYYMMDD_hhmmss_fff}_{conversation_id 先頭8文字}.md`
   - 絶対: `{CURSOR_PROJECT_DIR}/artifacts/ja-reply/...`
