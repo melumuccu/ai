@@ -79,8 +79,6 @@ New Project 用 Origin リポジトリは移行用スナップショットであ
 
 - 実行時に読む（**リポジトリに skill 本文をコピーしない**）:
   - `~/.agents/skills/kf-g-writing-japanese-tech/SKILL.md`
-  - genshijin **丁寧** 固定（通常・極限は使わない）
-- genshijin が無い場合のフォールバック: 本 repo の `.agents/skills/genshijin/SKILL.md`
 
 ### モデルと課金ルート
 

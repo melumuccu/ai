@@ -1,6 +1,6 @@
 # ai-ja-readability（Cursor hooks）
 
-Cursor エージェントの日本語出力を、`kf-g-writing-japanese-tech` と genshijin **丁寧** に沿って二次校正する hook 実装です。正本はこのリポジトリの `.agents/hooks/ai-ja-readability/` に置き、利用時は `~/.cursor/hooks` へコピーして `~/.cursor/hooks.json` から呼び出します。
+Cursor エージェントの日本語出力を、`kf-g-writing-japanese-tech` に沿って二次校正する hook 実装です。正本はこのリポジトリの `.agents/hooks/ai-ja-readability/` に置き、利用時は `~/.cursor/hooks` へコピーして `~/.cursor/hooks.json` から呼び出します。
 
 **引き継ぎ・要件一覧:** [HANDOFF.md](./HANDOFF.md)
 
@@ -49,7 +49,4 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 
 ## skill の読み方
 
-実行時に次を読みます（リポジトリへ skill 本文はコピーしません）。
-
-- `~/.agents/skills/kf-g-writing-japanese-tech/SKILL.md`
-- `~/.agents/skills/genshijin/SKILL.md`（無い場合はこのリポジトリの `.agents/skills/genshijin/SKILL.md`）
+実行時に `~/.agents/skills/kf-g-writing-japanese-tech/SKILL.md` を読みます（リポジトリへ skill 本文はコピーしません）。
