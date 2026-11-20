@@ -9,9 +9,13 @@ permissions:
 
 jobs:
   check:
-    runs-on: [self-hosted, ai]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: jdx/mise-action@v5
+        with:
+          # このジョブで必要なのは node のみ
+          install_args: node
       - name: Test sync script
         run: mise run test-sync-external-skills
       - name: Check lock, publish dir, and marketplace skills
